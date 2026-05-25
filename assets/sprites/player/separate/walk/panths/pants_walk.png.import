@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dnx674qd8g6h3"
-path="res://.godot/imported/pants_axe.png-bbc32a88361437581337d2a17890d5eb.ctex"
+uid="uid://cgemxqhdwavtb"
+path="res://.godot/imported/pants_walk.png-ff5123426880a067618d49a0173bc217.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/player/separate/axe/clothes/pants_axe.png"
-dest_files=["res://.godot/imported/pants_axe.png-bbc32a88361437581337d2a17890d5eb.ctex"]
+source_file="res://assets/sprites/player/separate/walk/panths/pants_walk.png"
+dest_files=["res://.godot/imported/pants_walk.png-ff5123426880a067618d49a0173bc217.ctex"]
 
 [params]
 

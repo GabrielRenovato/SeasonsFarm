@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c5qcyrlwj8y5m"
-path="res://.godot/imported/pants_pickaxe.png-6277b521e6a88a2044697e5aeeb7aab3.ctex"
+uid="uid://bi4rfwob82ukc"
+path="res://.godot/imported/pants_suit_hoe.png-1819e6abfeada0d3d555e1bf79623c6c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/player/separate/pickaxe/clothes/pants_pickaxe.png"
-dest_files=["res://.godot/imported/pants_pickaxe.png-6277b521e6a88a2044697e5aeeb7aab3.ctex"]
+source_file="res://assets/sprites/player/separate/hoe/panths/pants_suit_hoe.png"
+dest_files=["res://.godot/imported/pants_suit_hoe.png-1819e6abfeada0d3d555e1bf79623c6c.ctex"]
 
 [params]
 
