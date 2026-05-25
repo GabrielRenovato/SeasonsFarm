@@ -1,0 +1,142 @@
+[gd_scene format=3 uid="uid://dskqgijkm0dlx"]
+
+[ext_resource type="Script" uid="uid://bqf7gynjbvyqi" path="res://scripts/farmhouse.gd" id="1_lh3cv"]
+[ext_resource type="Texture2D" uid="uid://cujj52colc2w3" path="res://assets/tiles/farm/buildings.png" id="2_8u8rn"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_rnfsq"]
+size = Vector2(60, 23)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_lflwt"]
+size = Vector2(13, 19)
+
+[sub_resource type="Animation" id="Animation_lh3cv"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("DoorSprite:region_enabled")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("DoorSprite:region_rect")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Rect2(371.9655, 509.9279, 12.020416, 18.120392)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("DoorSprite:texture")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("2_8u8rn")]
+}
+
+[sub_resource type="Animation" id="Animation_8u8rn"]
+resource_name = "open_door"
+length = 0.26666668
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("DoorSprite:region_enabled")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.19984019),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [true, true, true]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("DoorSprite:region_rect")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.19984019),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [Rect2(627.7669, 510.1883, 11.9800415, 17.970032), Rect2(644.0638, 509.94296, 12.040527, 18.155365), Rect2(659.4883, 508.7465, 12.792236, 19.594452)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("DoorSprite:texture")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("2_8u8rn")]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_rnfsq"]
+_data = {
+&"RESET": SubResource("Animation_lh3cv"),
+&"open_door": SubResource("Animation_8u8rn")
+}
+
+[node name="Farmhouse" type="StaticBody2D" unique_id=973214779]
+z_index = 1
+y_sort_enabled = true
+collision_layer = 5
+script = ExtResource("1_lh3cv")
+
+[node name="House" type="Sprite2D" parent="." unique_id=1060135433]
+position = Vector2(0, -10)
+texture = ExtResource("2_8u8rn")
+region_enabled = true
+region_rect = Rect2(81.687096, 507.1925, 76.75837, 21.500488)
+
+[node name="HouseTeto" type="Sprite2D" parent="." unique_id=2053419837]
+z_index = 101
+y_sort_enabled = true
+position = Vector2(-1, -46)
+texture = ExtResource("2_8u8rn")
+region_enabled = true
+region_rect = Rect2(79.71878, 453.86328, 78.160355, 54.75757)
+
+[node name="HouseColision" type="CollisionShape2D" parent="." unique_id=1008806724]
+position = Vector2(0, -12.5)
+shape = SubResource("RectangleShape2D_rnfsq")
+
+[node name="DoorArea" type="Area2D" parent="." unique_id=2088994162]
+visible = false
+z_index = 7
+y_sort_enabled = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DoorArea" unique_id=590547132]
+light_mask = 7
+z_index = 1
+y_sort_enabled = true
+position = Vector2(0, -10)
+shape = SubResource("RectangleShape2D_lflwt")
+
+[node name="DoorSprite" type="Sprite2D" parent="." unique_id=2044296162]
+z_index = 1
+y_sort_enabled = true
+position = Vector2(0, -10)
+texture = ExtResource("2_8u8rn")
+region_enabled = true
+region_rect = Rect2(371.9655, 509.9279, 12.020416, 18.120392)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=918204459]
+libraries/ = SubResource("AnimationLibrary_rnfsq")

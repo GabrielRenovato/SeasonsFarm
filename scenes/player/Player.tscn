@@ -13,7 +13,7 @@
 [ext_resource type="Texture2D" uid="uid://xg5lyllg13ml" path="res://assets/sprites/player/separate/pickaxe/hair/bob_pickaxe.png" id="8_7oing"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_npwbq"]
-size = Vector2(8, 2)
+size = Vector2(8, 8)
 
 [sub_resource type="Animation" id="Animation_20koh"]
 length = 0.001
@@ -2481,25 +2481,29 @@ transitions = ["Start", "Idle", SubResource("AnimationNodeStateMachineTransition
 graph_offset = Vector2(94.92335, 0)
 
 [node name="Player" type="CharacterBody2D" unique_id=1414943563]
+z_index = 100
 y_sort_enabled = true
 script = ExtResource("1_4kuee")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=662564160]
-position = Vector2(0, 16)
+position = Vector2(0, -4)
 shape = SubResource("RectangleShape2D_npwbq")
 
 [node name="Body" type="Sprite2D" parent="." unique_id=563877287]
 texture_filter = 1
+position = Vector2(0, -16)
 texture = ExtResource("2_ov1oi")
 hframes = 8
 vframes = 4
 
 [node name="har" type="Sprite2D" parent="." unique_id=866368551]
+position = Vector2(0, -16)
 texture = ExtResource("3_20koh")
 hframes = 112
 vframes = 4
 
 [node name="MovementComponent" type="Node2D" parent="." unique_id=2050135645 node_paths=PackedStringArray("actor", "animation_tree")]
+position = Vector2(0, -16)
 script = ExtResource("5_tpg5x")
 actor = NodePath("..")
 animation_tree = NodePath("../AnimationTree")
@@ -2519,6 +2523,7 @@ parameters/Walk/blend_position = Vector2(-0.00386101, 0.24170613)
 
 [node name="ToolComponent" type="Node2D" parent="." unique_id=580386467 node_paths=PackedStringArray("animation_tree", "actor", "grid_anchor", "debug_rect")]
 y_sort_enabled = true
+position = Vector2(0, -16)
 script = ExtResource("7_npwbq")
 animation_tree = NodePath("../AnimationTree")
 actor = NodePath("..")
@@ -2528,17 +2533,15 @@ tilled_dirt_atlas_coords = Vector2i(10, 9)
 
 [node name="GridAnchor" type="Marker2D" parent="." unique_id=1479553450]
 y_sort_enabled = true
-position = Vector2(0, 16)
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=1362907515]
-visible = false
 offset_left = -10.0
-offset_top = 16.0
 offset_right = 10.0
-offset_bottom = 26.0
+offset_bottom = 10.0
 color = Color(1, 0.3019608, 1, 1)
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1223741438]
+position = Vector2(0, -16)
 process_callback = 0
 position_smoothing_enabled = true
 position_smoothing_speed = 15.0

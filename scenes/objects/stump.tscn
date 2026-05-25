@@ -15,6 +15,7 @@ script = ExtResource("1_53udi")
 wood_scene = ExtResource("2_uobp2")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1850022459]
+z_index = 1
 position = Vector2(0, -2)
 texture = ExtResource("1_wi2ep")
 region_enabled = true
