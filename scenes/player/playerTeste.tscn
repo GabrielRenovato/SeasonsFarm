@@ -1,0 +1,30 @@
+[gd_scene format=3 uid="uid://dcidvjprd2yj"]
+
+[ext_resource type="Texture2D" uid="uid://b7av87s82jddj" path="res://assets/sprites/player/separate/walk/char1_walk.png" id="1_pa5s4"]
+[ext_resource type="Texture2D" uid="uid://bd1qtk5qnfk6w" path="res://assets/sprites/player/separate/walk/hair/bob_walk.png" id="2_bubkq"]
+
+[sub_resource type="GDScript" id="GDScript_pa5s4"]
+script/source = "extends CharacterBody2D
+
+@export var speed: float = 200.0
+
+func _physics_process(delta: float) -> void:
+	var input_direction: Vector2 = Input.get_vector(\"left\", \"right\", \"up\", \"down\")
+	velocity = input_direction * speed
+	move_and_slide()
+"
+
+[node name="PlayerTeste" type="CharacterBody2D" unique_id=582002198]
+script = SubResource("GDScript_pa5s4")
+
+[node name="Body" type="Sprite2D" parent="." unique_id=1404056188]
+texture = ExtResource("1_pa5s4")
+hframes = 8
+vframes = 4
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=760777370]
+
+[node name="Har" type="Sprite2D" parent="." unique_id=520446816]
+texture = ExtResource("2_bubkq")
+hframes = 112
+vframes = 4
