@@ -2483,6 +2483,7 @@ graph_offset = Vector2(94.92335, 0)
 [node name="Player" type="CharacterBody2D" unique_id=1414943563]
 z_index = 100
 y_sort_enabled = true
+collision_mask = 7
 script = ExtResource("1_4kuee")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=662564160]
@@ -2533,6 +2534,7 @@ tilled_dirt_atlas_coords = Vector2i(10, 9)
 
 [node name="GridAnchor" type="Marker2D" parent="." unique_id=1479553450]
 y_sort_enabled = true
+position = Vector2(0, -10)
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=1362907515]
 offset_left = -10.0

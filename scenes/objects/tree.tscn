@@ -403,7 +403,7 @@ _data = {
 }
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_5qchx"]
-size = Vector2(9, 5.5)
+size = Vector2(9, 9.75)
 
 [node name="Tree" type="StaticBody2D" unique_id=916859041]
 z_index = 1
@@ -412,6 +412,7 @@ script = ExtResource("1_5qchx")
 wood_scene = ExtResource("2_eogu4")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=70832517]
+y_sort_enabled = true
 position = Vector2(0, -13)
 texture = ExtResource("1_r6wkp")
 hframes = 4
@@ -419,22 +420,20 @@ vframes = 8
 region_rect = Rect2(0, 0, 31.413063, 29.22102)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1544518977]
-visible = false
 y_sort_enabled = true
-position = Vector2(0, -1)
+position = Vector2(0, -4)
 shape = SubResource("RectangleShape2D_r6wkp")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1253008845]
 libraries/ = SubResource("AnimationLibrary_eogu4")
 
 [node name="Area2D" type="Area2D" parent="." unique_id=260621795]
-position = Vector2(0, 16)
+position = Vector2(0, -8)
 collision_layer = 7
 collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=2027807149]
-visible = false
 z_index = 1
 y_sort_enabled = true
-position = Vector2(0, -15)
+position = Vector2(0, 4.125)
 shape = SubResource("RectangleShape2D_5qchx")

@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://bqf7gynjbvyqi" path="res://scripts/farmhouse.gd" id="1_lh3cv"]
 [ext_resource type="Texture2D" uid="uid://cujj52colc2w3" path="res://assets/tiles/farm/buildings.png" id="2_8u8rn"]
+[ext_resource type="PackedScene" uid="uid://b60dxqtucsl50" path="res://scenes/levels/house_interior/house_interior.tscn" id="2_rnfsq"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rnfsq"]
 size = Vector2(60, 23)
@@ -58,10 +59,10 @@ tracks/0/path = NodePath("DoorSprite:region_enabled")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.1, 0.19984019),
-"transitions": PackedFloat32Array(1, 1, 1),
+"times": PackedFloat32Array(0, 0.099920094, 0.1, 0.10269565, 0.19984019),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
 "update": 1,
-"values": [true, true, true]
+"values": [true, true, true, true, true]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -70,10 +71,10 @@ tracks/1/path = NodePath("DoorSprite:region_rect")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.1, 0.19984019),
-"transitions": PackedFloat32Array(1, 1, 1),
+"times": PackedFloat32Array(0, 0.099920094, 0.1, 0.10269565, 0.19984019),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
 "update": 1,
-"values": [Rect2(627.7669, 510.1883, 11.9800415, 17.970032), Rect2(644.0638, 509.94296, 12.040527, 18.155365), Rect2(659.4883, 508.7465, 12.792236, 19.594452)]
+"values": [Rect2(499.68976, 509.99783, 12.426636, 18.47647), Rect2(515.74677, 509.8582, 12.41803, 18.291412), Rect2(644.0638, 509.94296, 12.040527, 18.155365), Rect2(515.5865, 509.26962, 12.530334, 18.795502), Rect2(659.4883, 508.7465, 12.792236, 19.594452)]
 }
 tracks/2/type = "value"
 tracks/2/imported = false
@@ -99,6 +100,7 @@ z_index = 1
 y_sort_enabled = true
 collision_layer = 5
 script = ExtResource("1_lh3cv")
+interior_scene = ExtResource("2_rnfsq")
 
 [node name="House" type="Sprite2D" parent="." unique_id=1060135433]
 position = Vector2(0, -10)
@@ -115,6 +117,7 @@ region_enabled = true
 region_rect = Rect2(79.71878, 453.86328, 78.160355, 54.75757)
 
 [node name="HouseColision" type="CollisionShape2D" parent="." unique_id=1008806724]
+z_index = 1
 position = Vector2(0, -12.5)
 shape = SubResource("RectangleShape2D_rnfsq")
 
@@ -122,6 +125,7 @@ shape = SubResource("RectangleShape2D_rnfsq")
 visible = false
 z_index = 7
 y_sort_enabled = true
+collision_layer = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DoorArea" unique_id=590547132]
 light_mask = 7
