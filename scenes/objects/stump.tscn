@@ -11,24 +11,25 @@ size = Vector2(8, 10)
 size = Vector2(10, 10)
 
 [node name="Stump" type="StaticBody2D" unique_id=1938617713]
+z_index = 1
+y_sort_enabled = true
 script = ExtResource("1_53udi")
 wood_scene = ExtResource("2_uobp2")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1850022459]
-z_index = 1
-position = Vector2(0, -2)
+position = Vector2(0, -3)
 texture = ExtResource("1_wi2ep")
 region_enabled = true
 region_rect = Rect2(528.96075, 390.24084, 14.0979, 9.742432)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=248238517]
-position = Vector2(0, -1)
+position = Vector2(0, -3)
 shape = SubResource("RectangleShape2D_uobp2")
 
 [node name="Area2D" type="Area2D" parent="." unique_id=119023481]
-position = Vector2(0, 11)
+position = Vector2(0, -4)
 collision_layer = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=1960927816]
-position = Vector2(0, -12)
+position = Vector2(0, 1)
 shape = SubResource("RectangleShape2D_2cu8u")

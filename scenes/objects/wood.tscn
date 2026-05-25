@@ -3,11 +3,11 @@
 [ext_resource type="Texture2D" uid="uid://bcy4eb17hixcm" path="res://assets/sprites/ui/items.png" id="1_8ljhs"]
 
 [node name="Wood" type="Area2D" unique_id=349830655]
+z_index = 1
+y_sort_enabled = true
 scale = Vector2(0.4, 0.4)
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=63569296]
-z_index = 1
-y_sort_enabled = true
 position = Vector2(1.9073486e-06, -7.500004)
 texture = ExtResource("1_8ljhs")
 region_enabled = true
