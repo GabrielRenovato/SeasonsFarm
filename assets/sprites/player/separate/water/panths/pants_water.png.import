@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://4nic7fs6igyf"
-path="res://.godot/imported/pants_carry.png-b39b86a8e66f89fb264ddb33d2c673cc.ctex"
+uid="uid://da2xl2euwvk6c"
+path="res://.godot/imported/pants_water.png-8110abf855fd662d0fb0848768c331da.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/player/separate/carry/clothes/pants_carry.png"
-dest_files=["res://.godot/imported/pants_carry.png-b39b86a8e66f89fb264ddb33d2c673cc.ctex"]
+source_file="res://assets/sprites/player/separate/water/panths/pants_water.png"
+dest_files=["res://.godot/imported/pants_water.png-8110abf855fd662d0fb0848768c331da.ctex"]
 
 [params]
 
