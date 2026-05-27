@@ -113,3 +113,12 @@ func _update_lantern_energy(_delta: float) -> void:
 	
 	# Smoothly interpolate energy to feel organic
 	lantern.energy = lerp(lantern.energy, target_energy, 0.1)
+
+func _unhandled_input(event: InputEvent) -> void:
+	# Pressione 'C' para abrir o menu de personalização
+	if event is InputEventKey and event.pressed and event.keycode == KEY_C:
+		var cust_scene = load("res://ui/customization_menu/character_customization.tscn")
+		if cust_scene:
+			var cust_instance = cust_scene.instantiate()
+			add_child(cust_instance)
+			get_viewport().set_input_as_handled()
