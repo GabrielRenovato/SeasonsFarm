@@ -44,6 +44,28 @@ func _physics_process(_delta: float) -> void:
 		movement_component.stop_movement()
 	else:
 		movement_component.handle_movement()
+		
+	_handle_dust_particles()
+
+func _handle_dust_particles() -> void:
+	var dust_particles = get_node_or_null("FloorEffects/DustParticles") as CPUParticles2D
+	if not dust_particles:
+		return
+		
+	if velocity.length() == 0:
+		dust_particles.emitting = false
+		return
+		
+	var current_scene = get_tree().current_scene
+	var grass_layer = current_scene.get_node_or_null("Grass_layer") as TileMapLayer
+	
+	var is_on_dirt = true
+	if grass_layer:
+		var cell_pos = grass_layer.local_to_map(grass_layer.to_local(global_position))
+		if grass_layer.get_cell_source_id(cell_pos) != -1:
+			is_on_dirt = false
+			
+	dust_particles.emitting = is_on_dirt
 
 func _update_lantern_energy(_delta: float) -> void:
 	if not lantern or not is_instance_valid(lantern):
