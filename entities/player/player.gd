@@ -17,7 +17,7 @@ func _ready() -> void:
 		tool_component.setup(inventory_data)
 		
 	# Instantiate HUD
-	var hud_scene = load("res://features/ui/hud.tscn")
+	var hud_scene = load("res://ui/hud/hud.tscn")
 	if hud_scene:
 		var hud_instance = hud_scene.instantiate()
 		add_child(hud_instance)

@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://dskqgijkm0dlx"]
 
-[ext_resource type="Script" uid="uid://bqf7gynjbvyqi" path="res://scripts/farmhouse.gd" id="1_lh3cv"]
+[ext_resource type="Script" uid="uid://bqf7gynjbvyqi" path="res://objects/buildings/farmhouse.gd" id="1_lh3cv"]
 [ext_resource type="Texture2D" uid="uid://cujj52colc2w3" path="res://assets/tiles/farm/buildings.png" id="2_8u8rn"]
-[ext_resource type="PackedScene" uid="uid://b60dxqtucsl50" path="res://scenes/levels/house_interior/house_interior.tscn" id="2_rnfsq"]
+[ext_resource type="PackedScene" uid="uid://b60dxqtucsl50" path="res://levels/house_interior/house_interior.tscn" id="2_rnfsq"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rnfsq"]
 size = Vector2(60, 23)

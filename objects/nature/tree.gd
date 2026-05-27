@@ -7,7 +7,7 @@ extends StaticBody2D
 @export var fall_left_anim: String = "falling_tree_inverted"
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
 
-const STUMP_SCENE = preload("res://scenes/objects/stump.tscn")
+const STUMP_SCENE = preload("res://objects/nature/stump.tscn")
 
 var chosen_fall_anim: String = ""
 var spawn_direction: float = 1.0

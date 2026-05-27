@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://cslotui123"]
 
-[ext_resource type="Script" uid="uid://dfas4lhuceinq" path="res://features/inventory/ui/slot_ui.gd" id="1_slotui"]
+[ext_resource type="Script" uid="uid://dfas4lhuceinq" path="res://systems/inventory/ui/slot_ui.gd" id="1_slotui"]
 [ext_resource type="Texture2D" uid="uid://chh3m2hxacfjb" path="res://assets/sprites/player/separate/axe/tool/axe.png" id="2_ujfas"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bg"]

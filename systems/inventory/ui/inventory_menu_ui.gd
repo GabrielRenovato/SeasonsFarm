@@ -19,7 +19,7 @@ class_name InventoryMenuUI
 @onready var fallback_content: CenterContainer = %FallbackContent
 @onready var fallback_label: Label = %FallbackLabel
 
-const SLOT_UI_SCENE = preload("res://features/inventory/ui/slot_ui.tscn")
+const SLOT_UI_SCENE = preload("res://systems/inventory/ui/slot_ui.tscn")
 
 var inventory_data: InventoryData
 var active_style: StyleBox

@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://cwawdpfdm21s3"]
 
-[ext_resource type="Script" uid="uid://4oh64adcefe" path="res://scripts/stump.gd" id="1_53udi"]
+[ext_resource type="Script" uid="uid://4oh64adcefe" path="res://objects/nature/stump.gd" id="1_53udi"]
 [ext_resource type="Texture2D" uid="uid://da0elrtfxoby6" path="res://assets/tiles/farm/tiles.png" id="1_wi2ep"]
-[ext_resource type="PackedScene" uid="uid://c41yftrv5xj4c" path="res://scenes/objects/wood.tscn" id="2_uobp2"]
+[ext_resource type="PackedScene" uid="uid://c41yftrv5xj4c" path="res://objects/nature/wood.tscn" id="2_uobp2"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_uobp2"]
 size = Vector2(8, 10)

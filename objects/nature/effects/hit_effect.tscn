@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3]
 
-[ext_resource type="Script" path="res://scripts/hit_effect.gd" id="1_hx2k3"]
+[ext_resource type="Script" path="res://objects/nature/effects/hit_effect.gd" id="1_hx2k3"]
 
 [node name="HitEffect" type="CPUParticles2D"]
 emitting = false

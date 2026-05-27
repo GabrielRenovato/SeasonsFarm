@@ -1,8 +1,8 @@
 [gd_scene load_steps=5 format=3 uid="uid://dsu8fy0n23kjp"]
 
-[ext_resource type="Script" path="res://features/ui/hud.gd" id="1_hud"]
-[ext_resource type="PackedScene" uid="uid://chotbarui123" path="res://features/inventory/ui/hotbar_ui.tscn" id="2_hotbar"]
-[ext_resource type="PackedScene" uid="uid://cinventorymenuui123" path="res://features/inventory/ui/inventory_menu_ui.tscn" id="3_invmenu"]
+[ext_resource type="Script" path="res://ui/hud/hud.gd" id="1_hud"]
+[ext_resource type="PackedScene" uid="uid://chotbarui123" path="res://systems/inventory/ui/hotbar_ui.tscn" id="2_hotbar"]
+[ext_resource type="PackedScene" uid="uid://cinventorymenuui123" path="res://systems/inventory/ui/inventory_menu_ui.tscn" id="3_invmenu"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hud"]
 bg_color = Color(0.1, 0.1, 0.1, 0.6)

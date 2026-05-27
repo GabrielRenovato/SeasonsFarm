@@ -1,11 +1,11 @@
 [gd_scene format=3 uid="uid://dtm3gi5e5socn"]
 
-[ext_resource type="Script" uid="uid://ct5ahm33ihbw1" path="res://scripts/player.gd" id="1_4kuee"]
+[ext_resource type="Script" uid="uid://ct5ahm33ihbw1" path="res://entities/player/player.gd" id="1_4kuee"]
 [ext_resource type="Texture2D" uid="uid://b7av87s82jddj" path="res://assets/sprites/player/separate/walk/char1_walk.png" id="2_ov1oi"]
 [ext_resource type="Texture2D" uid="uid://bd1qtk5qnfk6w" path="res://assets/sprites/player/separate/walk/hair/bob_walk.png" id="3_20koh"]
 [ext_resource type="Texture2D" uid="uid://d4jlo3t5k3r4q" path="res://assets/sprites/player/separate/pickaxe/tool/pickaxe_wood.png" id="5_20koh"]
 [ext_resource type="Texture2D" uid="uid://c4may5hox2dc6" path="res://assets/sprites/player/separate/walk/clothes/basic_walk.png" id="5_ejd4k"]
-[ext_resource type="Script" uid="uid://bljtp8a13beeo" path="res://scripts/movement_component.gd.gd" id="5_tpg5x"]
+[ext_resource type="Script" uid="uid://bljtp8a13beeo" path="res://entities/player/movement_component.gd" id="5_tpg5x"]
 [ext_resource type="Texture2D" uid="uid://cykqrcydn2svr" path="res://assets/sprites/player/separate/axe/clothes/basic_axe.png" id="6_2xrq6"]
 [ext_resource type="Texture2D" uid="uid://clqh66lfihgk2" path="res://assets/sprites/player/separate/axe/hair/bob_axe.png" id="6_180ig"]
 [ext_resource type="Texture2D" uid="uid://cgemxqhdwavtb" path="res://assets/sprites/player/separate/walk/panths/pants_walk.png" id="6_kswpp"]
@@ -13,7 +13,7 @@
 [ext_resource type="Texture2D" uid="uid://bpimp3vxt8aao" path="res://assets/sprites/player/separate/axe/without/char1_axe_without.png" id="6_ov1oi"]
 [ext_resource type="Texture2D" uid="uid://dukkacqme0wy8" path="res://assets/sprites/player/separate/axe/clothes/overall_axe.png" id="7_eac1a"]
 [ext_resource type="Texture2D" uid="uid://bvwad30ucpm5s" path="res://assets/sprites/player/separate/water/tool/wateringcan_red.png" id="7_geaob"]
-[ext_resource type="Script" uid="uid://bcd4qim3vvao1" path="res://scripts/tool_component.gd.gd" id="7_npwbq"]
+[ext_resource type="Script" uid="uid://bcd4qim3vvao1" path="res://entities/player/tool_component.gd" id="7_npwbq"]
 [ext_resource type="Texture2D" uid="uid://xg5lyllg13ml" path="res://assets/sprites/player/separate/pickaxe/hair/bob_pickaxe.png" id="8_7oing"]
 [ext_resource type="Texture2D" uid="uid://clev7wqfy6ue8" path="res://assets/sprites/player/separate/hoe/without/char1_hoe_without.png" id="8_ov1oi"]
 [ext_resource type="Texture2D" uid="uid://bfwr2r0085umv" path="res://assets/sprites/player/separate/axe/tool/axe_wood.png" id="8_rn7t0"]
@@ -37,7 +37,7 @@
 [ext_resource type="Texture2D" uid="uid://da2xl2euwvk6c" path="res://assets/sprites/player/separate/water/panths/pants_water.png" id="29_ye1dr"]
 [ext_resource type="Texture2D" uid="uid://dcisgd2sdlmq1" path="res://assets/sprites/player/separate/water/hair/bob_water.png" id="30_bvphr"]
 [ext_resource type="Texture2D" uid="uid://ck78l6i8pjgso" path="res://assets/sprites/player/separate/water/tool/wateringcan_purple.png" id="36_eac1a"]
-[ext_resource type="Script" uid="uid://b4jy0k4fkodko" path="res://scripts/safe_sprite.gd" id="safe_sprite_script"]
+[ext_resource type="Script" uid="uid://b4jy0k4fkodko" path="res://core/utils/safe_sprite.gd" id="safe_sprite_script"]
 
 [sub_resource type="Gradient" id="Gradient_shadow"]
 colors = PackedColorArray(0, 0, 0, 0.35, 0, 0, 0, 0)

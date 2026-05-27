@@ -11,7 +11,7 @@ class_name ToolComponent
 @export var axe_reach: float = 14.0
 @export var axe_hit_radius: float = 8.0
 
-const HIT_EFFECT_SCENE = preload("res://scenes/effects/hit_effect.tscn")
+const HIT_EFFECT_SCENE = preload("res://objects/nature/effects/hit_effect.tscn")
 
 var dirt_layer: TileMapLayer
 var state_machine: AnimationNodeStateMachinePlayback

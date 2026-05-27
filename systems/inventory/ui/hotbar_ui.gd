@@ -3,7 +3,7 @@ class_name HotbarUI
 
 @onready var slots_container: HBoxContainer = $MarginContainer/HBoxContainer
 
-const SLOT_UI_SCENE = preload("res://features/inventory/ui/slot_ui.tscn")
+const SLOT_UI_SCENE = preload("res://systems/inventory/ui/slot_ui.tscn")
 
 var inventory_data: InventoryData
 

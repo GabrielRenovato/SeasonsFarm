@@ -1,6 +1,6 @@
 [gd_scene load_steps=8 format=3 uid="uid://cinventorymenuui123"]
 
-[ext_resource type="Script" path="res://features/inventory/ui/inventory_menu_ui.gd" id="1_invmenu"]
+[ext_resource type="Script" path="res://systems/inventory/ui/inventory_menu_ui.gd" id="1_invmenu"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_menu_bg"]
 bg_color = Color(0.15, 0.15, 0.15, 0.96)
