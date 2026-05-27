@@ -5,6 +5,7 @@ class_name ToolComponent
 @export var actor: CharacterBody2D
 @export var grid_anchor: Marker2D
 @export var debug_rect: ColorRect
+@export var tool_area: Area2D
 @export var tilled_dirt_source_id: int = 0
 @export var tilled_dirt_atlas_coords: Vector2i = Vector2i(0, 0)
 
@@ -26,6 +27,9 @@ func _ready() -> void:
 	
 	animation_tree.active = true
 	state_machine.start("Idle")
+	
+	if tool_area != null:
+		tool_area.area_entered.connect(_on_tool_area_entered)
 
 func _update_strict_direction(direction: Vector2) -> void:
 	if direction != Vector2.ZERO:
@@ -79,8 +83,19 @@ func _execute_tool_action() -> void:
 	
 	if current_tool == "Hoe" and dirt_layer != null:
 		dirt_layer.set_cell(target_map_position, tilled_dirt_source_id, tilled_dirt_atlas_coords)
-	elif current_tool == "Axe" or current_tool == "Mining":
-		_check_for_interactables(target_map_position)
+
+func _on_tool_area_entered(area: Area2D) -> void:
+	if not is_using_tool:
+		return
+		
+	if current_tool == "Axe" or current_tool == "Mining":
+		var target_node = area
+		if area.get_parent() != null:
+			target_node = area.get_parent()
+			
+		if target_node.has_method("take_damage"):
+			target_node.call_deferred("take_damage", 1, actor.global_position, current_tool)
+			_flash_debug_rect(Color.GREEN)
 
 func _check_for_interactables(map_pos: Vector2i) -> void:
 	var world_pos = dirt_layer.map_to_local(map_pos)

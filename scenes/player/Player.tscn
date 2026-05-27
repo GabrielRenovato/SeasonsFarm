@@ -37,6 +37,7 @@
 [ext_resource type="Texture2D" uid="uid://da2xl2euwvk6c" path="res://assets/sprites/player/separate/water/panths/pants_water.png" id="29_ye1dr"]
 [ext_resource type="Texture2D" uid="uid://dcisgd2sdlmq1" path="res://assets/sprites/player/separate/water/hair/bob_water.png" id="30_bvphr"]
 [ext_resource type="Texture2D" uid="uid://ck78l6i8pjgso" path="res://assets/sprites/player/separate/water/tool/wateringcan_purple.png" id="36_eac1a"]
+[ext_resource type="Script" uid="uid://b4jy0k4fkodko" path="res://scripts/safe_sprite.gd" id="safe_sprite_script"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_npwbq"]
 size = Vector2(8, 8)
@@ -813,7 +814,7 @@ tracks/29/keys = {
 "times": PackedFloat32Array(0, 0.06835519, 0.26858145),
 "transitions": PackedFloat32Array(1, 1, 1),
 "update": 1,
-"values": [Vector2(0, 11), Vector2(0, -1), Vector2(0, 13)]
+"values": [Vector2(0, 11), Vector2(0, -1), Vector2(0, 28)]
 }
 
 [sub_resource type="Animation" id="Animation_x3qp0"]
@@ -1143,6 +1144,30 @@ tracks/26/keys = {
 "update": 1,
 "values": [150, 151, 152, 153, 154]
 }
+tracks/27/type = "value"
+tracks/27/imported = false
+tracks/27/enabled = true
+tracks/27/path = NodePath("Tool/Area2D/CollisionShape2D:disabled")
+tracks/27/interp = 1
+tracks/27/loop_wrap = true
+tracks/27/keys = {
+"times": PackedFloat32Array(0, 0.28),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+tracks/28/type = "value"
+tracks/28/imported = false
+tracks/28/enabled = true
+tracks/28/path = NodePath("Tool/Area2D:position")
+tracks/28/interp = 1
+tracks/28/loop_wrap = true
+tracks/28/keys = {
+"times": PackedFloat32Array(0, 0.28),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [Vector2(-10, 4), Vector2(-16, 11)]
+}
 
 [sub_resource type="Animation" id="Animation_76i7i"]
 resource_name = "axe_right"
@@ -1471,6 +1496,30 @@ tracks/26/keys = {
 "update": 1,
 "values": [100, 101, 102, 103, 104]
 }
+tracks/27/type = "value"
+tracks/27/imported = false
+tracks/27/enabled = true
+tracks/27/path = NodePath("Tool/Area2D:position")
+tracks/27/interp = 1
+tracks/27/loop_wrap = true
+tracks/27/keys = {
+"times": PackedFloat32Array(0, 0.28),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [Vector2(0, 11), Vector2(16, 11)]
+}
+tracks/28/type = "value"
+tracks/28/imported = false
+tracks/28/enabled = true
+tracks/28/path = NodePath("Tool/Area2D/CollisionShape2D:disabled")
+tracks/28/interp = 1
+tracks/28/loop_wrap = true
+tracks/28/keys = {
+"times": PackedFloat32Array(0, 0.28),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
 
 [sub_resource type="Animation" id="Animation_mndc6"]
 resource_name = "axe_up"
@@ -1772,7 +1821,7 @@ tracks/24/loop_wrap = true
 tracks/24/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
-"update": 0,
+"update": 1,
 "values": [Vector2(0, -16)]
 }
 tracks/25/type = "value"
@@ -1798,6 +1847,30 @@ tracks/26/keys = {
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1),
 "update": 1,
 "values": [50, 51, 52, 53, 54]
+}
+tracks/27/type = "value"
+tracks/27/imported = false
+tracks/27/enabled = true
+tracks/27/path = NodePath("Tool/Area2D:position")
+tracks/27/interp = 1
+tracks/27/loop_wrap = true
+tracks/27/keys = {
+"times": PackedFloat32Array(0, 0.2710011),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [Vector2(0, 11), Vector2(0, -8)]
+}
+tracks/28/type = "value"
+tracks/28/imported = false
+tracks/28/enabled = true
+tracks/28/path = NodePath("Tool/Area2D/CollisionShape2D:disabled")
+tracks/28/interp = 1
+tracks/28/loop_wrap = true
+tracks/28/keys = {
+"times": PackedFloat32Array(0, 0.2710011),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
 }
 
 [sub_resource type="Animation" id="Animation_5ttev"]
@@ -10443,12 +10516,14 @@ position = Vector2(0, -16)
 texture = ExtResource("2_ov1oi")
 hframes = 8
 vframes = 4
+script = ExtResource("safe_sprite_script")
 
 [node name="har" type="Sprite2D" parent="." unique_id=866368551]
 position = Vector2(0, -16)
 texture = ExtResource("3_20koh")
 hframes = 112
 vframes = 4
+script = ExtResource("safe_sprite_script")
 
 [node name="MovementComponent" type="Node2D" parent="." unique_id=2050135645 node_paths=PackedStringArray("actor", "animation_tree")]
 position = Vector2(0, -16)
@@ -10462,6 +10537,7 @@ libraries/ = SubResource("AnimationLibrary_p1lr0")
 
 [node name="AnimationTree" type="AnimationTree" parent="." unique_id=2070598990]
 tree_root = SubResource("AnimationNodeStateMachine_7oing")
+anim_player = NodePath("../AnimationPlayer")
 parameters/Axe/blend_position = Vector2(0, 0)
 parameters/Cary/blend_position = Vector2(0, 0)
 parameters/Hoe/blend_position = Vector2(0, 0)
@@ -10470,7 +10546,7 @@ parameters/Mining/blend_position = Vector2(0, 0)
 parameters/Walk/blend_position = Vector2(-0.00386101, 0.24170613)
 parameters/Water/blend_position = Vector2(0, 0)
 
-[node name="ToolComponent" type="Node2D" parent="." unique_id=580386467 node_paths=PackedStringArray("animation_tree", "actor", "grid_anchor", "debug_rect")]
+[node name="ToolComponent" type="Node2D" parent="." unique_id=580386467 node_paths=PackedStringArray("animation_tree", "actor", "grid_anchor", "debug_rect", "tool_area")]
 y_sort_enabled = true
 position = Vector2(0, -16)
 script = ExtResource("7_npwbq")
@@ -10478,6 +10554,7 @@ animation_tree = NodePath("../AnimationTree")
 actor = NodePath("..")
 grid_anchor = NodePath("../GridAnchor")
 debug_rect = NodePath("../ColorRect")
+tool_area = NodePath("../Tool/Area2D")
 tilled_dirt_atlas_coords = Vector2i(10, 9)
 
 [node name="GridAnchor" type="Marker2D" parent="." unique_id=1479553450]
@@ -10501,6 +10578,7 @@ z_index = 2
 position = Vector2(0, -16)
 hframes = 5
 vframes = 4
+script = ExtResource("safe_sprite_script")
 
 [node name="Area2D" type="Area2D" parent="Tool" unique_id=1186050250]
 position = Vector2(0, 11)
@@ -10514,6 +10592,7 @@ position = Vector2(0, -16)
 texture = ExtResource("5_ejd4k")
 hframes = 80
 vframes = 4
+script = ExtResource("safe_sprite_script")
 
 [node name="Lags" type="Sprite2D" parent="." unique_id=384411421]
 z_index = 1
@@ -10521,3 +10600,4 @@ position = Vector2(0, -16)
 texture = ExtResource("6_kswpp")
 hframes = 80
 vframes = 4
+script = ExtResource("safe_sprite_script")
