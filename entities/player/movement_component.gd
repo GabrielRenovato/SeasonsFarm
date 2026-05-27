@@ -12,14 +12,15 @@ var last_direction: Vector2 = Vector2.DOWN
 func _ready() -> void:
 	animation_tree.active = true
 	state_machine = animation_tree.get("parameters/playback")
+	if tool_component == null and actor != null:
+		tool_component = actor.get_node_or_null("ToolComponent") as ToolComponent
 	_update_blend_positions()
 
 func _update_blend_positions() -> void:
 	animation_tree.set("parameters/Idle/blend_position", last_direction)
 	animation_tree.set("parameters/Walk/blend_position", last_direction)
-	if tool_component and tool_component.is_carrying:
-		animation_tree.set("parameters/Cary/blend_position", last_direction)
-		animation_tree.set("parameters/CaryIdle/blend_position", last_direction)
+	if tool_component:
+		tool_component._update_strict_direction(last_direction)
 
 func stop_movement() -> void:
 	actor.velocity = Vector2.ZERO
