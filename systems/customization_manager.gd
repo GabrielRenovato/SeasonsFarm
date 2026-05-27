@@ -4,7 +4,7 @@ signal customization_changed
 
 # These should match the prefixes in your asset folder (e.g. "bob_walk.png")
 var available_hairstyles = ["bob", "spiky", "long"]
-var available_clothes = ["basic", "overalls"]
+var available_clothes = ["basic", "overall"]
 var available_bodies = ["light", "dark"]
 
 var current_hair: String = "bob"

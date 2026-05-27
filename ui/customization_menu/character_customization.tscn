@@ -26,6 +26,28 @@ layout_mode = 2
 text = "Personalizar Personagem"
 horizontal_alignment = 1
 
+[node name="PreviewArea" type="Control" parent="CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+
+[node name="BodyPreview" type="Sprite2D" parent="CenterContainer/VBoxContainer/PreviewArea"]
+position = Vector2(32, 32)
+scale = Vector2(3, 3)
+hframes = 8
+vframes = 4
+
+[node name="LagsPreview" type="Sprite2D" parent="CenterContainer/VBoxContainer/PreviewArea/BodyPreview"]
+hframes = 8
+vframes = 4
+
+[node name="ClothePreview" type="Sprite2D" parent="CenterContainer/VBoxContainer/PreviewArea/BodyPreview"]
+hframes = 8
+vframes = 4
+
+[node name="HairPreview" type="Sprite2D" parent="CenterContainer/VBoxContainer/PreviewArea/BodyPreview"]
+hframes = 8
+vframes = 4
+
 [node name="HairHBox" type="HBoxContainer" parent="CenterContainer/VBoxContainer"]
 layout_mode = 2
 alignment = 1
@@ -35,6 +57,7 @@ layout_mode = 2
 text = " < "
 
 [node name="HairLabel" type="Label" parent="CenterContainer/VBoxContainer/HairHBox"]
+custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 text = " Cabelo: Bob "
 horizontal_alignment = 1
@@ -52,6 +75,7 @@ layout_mode = 2
 text = " < "
 
 [node name="ClothesLabel" type="Label" parent="CenterContainer/VBoxContainer/ClothesHBox"]
+custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 text = " Roupa: Basic "
 horizontal_alignment = 1
