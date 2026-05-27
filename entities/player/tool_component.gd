@@ -69,6 +69,27 @@ func _update_strict_direction(direction: Vector2) -> void:
 	if is_carrying:
 		animation_tree.set("parameters/Cary/blend_position", strict_direction)
 		animation_tree.set("parameters/CaryIdle/blend_position", strict_direction)
+		_update_carry_sprite_position()
+
+func _update_carry_sprite_position() -> void:
+	if _carry_sprite == null or not is_carrying:
+		return
+	
+	if strict_direction == Vector2.UP:
+		_carry_sprite.position = Vector2(0, -18)
+		_carry_sprite.z_index = -1
+	elif strict_direction == Vector2.DOWN:
+		_carry_sprite.position = Vector2(0, -14)
+		_carry_sprite.z_index = 1
+	elif strict_direction == Vector2.LEFT:
+		_carry_sprite.position = Vector2(-5, -15)
+		_carry_sprite.z_index = 1
+	elif strict_direction == Vector2.RIGHT:
+		_carry_sprite.position = Vector2(5, -15)
+		_carry_sprite.z_index = 1
+	else:
+		_carry_sprite.position = Vector2(0, -14)
+		_carry_sprite.z_index = 1
 
 func update_target_preview(direction: Vector2) -> void:
 	_update_strict_direction(direction)
@@ -149,7 +170,7 @@ func _show_carry_sprite(item: ItemData) -> void:
 	_carry_sprite.vframes = 1
 	_carry_sprite.frame = 0
 	_carry_sprite.scale = Vector2(0.5, 0.5)
-	_carry_sprite.position = Vector2(0, -16)
+	_update_carry_sprite_position()
 	_carry_sprite.visible = true
 
 func _hide_carry_sprite() -> void:
