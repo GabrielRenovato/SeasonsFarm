@@ -23,9 +23,10 @@ var _pending_hit_direction: Vector2 = Vector2.ZERO
 var is_carrying: bool = false
 var _carry_item: ItemData
 var _carry_sprite: Sprite2D
+var _bobbing_time: float = 0.0
 
-func setup(p_inventory_data: InventoryData) -> void:
-	inventory_data = p_inventory_data
+func setup(new_inventory_data: InventoryData) -> void:
+	inventory_data = new_inventory_data
 	inventory_data.active_slot_changed.connect(_on_slot_changed)
 
 func get_current_tool() -> String:
@@ -35,7 +36,6 @@ func get_current_tool() -> String:
 			return item.tool_type
 	return ""
 
-
 func _ready() -> void:
 	state_machine = animation_tree.get("parameters/playback")
 	animation_tree.animation_finished.connect(_on_animation_finished)
@@ -44,21 +44,30 @@ func _ready() -> void:
 	if debug_rect != null:
 		debug_rect.set_as_top_level(true)
 	
-	var anim_player = actor.get_node_or_null("AnimationPlayer") as AnimationPlayer
-	if anim_player:
-		for dir in ["down", "right", "up", "left"]:
-			var anim_name = "carry_" + dir
-			if anim_player.has_animation(anim_name):
-				var anim = anim_player.get_animation(anim_name)
-				anim.loop_mode = Animation.LOOP_LINEAR
+	var animation_player = actor.get_node_or_null("AnimationPlayer") as AnimationPlayer
+	if animation_player:
+		for direction_name in ["down", "right", "up", "left"]:
+			var animation_name = "carry_" + direction_name
+			if animation_player.has_animation(animation_name):
+				var animation_reference = animation_player.get_animation(animation_name)
+				animation_reference.loop_mode = Animation.LOOP_LINEAR
 	
 	animation_tree.active = true
-	state_machine.start("Idle")
+	state_machine.travel("Idle")
 	
 	_carry_sprite = Sprite2D.new()
 	_carry_sprite.name = "CarrySprite"
 	_carry_sprite.visible = false
 	actor.call_deferred("add_child", _carry_sprite)
+
+func _process(delta: float) -> void:
+	if is_carrying and _carry_sprite != null:
+		if actor.velocity.length() > 0.0:
+			_bobbing_time += delta * 15.0
+			_update_carry_sprite_position()
+		elif _bobbing_time != 0.0:
+			_bobbing_time = 0.0
+			_update_carry_sprite_position()
 
 func _update_strict_direction(direction: Vector2) -> void:
 	if direction != Vector2.ZERO:
@@ -74,21 +83,25 @@ func _update_strict_direction(direction: Vector2) -> void:
 func _update_carry_sprite_position() -> void:
 	if _carry_sprite == null or not is_carrying:
 		return
+		
+	var bobbing_offset: float = 0.0
+	if actor.velocity.length() > 0.0:
+		bobbing_offset = round(sin(_bobbing_time) * 2.0)
 	
 	if strict_direction == Vector2.UP:
-		_carry_sprite.position = Vector2(0, -18)
+		_carry_sprite.position = Vector2(0.0, -24.0 + bobbing_offset)
 		_carry_sprite.z_index = -1
 	elif strict_direction == Vector2.DOWN:
-		_carry_sprite.position = Vector2(0, -14)
+		_carry_sprite.position = Vector2(0.0, -20.0 + bobbing_offset)
 		_carry_sprite.z_index = 1
 	elif strict_direction == Vector2.LEFT:
-		_carry_sprite.position = Vector2(-5, -15)
+		_carry_sprite.position = Vector2(0.0, -21.0 + bobbing_offset)
 		_carry_sprite.z_index = 1
 	elif strict_direction == Vector2.RIGHT:
-		_carry_sprite.position = Vector2(5, -15)
+		_carry_sprite.position = Vector2(0.0, -21.0 + bobbing_offset)
 		_carry_sprite.z_index = 1
 	else:
-		_carry_sprite.position = Vector2(0, -14)
+		_carry_sprite.position = Vector2(0.0, -20.0 + bobbing_offset)
 		_carry_sprite.z_index = 1
 
 func update_target_preview(direction: Vector2) -> void:
@@ -110,10 +123,10 @@ func _unhandled_input(event: InputEvent) -> void:
 		
 	if event is InputEventMouseButton and event.pressed:
 		if event.button_index == MOUSE_BUTTON_WHEEL_UP:
-			var prev_slot = inventory_data.active_slot_index - 1
-			if prev_slot < 0:
-				prev_slot = 11
-			inventory_data.active_slot_index = prev_slot
+			var previous_slot = inventory_data.active_slot_index - 1
+			if previous_slot < 0:
+				previous_slot = 11
+			inventory_data.active_slot_index = previous_slot
 			get_viewport().set_input_as_handled()
 		elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
 			var next_slot = (inventory_data.active_slot_index + 1) % 12
@@ -124,21 +137,19 @@ func handle_tool_switch() -> void:
 	if not inventory_data or is_using_tool:
 		return
 		
-	# Cycle with switch_tool action (Z)
 	if Input.is_action_just_pressed("switch_tool"):
 		var next_slot = (inventory_data.active_slot_index + 1) % 12
 		inventory_data.active_slot_index = next_slot
 		return
 
-	# Support numbers 1 to 9, 0, -, = keys directly
-	for i in range(12):
-		var key = KEY_1 + i
-		if i == 9: key = KEY_0
-		elif i == 10: key = KEY_MINUS
-		elif i == 11: key = KEY_EQUAL
+	for iterator_index in range(12):
+		var key_code = KEY_1 + iterator_index
+		if iterator_index == 9: key_code = KEY_0
+		elif iterator_index == 10: key_code = KEY_MINUS
+		elif iterator_index == 11: key_code = KEY_EQUAL
 		
-		if Input.is_key_pressed(key):
-			inventory_data.active_slot_index = i
+		if Input.is_key_pressed(key_code):
+			inventory_data.active_slot_index = iterator_index
 			return
 
 func _on_slot_changed(_index: int) -> void:
@@ -153,11 +164,11 @@ func _on_slot_changed(_index: int) -> void:
 			_show_carry_sprite(item)
 			animation_tree.set("parameters/Cary/blend_position", strict_direction)
 			animation_tree.set("parameters/CaryIdle/blend_position", strict_direction)
-			state_machine.start("CaryIdle")
+			state_machine.travel("CaryIdle")
 		else:
 			_hide_carry_sprite()
 			_carry_item = null
-			state_machine.start("Idle")
+			state_machine.travel("Idle")
 	elif is_carrying and item != _carry_item:
 		_carry_item = item
 		_show_carry_sprite(item)
@@ -169,7 +180,7 @@ func _show_carry_sprite(item: ItemData) -> void:
 	_carry_sprite.hframes = 1
 	_carry_sprite.vframes = 1
 	_carry_sprite.frame = 0
-	_carry_sprite.scale = Vector2(0.5, 0.5)
+	_carry_sprite.scale = Vector2(0.8, 0.8)
 	_update_carry_sprite_position()
 	_carry_sprite.visible = true
 
@@ -184,36 +195,31 @@ func handle_tool_use(direction: Vector2) -> void:
 	if Input.is_action_just_pressed("use_tool") and not is_using_tool:
 		var target_map_position: Vector2i = _get_target_map_position()
 		
-		# 1. Tenta colheita primeiro se houver planta adulta
 		if FarmManager and FarmManager.farm_data.has(target_map_position):
 			var tile_data = FarmManager.farm_data[target_map_position]
 			if tile_data.crop_id != "":
 				var crop_node = tile_data.crop_node
 				if is_instance_valid(crop_node) and crop_node.has_method("is_fully_grown") and crop_node.is_fully_grown():
 					_harvest_crop_at(target_map_position)
-					return # Consome o input
+					return
 		
 		var tool_name = get_current_tool()
 		
-		# 2. Se for ferramenta equipada
 		if tool_name != "":
 			is_using_tool = true
 			_active_tool_in_use = tool_name
 			_pending_hit_direction = strict_direction
 			
 			animation_tree.set("parameters/" + tool_name + "/blend_position", strict_direction)
-			state_machine.start(tool_name)
+			state_machine.travel(tool_name)
 			
-			# Enxada (Hoe) age imediatamente
 			if tool_name == "Hoe":
 				if FarmManager:
 					FarmManager.till_soil(target_map_position)
-			# Regador (Water) age imediatamente
 			elif tool_name == "Water":
 				if FarmManager:
 					FarmManager.water_soil(target_map_position)
 		
-		# 3. Se for semente equipada, tenta plantar
 		else:
 			_attempt_planting()
 
@@ -227,27 +233,26 @@ func _get_target_map_position() -> Vector2i:
 	
 	return dirt_layer.local_to_map(dirt_layer.to_local(target_global_position))
 
-# Disparado no FIM da animação — o golpe registra quando o swing termina
 func _hit_objects_in_direction() -> void:
 	var space_state = actor.get_world_2d().direct_space_state
 	
 	var hit_origin: Vector2 = actor.global_position + _pending_hit_direction * axe_reach
 	
-	var shape = CircleShape2D.new()
-	shape.radius = axe_hit_radius
+	var shape_circle = CircleShape2D.new()
+	shape_circle.radius = axe_hit_radius
 	
-	var query = PhysicsShapeQueryParameters2D.new()
-	query.shape = shape
-	query.transform = Transform2D(0.0, hit_origin)
-	query.collide_with_areas = true
-	query.collide_with_bodies = false
-	query.exclude = [actor.get_rid()]
+	var physics_query = PhysicsShapeQueryParameters2D.new()
+	physics_query.shape = shape_circle
+	physics_query.transform = Transform2D(0.0, hit_origin)
+	physics_query.collide_with_areas = true
+	physics_query.collide_with_bodies = false
+	physics_query.exclude = [actor.get_rid()]
 	
-	var results = space_state.intersect_shape(query, 8)
+	var query_results = space_state.intersect_shape(physics_query, 8)
 	
 	var hit_something := false
-	for result in results:
-		var hit_object = result.collider
+	for collision_result in query_results:
+		var hit_object = collision_result.collider
 		var target_node = hit_object
 		
 		if hit_object is Area2D:
@@ -261,9 +266,9 @@ func _hit_objects_in_direction() -> void:
 			hit_something = true
 			
 			if _active_tool_in_use == "Axe" or _active_tool_in_use == "Mining":
-				var effect = HIT_EFFECT_SCENE.instantiate()
-				actor.get_parent().add_child(effect)
-				effect.global_position = hit_origin
+				var effect_instance = HIT_EFFECT_SCENE.instantiate()
+				actor.get_parent().add_child(effect_instance)
+				effect_instance.global_position = hit_origin
 				
 			break
 	
@@ -277,9 +282,8 @@ func _flash_debug_rect(flash_color: Color) -> void:
 	await get_tree().create_timer(0.1).timeout
 	debug_rect.color = original_color
 
-func _on_animation_finished(_anim_name: StringName) -> void:
+func _on_animation_finished(_animation_name: StringName) -> void:
 	if is_using_tool:
-		# Executa o golpe no FIM da animação, não no início
 		if _active_tool_in_use == "Axe" or _active_tool_in_use == "Mining":
 			_hit_objects_in_direction()
 		
@@ -287,9 +291,9 @@ func _on_animation_finished(_anim_name: StringName) -> void:
 		_active_tool_in_use = ""
 		if is_carrying:
 			_show_carry_sprite(_carry_item)
-			state_machine.start("CaryIdle")
+			state_machine.travel("CaryIdle")
 		else:
-			state_machine.start("Idle")
+			state_machine.travel("Idle")
 
 func _attempt_planting() -> void:
 	if not inventory_data:
@@ -308,37 +312,36 @@ func _attempt_planting() -> void:
 			if crop_scene:
 				var crop_instance = crop_scene.instantiate()
 				
-				# Adiciona como filho da raiz do mapa (irmão de dirt_layer) para Y-sort perfeito no mapa
 				dirt_layer.get_parent().add_child(crop_instance)
 				
 				var tile_local_center = dirt_layer.map_to_local(target_map_position)
 				crop_instance.global_position = dirt_layer.to_global(tile_local_center)
 				
-				var success = FarmManager.plant_seed(target_map_position, item.crop_type, crop_instance)
-				if success:
-					var slot = inventory_data.slots[inventory_data.active_slot_index]
-					slot.quantity -= 1
-					if slot.quantity <= 0:
-						slot.item = null
+				var success_plant = FarmManager.plant_seed(target_map_position, item.crop_type, crop_instance)
+				if success_plant:
+					var current_slot = inventory_data.slots[inventory_data.active_slot_index]
+					current_slot.quantity -= 1
+					if current_slot.quantity <= 0:
+						current_slot.item = null
 					inventory_data.inventory_updated.emit()
 
-func _harvest_crop_at(pos: Vector2i) -> void:
+func _harvest_crop_at(target_position: Vector2i) -> void:
 	if not FarmManager or not inventory_data:
 		return
 		
-	var crop_id = FarmManager.harvest_crop(pos)
-	if crop_id != "":
-		var item = ItemData.new()
-		item.id = crop_id
+	var crop_identifier = FarmManager.harvest_crop(target_position)
+	if crop_identifier != "":
+		var new_item = ItemData.new()
+		new_item.id = crop_identifier
 		
-		var items_sheet = load("res://assets/sprites/ui/items.png")
-		if crop_id == "tomato":
-			item.name = "Tomate"
-			item.icon_color = Color(1.0, 1.0, 1.0)
-			item.icon_texture = inventory_data._get_item_frame(items_sheet, 1)
-		elif crop_id == "turnip":
-			item.name = "Nabo"
-			item.icon_color = Color(1.0, 1.0, 1.0)
-			item.icon_texture = inventory_data._get_item_frame(items_sheet, 7)
+		var items_sprite_sheet = load("res://assets/sprites/ui/items.png")
+		if crop_identifier == "tomato":
+			new_item.name = "Tomate"
+			new_item.icon_color = Color(1.0, 1.0, 1.0)
+			new_item.icon_texture = inventory_data._get_item_frame(items_sprite_sheet, 1)
+		elif crop_identifier == "turnip":
+			new_item.name = "Nabo"
+			new_item.icon_color = Color(1.0, 1.0, 1.0)
+			new_item.icon_texture = inventory_data._get_item_frame(items_sprite_sheet, 7)
 			
-		inventory_data.add_item(item, 1)
+		inventory_data.add_item(new_item, 1)

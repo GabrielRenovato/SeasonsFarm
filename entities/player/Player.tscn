@@ -21,6 +21,7 @@
 [ext_resource type="Texture2D" uid="uid://cmu5uidyeph8v" path="res://assets/sprites/player/separate/hoe/clothes/basic_hoe.png" id="10_pi3ps"]
 [ext_resource type="Texture2D" uid="uid://05whh8y012xp" path="res://assets/sprites/player/separate/hoe/tool/hoe_wood.png" id="10_rn7t0"]
 [ext_resource type="Texture2D" uid="uid://1jp1dbxww7b" path="res://assets/sprites/player/separate/pickaxe/without/char1_pickaxe_without.png" id="11_8qjgm"]
+[ext_resource type="Texture2D" uid="uid://b3ouo7ue416t6" path="res://assets/sprites/player/separate/carry/char1_carry.png" id="12_x3qp0"]
 [ext_resource type="Texture2D" uid="uid://bf6pej72bboiu" path="res://assets/sprites/player/separate/carry/clothes/basic_carry.png" id="13_76i7i"]
 [ext_resource type="Texture2D" uid="uid://4nic7fs6igyf" path="res://assets/sprites/player/separate/carry/panths/pants_carry.png" id="14_mndc6"]
 [ext_resource type="Texture2D" uid="uid://ds02hccf58fb5" path="res://assets/sprites/player/separate/hoe/panths/pants_hoe.png" id="14_p1lr0"]
@@ -1908,7 +1909,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("2_ov1oi")]
+"values": [ExtResource("12_x3qp0")]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -2200,7 +2201,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("2_ov1oi")]
+"values": [ExtResource("12_x3qp0")]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -2492,7 +2493,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("2_ov1oi")]
+"values": [ExtResource("12_x3qp0")]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -2784,7 +2785,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("2_ov1oi")]
+"values": [ExtResource("12_x3qp0")]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -3076,7 +3077,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("2_ov1oi")]
+"values": [ExtResource("12_x3qp0")]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -3368,7 +3369,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("2_ov1oi")]
+"values": [ExtResource("12_x3qp0")]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -3660,7 +3661,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("2_ov1oi")]
+"values": [ExtResource("12_x3qp0")]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -3952,7 +3953,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("2_ov1oi")]
+"values": [ExtResource("12_x3qp0")]
 }
 tracks/1/type = "value"
 tracks/1/imported = false

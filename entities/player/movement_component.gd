@@ -45,14 +45,12 @@ func handle_movement() -> void:
 			_update_blend_positions()
 
 		var target_state = "Cary" if carrying else "Walk"
-		if state_machine.get_current_node() != target_state:
-			state_machine.travel(target_state)
+		state_machine.travel(target_state)
 		actor.velocity = input_direction * movement_speed
 	else:
 		_update_blend_positions()
 		var target_state = "CaryIdle" if carrying else "Idle"
-		if state_machine.get_current_node() != target_state:
-			state_machine.travel(target_state)
+		state_machine.travel(target_state)
 		actor.velocity = Vector2.ZERO
 		
 	actor.move_and_slide()
