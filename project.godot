@@ -19,6 +19,7 @@ config/icon="res://icon.svg"
 
 TimeManager="*res://core/autoloads/time_manager.gd"
 CustomizationManager="*res://systems/customization_manager.gd"
+FarmManager="*res://core/autoloads/farm_manager.gd"
 
 [display]
 

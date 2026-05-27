@@ -103,24 +103,41 @@ func handle_tool_switch() -> void:
 func handle_tool_use(direction: Vector2) -> void:
 	_update_strict_direction(direction)
 	
-	var tool_name = get_current_tool()
-	if tool_name == "":
-		return # No tool selected
-		
 	if Input.is_action_just_pressed("use_tool") and not is_using_tool:
-		is_using_tool = true
-		_active_tool_in_use = tool_name
+		var target_map_position: Vector2i = _get_target_map_position()
 		
-		# Salva a direção do golpe no momento do input — usada no fim da animação
-		_pending_hit_direction = strict_direction
+		# 1. Tenta colheita primeiro se houver planta adulta
+		if FarmManager and FarmManager.farm_data.has(target_map_position):
+			var tile_data = FarmManager.farm_data[target_map_position]
+			if tile_data.crop_id != "":
+				var crop_node = tile_data.crop_node
+				if is_instance_valid(crop_node) and crop_node.has_method("is_fully_grown") and crop_node.is_fully_grown():
+					_harvest_crop_at(target_map_position)
+					return # Consome o input
 		
-		animation_tree.set("parameters/" + tool_name + "/blend_position", strict_direction)
-		state_machine.start(tool_name)
+		var tool_name = get_current_tool()
 		
-		# Hoe age imediatamente (muda o tile)
-		if tool_name == "Hoe" and dirt_layer != null:
-			var target_map_position: Vector2i = _get_target_map_position()
-			dirt_layer.set_cell(target_map_position, tilled_dirt_source_id, tilled_dirt_atlas_coords)
+		# 2. Se for ferramenta equipada
+		if tool_name != "":
+			is_using_tool = true
+			_active_tool_in_use = tool_name
+			_pending_hit_direction = strict_direction
+			
+			animation_tree.set("parameters/" + tool_name + "/blend_position", strict_direction)
+			state_machine.start(tool_name)
+			
+			# Enxada (Hoe) age imediatamente
+			if tool_name == "Hoe":
+				if FarmManager:
+					FarmManager.till_soil(target_map_position)
+			# Regador (Water) age imediatamente
+			elif tool_name == "Water":
+				if FarmManager:
+					FarmManager.water_soil(target_map_position)
+		
+		# 3. Se for semente equipada, tenta plantar
+		else:
+			_attempt_planting()
 
 func _get_target_map_position() -> Vector2i:
 	if dirt_layer == null or dirt_layer.tile_set == null or grid_anchor == null:
@@ -191,3 +208,55 @@ func _on_animation_finished(_anim_name: StringName) -> void:
 		is_using_tool = false
 		_active_tool_in_use = ""
 		state_machine.start("Idle")
+
+func _attempt_planting() -> void:
+	if not inventory_data:
+		return
+		
+	var item = inventory_data.get_active_item()
+	if not item or not item.is_seed:
+		return
+		
+	var target_map_position: Vector2i = _get_target_map_position()
+	
+	if FarmManager and FarmManager.farm_data.has(target_map_position):
+		var tile_data = FarmManager.farm_data[target_map_position]
+		if tile_data.tilled and tile_data.crop_id == "":
+			var crop_scene = load("res://objects/crops/crop.tscn")
+			if crop_scene:
+				var crop_instance = crop_scene.instantiate()
+				
+				# Adiciona como filho da raiz do mapa (irmão de dirt_layer) para Y-sort perfeito no mapa
+				dirt_layer.get_parent().add_child(crop_instance)
+				
+				var tile_local_center = dirt_layer.map_to_local(target_map_position)
+				crop_instance.global_position = dirt_layer.to_global(tile_local_center)
+				
+				var success = FarmManager.plant_seed(target_map_position, item.crop_type, crop_instance)
+				if success:
+					var slot = inventory_data.slots[inventory_data.active_slot_index]
+					slot.quantity -= 1
+					if slot.quantity <= 0:
+						slot.item = null
+					inventory_data.inventory_updated.emit()
+
+func _harvest_crop_at(pos: Vector2i) -> void:
+	if not FarmManager or not inventory_data:
+		return
+		
+	var crop_id = FarmManager.harvest_crop(pos)
+	if crop_id != "":
+		var item = ItemData.new()
+		item.id = crop_id
+		
+		var items_sheet = load("res://assets/sprites/ui/items.png")
+		if crop_id == "tomato":
+			item.name = "Tomate"
+			item.icon_color = Color(1.0, 1.0, 1.0)
+			item.icon_texture = inventory_data._get_item_frame(items_sheet, 1)
+		elif crop_id == "turnip":
+			item.name = "Nabo"
+			item.icon_color = Color(1.0, 1.0, 1.0)
+			item.icon_texture = inventory_data._get_item_frame(items_sheet, 7)
+			
+		inventory_data.add_item(item, 1)
