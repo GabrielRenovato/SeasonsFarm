@@ -167,4 +167,7 @@ func _update_ui() -> void:
 	_update_preview_frames()
 
 func _on_close() -> void:
-	queue_free()
+	if get_tree().current_scene == self:
+		get_tree().change_scene_to_file("res://levels/main_farm/Farm.tscn")
+	else:
+		queue_free()

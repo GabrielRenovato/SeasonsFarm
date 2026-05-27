@@ -47,13 +47,13 @@ text = "Personagem"
 horizontal_alignment = 1
 
 [node name="PreviewArea" type="Control" parent="CenterContainer/PanelContainer/MarginContainer/HBoxContainer/LeftVBox"]
-custom_minimum_size = Vector2(64, 64)
+custom_minimum_size = Vector2(64, 96)
 layout_mode = 2
 size_flags_horizontal = 4
 
 [node name="BodyPreview" type="Sprite2D" parent="CenterContainer/PanelContainer/MarginContainer/HBoxContainer/LeftVBox/PreviewArea"]
 texture_filter = 1
-position = Vector2(32, 32)
+position = Vector2(32, 48)
 scale = Vector2(3, 3)
 
 [node name="LagsPreview" type="Sprite2D" parent="CenterContainer/PanelContainer/MarginContainer/HBoxContainer/LeftVBox/PreviewArea/BodyPreview"]
