@@ -1,16 +1,16 @@
 extends CanvasLayer
 
-@onready var body_preview: Sprite2D = $CenterContainer/PanelContainer/MarginContainer/VBoxContainer/PreviewArea/BodyPreview
-@onready var legs_preview: Sprite2D = $CenterContainer/PanelContainer/MarginContainer/VBoxContainer/PreviewArea/BodyPreview/LagsPreview
-@onready var clothes_preview: Sprite2D = $CenterContainer/PanelContainer/MarginContainer/VBoxContainer/PreviewArea/BodyPreview/ClothePreview
-@onready var hair_preview: Sprite2D = $CenterContainer/PanelContainer/MarginContainer/VBoxContainer/PreviewArea/BodyPreview/HairPreview
+@onready var body_preview: Sprite2D = $CenterContainer/PanelContainer/MarginContainer/HBoxContainer/LeftVBox/PreviewArea/BodyPreview
+@onready var legs_preview: Sprite2D = $CenterContainer/PanelContainer/MarginContainer/HBoxContainer/LeftVBox/PreviewArea/BodyPreview/LagsPreview
+@onready var clothes_preview: Sprite2D = $CenterContainer/PanelContainer/MarginContainer/HBoxContainer/LeftVBox/PreviewArea/BodyPreview/ClothePreview
+@onready var hair_preview: Sprite2D = $CenterContainer/PanelContainer/MarginContainer/HBoxContainer/LeftVBox/PreviewArea/BodyPreview/HairPreview
 
-@onready var body_label: Label = $CenterContainer/PanelContainer/MarginContainer/VBoxContainer/CategoryContainer/BodyHBox/BodyLabel
-@onready var hair_label: Label = $CenterContainer/PanelContainer/MarginContainer/VBoxContainer/CategoryContainer/HairHBox/HairLabel
-@onready var clothes_label: Label = $CenterContainer/PanelContainer/MarginContainer/VBoxContainer/CategoryContainer/ClothesHBox/ClothesLabel
-@onready var pants_label: Label = $CenterContainer/PanelContainer/MarginContainer/VBoxContainer/CategoryContainer/PantsHBox/PantsLabel
+@onready var body_label: Label = $CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer/BodyHBox/BodyLabel
+@onready var hair_label: Label = $CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer/HairHBox/HairLabel
+@onready var clothes_label: Label = $CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer/ClothesHBox/ClothesLabel
+@onready var pants_label: Label = $CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer/PantsHBox/PantsLabel
 
-@onready var color_grid: GridContainer = $CenterContainer/PanelContainer/MarginContainer/VBoxContainer/ColorGrid
+@onready var color_grid: GridContainer = $CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/ColorGrid
 
 var preview_frame: int = 0
 var animation_timer: Timer
@@ -35,20 +35,20 @@ func _ready() -> void:
 
 	# Connect category buttons
 	# Body/Skin
-	$CenterContainer/PanelContainer/MarginContainer/VBoxContainer/CategoryContainer/BodyHBox/PrevBody.pressed.connect(func(): CustomizationManager.prev_body())
-	$CenterContainer/PanelContainer/MarginContainer/VBoxContainer/CategoryContainer/BodyHBox/NextBody.pressed.connect(func(): CustomizationManager.next_body())
+	$CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer/BodyHBox/PrevBody.pressed.connect(func(): CustomizationManager.prev_body())
+	$CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer/BodyHBox/NextBody.pressed.connect(func(): CustomizationManager.next_body())
 	# Hair
-	$CenterContainer/PanelContainer/MarginContainer/VBoxContainer/CategoryContainer/HairHBox/PrevHair.pressed.connect(func(): CustomizationManager.prev_hair())
-	$CenterContainer/PanelContainer/MarginContainer/VBoxContainer/CategoryContainer/HairHBox/NextHair.pressed.connect(func(): CustomizationManager.next_hair())
+	$CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer/HairHBox/PrevHair.pressed.connect(func(): CustomizationManager.prev_hair())
+	$CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer/HairHBox/NextHair.pressed.connect(func(): CustomizationManager.next_hair())
 	# Clothes
-	$CenterContainer/PanelContainer/MarginContainer/VBoxContainer/CategoryContainer/ClothesHBox/PrevClothes.pressed.connect(func(): CustomizationManager.prev_clothes())
-	$CenterContainer/PanelContainer/MarginContainer/VBoxContainer/CategoryContainer/ClothesHBox/NextClothes.pressed.connect(func(): CustomizationManager.next_clothes())
+	$CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer/ClothesHBox/PrevClothes.pressed.connect(func(): CustomizationManager.prev_clothes())
+	$CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer/ClothesHBox/NextClothes.pressed.connect(func(): CustomizationManager.next_clothes())
 	# Pants
-	$CenterContainer/PanelContainer/MarginContainer/VBoxContainer/CategoryContainer/PantsHBox/PrevPants.pressed.connect(func(): CustomizationManager.prev_pants())
-	$CenterContainer/PanelContainer/MarginContainer/VBoxContainer/CategoryContainer/PantsHBox/NextPants.pressed.connect(func(): CustomizationManager.next_pants())
+	$CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer/PantsHBox/PrevPants.pressed.connect(func(): CustomizationManager.prev_pants())
+	$CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer/PantsHBox/NextPants.pressed.connect(func(): CustomizationManager.next_pants())
 	
 	# Close button
-	$CenterContainer/PanelContainer/MarginContainer/VBoxContainer/CloseButton.pressed.connect(_on_close)
+	$CenterContainer/PanelContainer/MarginContainer/HBoxContainer/LeftVBox/CloseButton.pressed.connect(_on_close)
 
 	# Build premium color swatches dynamically
 	_build_color_swatches()
@@ -81,20 +81,20 @@ func _build_color_swatches() -> void:
 
 	for col in preset_colors:
 		var btn = Button.new()
-		btn.custom_minimum_size = Vector2(28, 28)
+		btn.custom_minimum_size = Vector2(18, 18)
 		btn.focus_mode = Control.FOCUS_NONE
 
 		# Setup styleboxes to draw circular buttons
 		var sb = StyleBoxFlat.new()
 		sb.bg_color = col
-		sb.corner_radius_top_left = 14
-		sb.corner_radius_top_right = 14
-		sb.corner_radius_bottom_left = 14
-		sb.corner_radius_bottom_right = 14
-		sb.border_width_left = 2
-		sb.border_width_top = 2
-		sb.border_width_right = 2
-		sb.border_width_bottom = 2
+		sb.corner_radius_top_left = 9
+		sb.corner_radius_top_right = 9
+		sb.corner_radius_bottom_left = 9
+		sb.corner_radius_bottom_right = 9
+		sb.border_width_left = 1
+		sb.border_width_top = 1
+		sb.border_width_right = 1
+		sb.border_width_bottom = 1
 
 		# White border if selected, otherwise dark gray border
 		if CustomizationManager.hair_color.is_equal_approx(col):

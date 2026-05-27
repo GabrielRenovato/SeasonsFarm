@@ -18,143 +18,168 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 
 [node name="PanelContainer" type="PanelContainer" parent="CenterContainer"]
-custom_minimum_size = Vector2(300, 420)
+custom_minimum_size = Vector2(430, 200)
 layout_mode = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="CenterContainer/PanelContainer"]
 layout_mode = 2
-theme_override_constants/margin_left = 20
-theme_override_constants/margin_top = 20
-theme_override_constants/margin_right = 20
-theme_override_constants/margin_bottom = 20
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer"]
 layout_mode = 2
-theme_override_constants/separation = 12
+theme_override_constants/separation = 20
 alignment = 1
 
-[node name="Title" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
+[node name="LeftVBox" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+theme_override_constants/separation = 6
+alignment = 1
+
+[node name="Title" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/HBoxContainer/LeftVBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.85, 0.4, 1)
-theme_override_font_sizes/font_size = 18
-text = "Personalizar Personagem"
+theme_override_font_sizes/font_size = 12
+text = "Personagem"
 horizontal_alignment = 1
 
-[node name="PreviewArea" type="Control" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
-custom_minimum_size = Vector2(80, 80)
+[node name="PreviewArea" type="Control" parent="CenterContainer/PanelContainer/MarginContainer/HBoxContainer/LeftVBox"]
+custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 size_flags_horizontal = 4
 
-[node name="BodyPreview" type="Sprite2D" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/PreviewArea"]
+[node name="BodyPreview" type="Sprite2D" parent="CenterContainer/PanelContainer/MarginContainer/HBoxContainer/LeftVBox/PreviewArea"]
 texture_filter = 1
-position = Vector2(40, 40)
-scale = Vector2(3.5, 3.5)
+position = Vector2(32, 32)
+scale = Vector2(3, 3)
 
-[node name="LagsPreview" type="Sprite2D" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/PreviewArea/BodyPreview"]
+[node name="LagsPreview" type="Sprite2D" parent="CenterContainer/PanelContainer/MarginContainer/HBoxContainer/LeftVBox/PreviewArea/BodyPreview"]
 
-[node name="ClothePreview" type="Sprite2D" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/PreviewArea/BodyPreview"]
+[node name="ClothePreview" type="Sprite2D" parent="CenterContainer/PanelContainer/MarginContainer/HBoxContainer/LeftVBox/PreviewArea/BodyPreview"]
 
-[node name="HairPreview" type="Sprite2D" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/PreviewArea/BodyPreview"]
+[node name="HairPreview" type="Sprite2D" parent="CenterContainer/PanelContainer/MarginContainer/HBoxContainer/LeftVBox/PreviewArea/BodyPreview"]
 
-[node name="CategoryContainer" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
+[node name="CloseButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/HBoxContainer/LeftVBox"]
+custom_minimum_size = Vector2(80, 24)
 layout_mode = 2
-theme_override_constants/separation = 8
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 10
+text = "Pronto"
 
-[node name="BodyHBox" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/CategoryContainer"]
+[node name="RightVBox" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+theme_override_constants/separation = 6
+alignment = 1
+
+[node name="CategoryContainer" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="BodyHBox" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer"]
 layout_mode = 2
 alignment = 1
 
-[node name="PrevBody" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/CategoryContainer/BodyHBox"]
-custom_minimum_size = Vector2(30, 0)
+[node name="PrevBody" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer/BodyHBox"]
+custom_minimum_size = Vector2(22, 18)
 layout_mode = 2
-text = " < "
+theme_override_font_sizes/font_size = 8
+text = "<"
 
-[node name="BodyLabel" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/CategoryContainer/BodyHBox"]
-custom_minimum_size = Vector2(150, 0)
+[node name="BodyLabel" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer/BodyHBox"]
+custom_minimum_size = Vector2(130, 0)
 layout_mode = 2
+theme_override_font_sizes/font_size = 10
 text = " Pele: Pele 1 "
 horizontal_alignment = 1
 
-[node name="NextBody" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/CategoryContainer/BodyHBox"]
-custom_minimum_size = Vector2(30, 0)
+[node name="NextBody" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer/BodyHBox"]
+custom_minimum_size = Vector2(22, 18)
 layout_mode = 2
-text = " > "
+theme_override_font_sizes/font_size = 8
+text = ">"
 
-[node name="HairHBox" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/CategoryContainer"]
+[node name="HairHBox" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer"]
 layout_mode = 2
 alignment = 1
 
-[node name="PrevHair" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/CategoryContainer/HairHBox"]
-custom_minimum_size = Vector2(30, 0)
+[node name="PrevHair" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer/HairHBox"]
+custom_minimum_size = Vector2(22, 18)
 layout_mode = 2
-text = " < "
+theme_override_font_sizes/font_size = 8
+text = "<"
 
-[node name="HairLabel" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/CategoryContainer/HairHBox"]
-custom_minimum_size = Vector2(150, 0)
+[node name="HairLabel" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer/HairHBox"]
+custom_minimum_size = Vector2(130, 0)
 layout_mode = 2
+theme_override_font_sizes/font_size = 10
 text = " Cabelo: Bob "
 horizontal_alignment = 1
 
-[node name="NextHair" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/CategoryContainer/HairHBox"]
-custom_minimum_size = Vector2(30, 0)
+[node name="NextHair" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer/HairHBox"]
+custom_minimum_size = Vector2(22, 18)
 layout_mode = 2
-text = " > "
+theme_override_font_sizes/font_size = 8
+text = ">"
 
-[node name="ClothesHBox" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/CategoryContainer"]
+[node name="ClothesHBox" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer"]
 layout_mode = 2
 alignment = 1
 
-[node name="PrevClothes" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/CategoryContainer/ClothesHBox"]
-custom_minimum_size = Vector2(30, 0)
+[node name="PrevClothes" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer/ClothesHBox"]
+custom_minimum_size = Vector2(22, 18)
 layout_mode = 2
-text = " < "
+theme_override_font_sizes/font_size = 8
+text = "<"
 
-[node name="ClothesLabel" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/CategoryContainer/ClothesHBox"]
-custom_minimum_size = Vector2(150, 0)
+[node name="ClothesLabel" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer/ClothesHBox"]
+custom_minimum_size = Vector2(130, 0)
 layout_mode = 2
+theme_override_font_sizes/font_size = 10
 text = " Roupa: Básica "
 horizontal_alignment = 1
 
-[node name="NextClothes" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/CategoryContainer/ClothesHBox"]
-custom_minimum_size = Vector2(30, 0)
+[node name="NextClothes" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer/ClothesHBox"]
+custom_minimum_size = Vector2(22, 18)
 layout_mode = 2
-text = " > "
+theme_override_font_sizes/font_size = 8
+text = ">"
 
-[node name="PantsHBox" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/CategoryContainer"]
+[node name="PantsHBox" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer"]
 layout_mode = 2
 alignment = 1
 
-[node name="PrevPants" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/CategoryContainer/PantsHBox"]
-custom_minimum_size = Vector2(30, 0)
+[node name="PrevPants" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer/PantsHBox"]
+custom_minimum_size = Vector2(22, 18)
 layout_mode = 2
-text = " < "
+theme_override_font_sizes/font_size = 8
+text = "<"
 
-[node name="PantsLabel" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/CategoryContainer/PantsHBox"]
-custom_minimum_size = Vector2(150, 0)
+[node name="PantsLabel" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer/PantsHBox"]
+custom_minimum_size = Vector2(130, 0)
 layout_mode = 2
+theme_override_font_sizes/font_size = 10
 text = " Calça: Normal "
 horizontal_alignment = 1
 
-[node name="NextPants" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/CategoryContainer/PantsHBox"]
-custom_minimum_size = Vector2(30, 0)
+[node name="NextPants" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer/PantsHBox"]
+custom_minimum_size = Vector2(22, 18)
 layout_mode = 2
-text = " > "
+theme_override_font_sizes/font_size = 8
+text = ">"
 
-[node name="ColorLabel" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
+[node name="ColorLabel" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 9
 text = "Cor do Cabelo"
 horizontal_alignment = 1
 
-[node name="ColorGrid" type="GridContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
+[node name="ColorGrid" type="GridContainer" parent="CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox"]
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_constants/h_separation = 6
 theme_override_constants/v_separation = 6
 columns = 5
-
-[node name="CloseButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
-custom_minimum_size = Vector2(120, 32)
-layout_mode = 2
-size_flags_horizontal = 4
-text = "Pronto"
