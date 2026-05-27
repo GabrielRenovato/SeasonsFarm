@@ -24,6 +24,15 @@ func _ready() -> void:
 	if spawn_trees:
 		generate_trees_procedurally()
 
+	# Dynamic Day/Night Cycle CanvasModulate
+	var day_night_script = load("res://scripts/day_night_cycle.gd")
+	if day_night_script:
+		var canvas_modulate = CanvasModulate.new()
+		canvas_modulate.set_script(day_night_script)
+		canvas_modulate.name = "DayNightCycle"
+		add_child(canvas_modulate)
+
+
 func generate_trees_procedurally() -> void:
 	if not tree_scene:
 		push_warning("MapManager: tree_scene is not assigned!")
