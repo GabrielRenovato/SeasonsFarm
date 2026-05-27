@@ -1,6 +1,7 @@
-[gd_scene load_steps=3 format=3 uid="uid://cslotui123"]
+[gd_scene format=3 uid="uid://cslotui123"]
 
-[ext_resource type="Script" path="res://features/inventory/ui/slot_ui.gd" id="1_slotui"]
+[ext_resource type="Script" uid="uid://dfas4lhuceinq" path="res://features/inventory/ui/slot_ui.gd" id="1_slotui"]
+[ext_resource type="Texture2D" uid="uid://chh3m2hxacfjb" path="res://assets/sprites/player/separate/axe/tool/axe.png" id="2_ujfas"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bg"]
 bg_color = Color(0.18, 0.18, 0.18, 0.9)
@@ -15,29 +16,28 @@ corner_radius_bottom_right = 3
 corner_radius_bottom_left = 3
 anti_aliasing = false
 
-[node name="SlotUI" type="PanelContainer"]
+[node name="SlotUI" type="PanelContainer" unique_id=1229524394]
 custom_minimum_size = Vector2(20, 20)
-layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 theme_override_styles/panel = SubResource("StyleBoxFlat_bg")
 script = ExtResource("1_slotui")
 
-[node name="MarginContainer" type="MarginContainer" parent="."]
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1671416910]
 layout_mode = 2
 theme_override_constants/margin_left = 2
 theme_override_constants/margin_top = 2
 theme_override_constants/margin_right = 2
 theme_override_constants/margin_bottom = 2
 
-[node name="ItemIcon" type="TextureRect" parent="MarginContainer"]
+[node name="ItemIcon" type="TextureRect" parent="MarginContainer" unique_id=107494197]
 visible = false
 layout_mode = 2
 mouse_filter = 2
 expand_mode = 1
 stretch_mode = 5
 
-[node name="QuantityLabel" type="Label" parent="MarginContainer"]
+[node name="QuantityLabel" type="Label" parent="MarginContainer" unique_id=1154810259]
 visible = false
 layout_mode = 2
 size_flags_horizontal = 8
@@ -49,9 +49,10 @@ text = "1"
 horizontal_alignment = 2
 vertical_alignment = 2
 
-[node name="ActiveBorder" type="ReferenceRect" parent="."]
+[node name="ActiveBorder" type="ReferenceRect" parent="." unique_id=1193711746]
 visible = false
 layout_mode = 2
 border_color = Color(1, 0.85, 0.2, 1)
 border_width = 1.5
 editor_only = false
+
