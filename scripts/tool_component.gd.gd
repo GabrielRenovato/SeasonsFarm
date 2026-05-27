@@ -88,7 +88,7 @@ func _on_tool_area_entered(area: Area2D) -> void:
 	if not is_using_tool:
 		return
 		
-	if current_tool == "Axe" or current_tool == "Mining":
+	if current_tool == "Axe" or current_tool == "Mining" or current_tool == "Hoe":
 		var target_node = area
 		if area.get_parent() != null:
 			target_node = area.get_parent()

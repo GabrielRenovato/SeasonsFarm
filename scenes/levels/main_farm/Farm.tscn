@@ -16131,7 +16131,6 @@ tree_scene = ExtResource("3_2i7y8")
 position = Vector2(360, 24)
 
 [node name="Farmhouse" parent="." unique_id=973214779 instance=ExtResource("5_ddsni")]
-z_index = 3
 position = Vector2(400, -8)
 
 [node name="Player" parent="." unique_id=1414943563 instance=ExtResource("1_o3yca")]

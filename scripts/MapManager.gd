@@ -1,25 +1,96 @@
 extends Node2D
 
 @export var tree_scene: PackedScene
-@onready var spawn_layer: TileMapLayer = $SpawnLayer
+
+@export_group("Procedural Generation")
+@export var spawn_trees: bool = true
+## Seed for noise generation. If set to 0, a random seed will be used each time.
+@export var noise_seed: int = 0
+## Frequency of the noise. Higher values create smaller, denser patches.
+@export_range(0.01, 1.0, 0.01) var noise_frequency: float = 0.15
+## Noise threshold for spawning. Higher values make forests smaller and sparser. (range -1.0 to 1.0)
+@export_range(-1.0, 1.0, 0.05) var spawn_threshold: float = 0.15
+## Extra organic random chance (0.0 to 1.0) to spawn a tree on a valid noise cell. Helps break up uniform shapes.
+@export_range(0.0, 1.0, 0.05) var spawn_chance: float = 0.7
+@export_range(16.0, 128.0, 8.0) var min_tree_distance: float = 32.0
+
+@onready var ground_layer: TileMapLayer = $GroundLayer
 
 func _ready() -> void:
-	replace_markers_with_trees()
+	# Clean up SpawnLayer if it exists in the scene
+	if has_node("SpawnLayer"):
+		$SpawnLayer.queue_free()
+		
+	if spawn_trees:
+		generate_trees_procedurally()
 
-func replace_markers_with_trees() -> void:
-	# Obtém todas as células que possuem o tile de marcação (usando um ID de exemplo)
-	var used_cells = spawn_layer.get_used_cells()
+func generate_trees_procedurally() -> void:
+	if not tree_scene:
+		push_warning("MapManager: tree_scene is not assigned!")
+		return
+		
+	if not ground_layer:
+		push_warning("MapManager: GroundLayer not found!")
+		return
+
+	# Configure FastNoiseLite as standard in Godot 4
+	var noise := FastNoiseLite.new()
+	noise.noise_type = FastNoiseLite.TYPE_SIMPLEX
 	
+	if noise_seed == 0:
+		noise.seed = randi()
+	else:
+		noise.seed = noise_seed
+		
+	noise.frequency = noise_frequency
+
+	# Set up seeded random generator for the density filter
+	var rng := RandomNumberGenerator.new()
+	rng.seed = noise.seed
+
+	var used_cells := ground_layer.get_used_cells()
+	
+	# Fetch player position to prevent spawning a tree directly on top of the player
+	var player_pos := Vector2.ZERO
+	var check_player := false
+	if has_node("Player"):
+		player_pos = $Player.global_position
+		check_player = true
+
+	# We keep track of how many trees we spawn for debug logging
+	var spawned_count := 0
+
+	# Keep track of spawned positions to enforce minimum distance between trees
+	var spawned_positions: Array[Vector2] = []
+
 	for cell in used_cells:
-		# Pega a posição central do tile
-		var world_position = spawn_layer.map_to_local(cell)
+		# Check if there is grass on top of this dirt. If so, skip spawning here.
+		if has_node("Grass_layer") and $Grass_layer.get_cell_source_id(cell) != -1:
+			continue
+			
+		var world_position := ground_layer.map_to_local(cell)
 		
-		# Instancia a árvore
-		var new_tree = tree_scene.instantiate()
-		new_tree.global_position = world_position
+		# Prevent spawning within player's starting area (64 pixels radius)
+		if check_player and world_position.distance_to(player_pos) < 64.0:
+			continue
+			
+		# Sample noise value at grid cell coordinates
+		var noise_val := noise.get_noise_2d(cell.x, cell.y)
 		
-		# Adiciona ao nó pai (preferencialmente um nó com Y-Sort)
-		add_child(new_tree)
-		
-	# Apaga a camada de marcação após instanciar tudo
-	spawn_layer.queue_free()
+		if noise_val > spawn_threshold:
+			if rng.randf() < spawn_chance:
+				# Check if this position is too close to any already spawned tree
+				var too_close := false
+				for pos in spawned_positions:
+					if world_position.distance_to(pos) < min_tree_distance:
+						too_close = true
+						break
+				
+				if not too_close:
+					var new_tree = tree_scene.instantiate()
+					new_tree.global_position = world_position
+					add_child(new_tree)
+					spawned_positions.append(world_position)
+					spawned_count += 1
+				
+	print("MapManager: Procedurally generated ", spawned_count, " trees using seed ", noise.seed)
