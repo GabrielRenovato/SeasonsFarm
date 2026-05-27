@@ -22,6 +22,14 @@ func _ready() -> void:
 		var hud_instance = hud_scene.instantiate()
 		add_child(hud_instance)
 		hud_instance.setup(inventory_data)
+		
+	# Initialize Customization Component
+	var customization_script = load("res://entities/player/customization_component.gd")
+	if customization_script:
+		var customization_instance = customization_script.new()
+		customization_instance.animation_player = $AnimationPlayer
+		customization_instance.name = "CustomizationComponent"
+		add_child(customization_instance)
 	
 	# Setup Player Lantern (PointLight2D)
 	lantern = PointLight2D.new()
