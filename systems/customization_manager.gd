@@ -10,9 +10,9 @@ var available_hairstyles = [
 ]
 
 var available_clothes = [
-	"basic", "clown", "dress", "floral", "overalls", "pumpkin", 
+	"basic", "clown", "dress", "floral", "overalls", 
 	"sailor_bow", "sailor", "shoes", "skirt", "skull", "spaghetti", 
-	"spooky", "sporty", "stripe", "suit", "witch"
+	"sporty", "stripe", "suit"
 ]
 
 var available_bodies = [

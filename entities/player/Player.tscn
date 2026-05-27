@@ -10768,6 +10768,7 @@ vframes = 4
 script = ExtResource("safe_sprite_script")
 
 [node name="Lags" type="Sprite2D" parent="Body" unique_id=384411421]
+position = Vector2(0, -1)
 texture = ExtResource("6_kswpp")
 hframes = 80
 vframes = 4
