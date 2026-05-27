@@ -36,8 +36,12 @@ func _die() -> void:
 	$Area2D/CollisionShape2D.set_deferred("disabled", true)
 	
 	var stump_instance = STUMP_SCENE.instantiate()
-	get_tree().current_scene.add_child(stump_instance)
+	get_parent().add_child(stump_instance)
 	stump_instance.global_position = global_position
+	
+	stump_instance.get_node("CollisionShape2D").set_deferred("disabled", true)
+	if stump_instance.has_node("Area2D/CollisionShape2D"):
+		stump_instance.get_node("Area2D/CollisionShape2D").set_deferred("disabled", true)
 	
 	if chosen_fall_anim != "" and animation_player.has_animation(chosen_fall_anim):
 		animation_player.play(chosen_fall_anim)
@@ -45,6 +49,11 @@ func _die() -> void:
 	elif animation_player.has_animation(fall_right_anim):
 		animation_player.play(fall_right_anim)
 		await animation_player.animation_finished
+	
+	if is_instance_valid(stump_instance):
+		stump_instance.get_node("CollisionShape2D").set_deferred("disabled", false)
+		if stump_instance.has_node("Area2D/CollisionShape2D"):
+			stump_instance.get_node("Area2D/CollisionShape2D").set_deferred("disabled", false)
 	
 	_spawn_wood()
 	queue_free()
@@ -55,7 +64,7 @@ func _spawn_wood() -> void:
 		
 	for i in range(wood_amount):
 		var wood_instance = wood_scene.instantiate()
-		get_tree().current_scene.add_child(wood_instance)
+		get_parent().add_child(wood_instance)
 		wood_instance.global_position = global_position
 		
 		var random_x = randf_range(10, 50) * spawn_direction

@@ -3,14 +3,25 @@ extends CharacterBody2D
 @onready var movement_component: MovementComponent = $MovementComponent
 @onready var tool_component: ToolComponent = $ToolComponent
 
+@export var inventory_data: InventoryData
+
 var lantern: PointLight2D = null
 
 func _ready() -> void:
+	if inventory_data == null:
+		inventory_data = InventoryData.new()
+		inventory_data.setup_default_inventory()
+		
+	# Pass inventory to ToolComponent
+	if tool_component:
+		tool_component.setup(inventory_data)
+		
 	# Instantiate HUD
 	var hud_scene = load("res://features/ui/hud.tscn")
 	if hud_scene:
 		var hud_instance = hud_scene.instantiate()
 		add_child(hud_instance)
+		hud_instance.setup(inventory_data)
 	
 	# Setup Player Lantern (PointLight2D)
 	lantern = PointLight2D.new()
