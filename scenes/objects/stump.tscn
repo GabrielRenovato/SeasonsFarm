@@ -11,12 +11,12 @@ size = Vector2(8, 10)
 size = Vector2(10, 10)
 
 [node name="Stump" type="StaticBody2D" unique_id=1938617713]
-z_index = 1
 y_sort_enabled = true
 script = ExtResource("1_53udi")
 wood_scene = ExtResource("2_uobp2")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1850022459]
+y_sort_enabled = true
 position = Vector2(0, -3)
 texture = ExtResource("1_wi2ep")
 region_enabled = true

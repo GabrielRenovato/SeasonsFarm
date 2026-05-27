@@ -8,6 +8,8 @@ class_name ToolComponent
 @export var tool_area: Area2D
 @export var tilled_dirt_source_id: int = 0
 @export var tilled_dirt_atlas_coords: Vector2i = Vector2i(0, 0)
+@export var axe_reach: float = 14.0
+@export var axe_hit_radius: float = 8.0
 
 var dirt_layer: TileMapLayer
 var state_machine: AnimationNodeStateMachinePlayback
@@ -16,6 +18,7 @@ var available_tools: Array[String] = ["Hoe", "Mining", "Axe"]
 var current_tool_index: int = 0
 var current_tool: String = "Hoe"
 var strict_direction: Vector2 = Vector2.DOWN
+var _pending_hit_direction: Vector2 = Vector2.ZERO
 
 func _ready() -> void:
 	state_machine = animation_tree.get("parameters/playback")
@@ -27,9 +30,6 @@ func _ready() -> void:
 	
 	animation_tree.active = true
 	state_machine.start("Idle")
-	
-	if tool_area != null:
-		tool_area.area_entered.connect(_on_tool_area_entered)
 
 func _update_strict_direction(direction: Vector2) -> void:
 	if direction != Vector2.ZERO:
@@ -64,9 +64,16 @@ func handle_tool_use(direction: Vector2) -> void:
 	if Input.is_action_just_pressed("use_tool") and not is_using_tool:
 		is_using_tool = true
 		
+		# Salva a direção do golpe no momento do input — usada no fim da animação
+		_pending_hit_direction = strict_direction
+		
 		animation_tree.set("parameters/" + current_tool + "/blend_position", strict_direction)
 		state_machine.start(current_tool)
-		_execute_tool_action()
+		
+		# Hoe age imediatamente (muda o tile)
+		if current_tool == "Hoe" and dirt_layer != null:
+			var target_map_position: Vector2i = _get_target_map_position()
+			dirt_layer.set_cell(target_map_position, tilled_dirt_source_id, tilled_dirt_atlas_coords)
 
 func _get_target_map_position() -> Vector2i:
 	if dirt_layer == null or dirt_layer.tile_set == null or grid_anchor == null:
@@ -78,50 +85,41 @@ func _get_target_map_position() -> Vector2i:
 	
 	return dirt_layer.local_to_map(dirt_layer.to_local(target_global_position))
 
-func _execute_tool_action() -> void:
-	var target_map_position: Vector2i = _get_target_map_position()
-	
-	if current_tool == "Hoe" and dirt_layer != null:
-		dirt_layer.set_cell(target_map_position, tilled_dirt_source_id, tilled_dirt_atlas_coords)
-
-func _on_tool_area_entered(area: Area2D) -> void:
-	if not is_using_tool:
-		return
-		
-	if current_tool == "Axe" or current_tool == "Mining" or current_tool == "Hoe":
-		var target_node = area
-		if area.get_parent() != null:
-			target_node = area.get_parent()
-			
-		if target_node.has_method("take_damage"):
-			target_node.call_deferred("take_damage", 1, actor.global_position, current_tool)
-			_flash_debug_rect(Color.GREEN)
-
-func _check_for_interactables(map_pos: Vector2i) -> void:
-	var world_pos = dirt_layer.map_to_local(map_pos)
+# Disparado no FIM da animação — o golpe registra quando o swing termina
+func _hit_objects_in_direction() -> void:
 	var space_state = actor.get_world_2d().direct_space_state
 	
-	var query = PhysicsPointQueryParameters2D.new()
-	query.position = dirt_layer.to_global(world_pos)
+	var hit_origin: Vector2 = actor.global_position + _pending_hit_direction * axe_reach
+	
+	var shape = CircleShape2D.new()
+	shape.radius = axe_hit_radius
+	
+	var query = PhysicsShapeQueryParameters2D.new()
+	query.shape = shape
+	query.transform = Transform2D(0.0, hit_origin)
 	query.collide_with_areas = true
-	query.collide_with_bodies = true
+	query.collide_with_bodies = false
+	query.exclude = [actor.get_rid()]
 	
-	var results = space_state.intersect_point(query)
+	var results = space_state.intersect_shape(query, 8)
 	
-	if results.is_empty():
-		_flash_debug_rect(Color.RED)
-	else:
-		_flash_debug_rect(Color.GREEN)
-		
+	var hit_something := false
 	for result in results:
 		var hit_object = result.collider
 		var target_node = hit_object
 		
 		if hit_object is Area2D:
 			target_node = hit_object.get_parent()
-			
+		
+		if target_node == actor or target_node.is_ancestor_of(actor):
+			continue
+		
 		if target_node.has_method("take_damage"):
 			target_node.take_damage(1, actor.global_position, current_tool)
+			hit_something = true
+			break
+	
+	_flash_debug_rect(Color.GREEN if hit_something else Color.RED)
 
 func _flash_debug_rect(flash_color: Color) -> void:
 	if debug_rect == null:
@@ -133,5 +131,9 @@ func _flash_debug_rect(flash_color: Color) -> void:
 
 func _on_animation_finished(_anim_name: StringName) -> void:
 	if is_using_tool:
+		# Executa o golpe no FIM da animação, não no início
+		if current_tool == "Axe" or current_tool == "Mining":
+			_hit_objects_in_direction()
+		
 		is_using_tool = false
 		state_machine.start("Idle")

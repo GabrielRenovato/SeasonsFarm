@@ -135,8 +135,6 @@ position = Vector2(0, -10)
 shape = SubResource("RectangleShape2D_lflwt")
 
 [node name="DoorSprite" type="Sprite2D" parent="." unique_id=2044296162]
-z_index = 1
-y_sort_enabled = true
 position = Vector2(0, -10)
 texture = ExtResource("2_8u8rn")
 region_enabled = true

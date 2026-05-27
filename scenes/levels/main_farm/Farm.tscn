@@ -1,7 +1,7 @@
 [gd_scene format=4 uid="uid://ty6fnl1pystt"]
 
 [ext_resource type="Script" uid="uid://bafb7y1btsjh6" path="res://scripts/MapManager.gd" id="1_h12un"]
-[ext_resource type="PackedScene" uid="uid://de4bwi1af0jsj" path="res://scenes/player/Player.tscn" id="1_o3yca"]
+[ext_resource type="PackedScene" uid="uid://dtm3gi5e5socn" path="res://scenes/player/Player.tscn" id="1_o3yca"]
 [ext_resource type="Texture2D" uid="uid://da0elrtfxoby6" path="res://assets/tiles/farm/tiles.png" id="2_6pgyg"]
 [ext_resource type="PackedScene" uid="uid://bx7olxx11lmmi" path="res://scenes/objects/tree.tscn" id="3_2i7y8"]
 [ext_resource type="Texture2D" uid="uid://cujj52colc2w3" path="res://assets/tiles/farm/buildings.png" id="3_6nokk"]
@@ -16157,5 +16157,5 @@ tile_set = SubResource("TileSet_o5h6p")
 [node name="SpawnLayer" type="TileMapLayer" parent="." unique_id=518368534]
 y_sort_enabled = true
 position = Vector2(80, 80)
-tile_map_data = PackedByteArray("AAD9/wEAAQAUABkAAAD///7/AQAUABkAAAD8//v/AQAUABkAAAAHAP//AQAUABkAAAD8//X/AQAUABkAAAAEAPb/AQAUABkAAAALAPf/AQAUABkAAAACAPL/AQAUABkAAAABAPj/AQAUABkAAAAKAPv/AQAUABkAAAANAAUAAQAUABkAAAD7/wgAAQAUABkAAAAGAAQAAQAUABkAAAAGAAgAAQAUABkAAAAAAAkAAQAUABkAAAAMAAkAAQAUABkAAAADAAQAAQAUABkAAAD+/wQAAQAUABkAAAABAAYAAQAUABkAAAALAAAAAQAUABkAAAANAPz/AQAUABkAAAAMAPT/AQAUABkAAAAIAPL/AQAUABkAAAAFAPj/AQAUABkAAAAEAP7/AQAUABkAAAAHAPj/AQAUABkAAAAbAAsAAQAUABkAAAATAAsAAQAUABkAAAARAAYAAQAUABkAAAANAAsAAQAUABkAAAACAA0AAQAUABkAAAD7/wwAAQAUABkAAAD//w0AAQAUABkAAAAHAAoAAQAUABkAAAANAA0AAQAUABkAAAAbAAgAAQAUABkAAAAHABAAAQAUABkAAAABAA8AAQAUABkAAAACAPf/AAAcAB4AAAABAPv/AAAcAB4AAAAHAPn/AAAcAB4AAAADAPf/AAAcAB4AAAAHAPz/AAAcAB4AAAAIAPz/AAAcAB4AAAAKAP7/AAAcAB4AAAAIAAMAAAAcAB4AAAAEAAIAAAAcAB4AAAA=")
+tile_map_data = PackedByteArray("AAACAPL/AQAUABkAAAAIAPL/AQAUABkAAAA=")
 tile_set = SubResource("TileSet_khw3i")

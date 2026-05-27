@@ -463,6 +463,18 @@ tracks/33/keys = {
 "update": 0,
 "values": [Vector2(0, 11)]
 }
+tracks/34/type = "value"
+tracks/34/imported = false
+tracks/34/enabled = true
+tracks/34/path = NodePath("Body/Lags:rotation")
+tracks/34/interp = 1
+tracks/34/loop_wrap = true
+tracks/34/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
 
 [sub_resource type="Animation" id="Animation_kvwax"]
 resource_name = "axe_down"
@@ -8194,15 +8206,15 @@ tracks/17/keys = {
 }
 tracks/18/type = "value"
 tracks/18/imported = false
-tracks/18/enabled = false
+tracks/18/enabled = true
 tracks/18/path = NodePath("Body/Lags:position")
 tracks/18/interp = 1
 tracks/18/loop_wrap = true
 tracks/18/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(0, -17)]
+"times": PackedFloat32Array(0, 0.0404843, 0.06440902, 0.12934752, 0.1908682, 0.19855829, 0.2002672, 0.20112164, 0.2669146, 0.32245412, 0.33185312, 0.39850053),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [Vector2(0, -1), Vector2(0, -1), Vector2(0, -1), Vector2(0, 2), Vector2(0, 0), Vector2(0, 0), Vector2(0, -1), Vector2(0, 0), Vector2(0, -1), Vector2(0, -1), Vector2(0, -1), Vector2(0, 2)]
 }
 tracks/19/type = "value"
 tracks/19/imported = false
@@ -8223,10 +8235,22 @@ tracks/20/path = NodePath("Body/Lags:z_index")
 tracks/20/interp = 1
 tracks/20/loop_wrap = true
 tracks/20/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
+"times": PackedFloat32Array(0, 0.27448776),
+"transitions": PackedFloat32Array(1, 1),
 "update": 1,
-"values": [0]
+"values": [0, 0]
+}
+tracks/21/type = "value"
+tracks/21/imported = false
+tracks/21/enabled = true
+tracks/21/path = NodePath("Body/Lags:rotation")
+tracks/21/interp = 1
+tracks/21/loop_wrap = true
+tracks/21/keys = {
+"times": PackedFloat32Array(0.15241778, 0.39850053),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, 0.0]
 }
 
 [sub_resource type="Animation" id="Animation_pi3ps"]
@@ -10743,26 +10767,20 @@ hframes = 8
 vframes = 4
 script = ExtResource("safe_sprite_script")
 
-
-
 [node name="Lags" type="Sprite2D" parent="Body" unique_id=384411421]
-position = Vector2(0, 0)
+position = Vector2(0, -1)
 texture = ExtResource("6_kswpp")
 hframes = 80
 vframes = 4
 script = ExtResource("safe_sprite_script")
 
 [node name="Clothe" type="Sprite2D" parent="Body" unique_id=1352049259]
-position = Vector2(0, 0)
 texture = ExtResource("5_ejd4k")
 hframes = 80
 vframes = 4
 script = ExtResource("safe_sprite_script")
 
-
-
 [node name="har" type="Sprite2D" parent="Body" unique_id=866368551]
-position = Vector2(0, 0)
 texture = ExtResource("3_20koh")
 hframes = 112
 vframes = 4
@@ -10829,5 +10847,3 @@ position = Vector2(0, 11)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Tool/Area2D" unique_id=1049002800]
 shape = SubResource("CircleShape2D_eac1a")
 disabled = true
-
-
