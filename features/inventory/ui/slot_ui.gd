@@ -1,7 +1,7 @@
 extends PanelContainer
 class_name SlotUI
 
-@onready var item_icon: ColorRect = $MarginContainer/ItemIcon
+@onready var item_icon: TextureRect = $MarginContainer/ItemIcon
 @onready var quantity_label: Label = $MarginContainer/QuantityLabel
 @onready var active_border: ReferenceRect = $ActiveBorder
 
@@ -25,8 +25,16 @@ func update_ui() -> void:
 		tooltip_text = ""
 	else:
 		item_icon.visible = true
-		item_icon.color = slot_data.item.icon_color
 		tooltip_text = slot_data.item.name
+		
+		if slot_data.item.icon_texture != null:
+			item_icon.texture = slot_data.item.icon_texture
+			item_icon.self_modulate = Color.WHITE
+		else:
+			var placeholder = PlaceholderTexture2D.new()
+			placeholder.size = Vector2(16, 16)
+			item_icon.texture = placeholder
+			item_icon.self_modulate = slot_data.item.icon_color
 		
 		if slot_data.item.is_tool:
 			quantity_label.visible = false
@@ -55,11 +63,21 @@ func _get_drag_data(_at_position: Vector2) -> Variant:
 	var style_box = get_theme_stylebox("panel").duplicate()
 	preview.add_theme_stylebox_override("panel", style_box)
 	
-	var preview_icon = ColorRect.new()
-	preview_icon.color = slot_data.item.icon_color
+	var preview_icon = TextureRect.new()
+	preview_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	preview_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	preview_icon.custom_minimum_size = Vector2(16, 16)
 	preview_icon.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	preview_icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	
+	if slot_data.item.icon_texture != null:
+		preview_icon.texture = slot_data.item.icon_texture
+	else:
+		var placeholder = PlaceholderTexture2D.new()
+		placeholder.size = Vector2(16, 16)
+		preview_icon.texture = placeholder
+		preview_icon.self_modulate = slot_data.item.icon_color
+		
 	preview.add_child(preview_icon)
 	
 	set_drag_preview(preview)

@@ -30,10 +30,12 @@ theme_override_constants/margin_top = 2
 theme_override_constants/margin_right = 2
 theme_override_constants/margin_bottom = 2
 
-[node name="ItemIcon" type="ColorRect" parent="MarginContainer"]
+[node name="ItemIcon" type="TextureRect" parent="MarginContainer"]
 visible = false
 layout_mode = 2
 mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
 
 [node name="QuantityLabel" type="Label" parent="MarginContainer"]
 visible = false

@@ -6,3 +6,4 @@ class_name ItemData
 @export var is_tool: bool = false
 @export var tool_type: String = "" # "Hoe", "Axe", "Mining"
 @export var icon_color: Color = Color.WHITE
+@export var icon_texture: Texture2D

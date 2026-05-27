@@ -22,6 +22,9 @@ func setup_default_inventory() -> void:
 		sd.quantity = 0
 		slots.append(sd)
 	
+	# Load Sprout Lands tools sheet
+	var items_sheet = load("res://assets/sprites/ui/items.png")
+	
 	# Add default tools
 	var hoe = ItemData.new()
 	hoe.id = "hoe"
@@ -29,6 +32,11 @@ func setup_default_inventory() -> void:
 	hoe.is_tool = true
 	hoe.tool_type = "Hoe"
 	hoe.icon_color = Color(0.8, 0.4, 0.1) # Brownish
+	if items_sheet:
+		var hoe_tex = AtlasTexture.new()
+		hoe_tex.atlas = items_sheet
+		hoe_tex.region = Rect2(64, 0, 16, 16)
+		hoe.icon_texture = hoe_tex
 	
 	var axe = ItemData.new()
 	axe.id = "axe"
@@ -36,6 +44,11 @@ func setup_default_inventory() -> void:
 	axe.is_tool = true
 	axe.tool_type = "Axe"
 	axe.icon_color = Color(0.8, 0.1, 0.1) # Reddish
+	if items_sheet:
+		var axe_tex = AtlasTexture.new()
+		axe_tex.atlas = items_sheet
+		axe_tex.region = Rect2(0, 0, 16, 16)
+		axe.icon_texture = axe_tex
 	
 	var mining = ItemData.new()
 	mining.id = "pickaxe"
@@ -43,6 +56,11 @@ func setup_default_inventory() -> void:
 	mining.is_tool = true
 	mining.tool_type = "Mining"
 	mining.icon_color = Color(0.1, 0.6, 0.8) # Bluish
+	if items_sheet:
+		var pick_tex = AtlasTexture.new()
+		pick_tex.atlas = items_sheet
+		pick_tex.region = Rect2(16, 0, 16, 16)
+		mining.icon_texture = pick_tex
 	
 	slots[0].item = hoe
 	slots[0].quantity = 1
