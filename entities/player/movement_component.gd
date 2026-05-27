@@ -19,6 +19,8 @@ func _ready() -> void:
 func _update_blend_positions() -> void:
 	animation_tree.set("parameters/Idle/blend_position", last_direction)
 	animation_tree.set("parameters/Walk/blend_position", last_direction)
+	animation_tree.set("parameters/Cary/blend_position", last_direction)
+	animation_tree.set("parameters/CaryIdle/blend_position", last_direction)
 	if tool_component:
 		tool_component._update_strict_direction(last_direction)
 
@@ -30,6 +32,7 @@ func stop_movement() -> void:
 func handle_movement() -> void:
 	var input_direction: Vector2 = Input.get_vector("left", "right", "up", "down")
 	var carrying = tool_component != null and tool_component.is_carrying
+	
 	if input_direction != Vector2.ZERO:
 		var new_direction: Vector2
 		if abs(input_direction.x) > abs(input_direction.y):
@@ -51,4 +54,5 @@ func handle_movement() -> void:
 		if state_machine.get_current_node() != target_state:
 			state_machine.travel(target_state)
 		actor.velocity = Vector2.ZERO
+		
 	actor.move_and_slide()
