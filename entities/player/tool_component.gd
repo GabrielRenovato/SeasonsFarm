@@ -20,9 +20,13 @@ var is_using_tool: bool = false
 var _active_tool_in_use: String = ""
 var strict_direction: Vector2 = Vector2.DOWN
 var _pending_hit_direction: Vector2 = Vector2.ZERO
+var is_carrying: bool = false
+var _carry_item: ItemData
+var _carry_sprite: Sprite2D
 
 func setup(p_inventory_data: InventoryData) -> void:
 	inventory_data = p_inventory_data
+	inventory_data.active_slot_changed.connect(_on_slot_changed)
 
 func get_current_tool() -> String:
 	if inventory_data:
@@ -40,8 +44,21 @@ func _ready() -> void:
 	if debug_rect != null:
 		debug_rect.set_as_top_level(true)
 	
+	var anim_player = actor.get_node_or_null("AnimationPlayer") as AnimationPlayer
+	if anim_player:
+		for dir in ["down", "right", "up", "left"]:
+			var anim_name = "carry_" + dir
+			if anim_player.has_animation(anim_name):
+				var anim = anim_player.get_animation(anim_name)
+				anim.loop_mode = Animation.LOOP_LINEAR
+	
 	animation_tree.active = true
 	state_machine.start("Idle")
+	
+	_carry_sprite = Sprite2D.new()
+	_carry_sprite.name = "CarrySprite"
+	_carry_sprite.visible = false
+	actor.call_deferred("add_child", _carry_sprite)
 
 func _update_strict_direction(direction: Vector2) -> void:
 	if direction != Vector2.ZERO:
@@ -49,6 +66,9 @@ func _update_strict_direction(direction: Vector2) -> void:
 			strict_direction = Vector2(sign(direction.x), 0)
 		elif abs(direction.y) > abs(direction.x):
 			strict_direction = Vector2(0, sign(direction.y))
+	if is_carrying:
+		animation_tree.set("parameters/Cary/blend_position", strict_direction)
+		animation_tree.set("parameters/CaryIdle/blend_position", strict_direction)
 
 func update_target_preview(direction: Vector2) -> void:
 	_update_strict_direction(direction)
@@ -99,6 +119,43 @@ func handle_tool_switch() -> void:
 		if Input.is_key_pressed(key):
 			inventory_data.active_slot_index = i
 			return
+
+func _on_slot_changed(_index: int) -> void:
+	if not inventory_data or is_using_tool:
+		return
+	var item = inventory_data.get_active_item()
+	var should_carry = item != null and not item.is_tool
+	if should_carry != is_carrying:
+		is_carrying = should_carry
+		if is_carrying:
+			_carry_item = item
+			_show_carry_sprite(item)
+			animation_tree.set("parameters/Cary/blend_position", strict_direction)
+			animation_tree.set("parameters/CaryIdle/blend_position", strict_direction)
+			state_machine.start("CaryIdle")
+		else:
+			_hide_carry_sprite()
+			_carry_item = null
+			state_machine.start("Idle")
+	elif is_carrying and item != _carry_item:
+		_carry_item = item
+		_show_carry_sprite(item)
+
+func _show_carry_sprite(item: ItemData) -> void:
+	if _carry_sprite == null or item == null:
+		return
+	_carry_sprite.texture = item.icon_texture
+	_carry_sprite.hframes = 1
+	_carry_sprite.vframes = 1
+	_carry_sprite.frame = 0
+	_carry_sprite.scale = Vector2(0.5, 0.5)
+	_carry_sprite.position = Vector2(0, -16)
+	_carry_sprite.visible = true
+
+func _hide_carry_sprite() -> void:
+	if _carry_sprite == null:
+		return
+	_carry_sprite.visible = false
 
 func handle_tool_use(direction: Vector2) -> void:
 	_update_strict_direction(direction)
@@ -207,7 +264,11 @@ func _on_animation_finished(_anim_name: StringName) -> void:
 		
 		is_using_tool = false
 		_active_tool_in_use = ""
-		state_machine.start("Idle")
+		if is_carrying:
+			_show_carry_sprite(_carry_item)
+			state_machine.start("CaryIdle")
+		else:
+			state_machine.start("Idle")
 
 func _attempt_planting() -> void:
 	if not inventory_data:
