@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="FARM GAMING"
-run/main_scene="uid://ty6fnl1pystt"
+run/main_scene="res://ui/customization_menu/character_customization.tscn"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://icon.svg"
 
