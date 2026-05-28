@@ -16,10 +16,10 @@ margin_left = 14
 margin_top = 14
 margin_right = 14
 margin_bottom = 14
-content_margin_left = 18
-content_margin_top = 18
-content_margin_right = 18
-content_margin_bottom = 18
+content_margin_left = 10
+content_margin_top = 10
+content_margin_right = 10
+content_margin_bottom = 10
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_tab_active"]
 atlas = ExtResource("3_extras")
@@ -28,10 +28,10 @@ filter_clip = true
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_tab_active"]
 texture = SubResource("AtlasTexture_tab_active")
-content_margin_left = 3
-content_margin_top = 3
-content_margin_right = 3
-content_margin_bottom = 3
+content_margin_left = 2
+content_margin_top = 2
+content_margin_right = 2
+content_margin_bottom = 2
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_tab_inactive"]
 atlas = ExtResource("3_extras")
@@ -40,10 +40,10 @@ filter_clip = true
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_tab_inactive"]
 texture = SubResource("AtlasTexture_tab_inactive")
-content_margin_left = 3
-content_margin_top = 3
-content_margin_right = 3
-content_margin_bottom = 3
+content_margin_left = 2
+content_margin_top = 2
+content_margin_right = 2
+content_margin_bottom = 2
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_tab_hover"]
 atlas = ExtResource("3_extras")
@@ -52,10 +52,10 @@ filter_clip = true
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_tab_hover"]
 texture = SubResource("AtlasTexture_tab_hover")
-content_margin_left = 3
-content_margin_top = 3
-content_margin_right = 3
-content_margin_bottom = 3
+content_margin_left = 2
+content_margin_top = 2
+content_margin_right = 2
+content_margin_bottom = 2
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_close_btn"]
 bg_color = Color(0.65, 0.15, 0.15, 1)
@@ -70,10 +70,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -200.0
-offset_top = -130.0
-offset_right = 200.0
-offset_bottom = 130.0
+offset_left = -160.0
+offset_top = -90.0
+offset_right = 160.0
+offset_bottom = 90.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 0
@@ -86,9 +86,9 @@ alignment = 1
 
 [node name="BtnInventory" type="Button" parent="TabsContainer"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(28, 20)
+custom_minimum_size = Vector2(24, 16)
 layout_mode = 2
-theme_override_font_sizes/font_size = 10
+theme_override_font_sizes/font_size = 8
 theme_override_styles/normal = SubResource("StyleBoxTexture_tab_active")
 theme_override_styles/hover = SubResource("StyleBoxTexture_tab_hover")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_tab_active")
@@ -97,9 +97,9 @@ text = "🎒"
 
 [node name="BtnSkills" type="Button" parent="TabsContainer"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(28, 20)
+custom_minimum_size = Vector2(24, 16)
 layout_mode = 2
-theme_override_font_sizes/font_size = 10
+theme_override_font_sizes/font_size = 8
 theme_override_styles/normal = SubResource("StyleBoxTexture_tab_inactive")
 theme_override_styles/hover = SubResource("StyleBoxTexture_tab_hover")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_tab_inactive")
@@ -108,9 +108,9 @@ text = "🔨"
 
 [node name="BtnRelationships" type="Button" parent="TabsContainer"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(28, 20)
+custom_minimum_size = Vector2(24, 16)
 layout_mode = 2
-theme_override_font_sizes/font_size = 10
+theme_override_font_sizes/font_size = 8
 theme_override_styles/normal = SubResource("StyleBoxTexture_tab_inactive")
 theme_override_styles/hover = SubResource("StyleBoxTexture_tab_hover")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_tab_inactive")
@@ -119,9 +119,9 @@ text = "❤️"
 
 [node name="BtnMap" type="Button" parent="TabsContainer"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(28, 20)
+custom_minimum_size = Vector2(24, 16)
 layout_mode = 2
-theme_override_font_sizes/font_size = 10
+theme_override_font_sizes/font_size = 8
 theme_override_styles/normal = SubResource("StyleBoxTexture_tab_inactive")
 theme_override_styles/hover = SubResource("StyleBoxTexture_tab_hover")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_tab_inactive")
@@ -130,9 +130,9 @@ text = "🗺️"
 
 [node name="BtnCrafting" type="Button" parent="TabsContainer"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(28, 20)
+custom_minimum_size = Vector2(24, 16)
 layout_mode = 2
-theme_override_font_sizes/font_size = 10
+theme_override_font_sizes/font_size = 8
 theme_override_styles/normal = SubResource("StyleBoxTexture_tab_inactive")
 theme_override_styles/hover = SubResource("StyleBoxTexture_tab_hover")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_tab_inactive")
@@ -141,9 +141,9 @@ text = "⚙️"
 
 [node name="BtnCollections" type="Button" parent="TabsContainer"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(28, 20)
+custom_minimum_size = Vector2(24, 16)
 layout_mode = 2
-theme_override_font_sizes/font_size = 10
+theme_override_font_sizes/font_size = 8
 theme_override_styles/normal = SubResource("StyleBoxTexture_tab_inactive")
 theme_override_styles/hover = SubResource("StyleBoxTexture_tab_hover")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_tab_inactive")
@@ -152,9 +152,9 @@ text = "⭐"
 
 [node name="BtnOptions" type="Button" parent="TabsContainer"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(28, 20)
+custom_minimum_size = Vector2(24, 16)
 layout_mode = 2
-theme_override_font_sizes/font_size = 10
+theme_override_font_sizes/font_size = 8
 theme_override_styles/normal = SubResource("StyleBoxTexture_tab_inactive")
 theme_override_styles/hover = SubResource("StyleBoxTexture_tab_hover")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_tab_inactive")
@@ -163,9 +163,9 @@ text = "🔧"
 
 [node name="BtnExit" type="Button" parent="TabsContainer"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(28, 20)
+custom_minimum_size = Vector2(24, 16)
 layout_mode = 2
-theme_override_font_sizes/font_size = 10
+theme_override_font_sizes/font_size = 8
 theme_override_styles/normal = SubResource("StyleBoxTexture_tab_inactive")
 theme_override_styles/hover = SubResource("StyleBoxTexture_tab_hover")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_tab_inactive")
@@ -180,10 +180,10 @@ theme_override_styles/panel = SubResource("StyleBoxTexture_menu_bg")
 
 [node name="MarginContainer" type="MarginContainer" parent="ContentPanel"]
 layout_mode = 2
-theme_override_constants/margin_left = 12
-theme_override_constants/margin_top = 12
-theme_override_constants/margin_right = 12
-theme_override_constants/margin_bottom = 12
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 6
 
 [node name="TabContents" type="Control" parent="ContentPanel/MarginContainer"]
 layout_mode = 2
@@ -196,7 +196,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 4
+theme_override_constants/separation = 3
 
 [node name="Header" type="HBoxContainer" parent="ContentPanel/MarginContainer/TabContents/InventoryContent"]
 layout_mode = 2
@@ -205,21 +205,21 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.28, 0.13, 0.05, 1)
-theme_override_font_sizes/font_size = 10
+theme_override_font_sizes/font_size = 9
 text = "🎒 Inventário"
 vertical_alignment = 1
 
 [node name="CloseButton" type="Button" parent="ContentPanel/MarginContainer/TabContents/InventoryContent/Header"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(16, 16)
+custom_minimum_size = Vector2(14, 14)
 layout_mode = 2
-theme_override_font_sizes/font_size = 7
+theme_override_font_sizes/font_size = 6
 theme_override_styles/normal = SubResource("StyleBoxFlat_close_btn")
 text = "X"
 
 [node name="Separator" type="TextureRect" parent="ContentPanel/MarginContainer/TabContents/InventoryContent"]
 layout_mode = 2
-custom_minimum_size = Vector2(0, 8)
+custom_minimum_size = Vector2(0, 6)
 texture = ExtResource("4_decor")
 expand_mode = 1
 stretch_mode = 1
@@ -247,7 +247,7 @@ grow_vertical = 2
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.28, 0.13, 0.05, 0.8)
-theme_override_font_sizes/font_size = 10
+theme_override_font_sizes/font_size = 9
 text = "Tela em Desenvolvimento"
 horizontal_alignment = 1
 vertical_alignment = 1

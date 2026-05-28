@@ -25,7 +25,7 @@ expand_margin_right = 0
 expand_margin_bottom = 0
 
 [node name="SlotUI" type="PanelContainer" unique_id=1229524394]
-custom_minimum_size = Vector2(24, 24)
+custom_minimum_size = Vector2(20, 20)
 size_flags_horizontal = 4
 size_flags_vertical = 4
 theme_override_styles/panel = SubResource("StyleBoxTexture_slot_bg")
