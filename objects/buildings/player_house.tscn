@@ -1,0 +1,266 @@
+[gd_scene format=3 uid="uid://cx6gijkm0d1ab"]
+
+[ext_resource type="Script" uid="uid://bqf7gynjbvyqi" path="res://objects/buildings/farmhouse.gd" id="1_lh3cv"]
+[ext_resource type="Texture2D" uid="uid://qm8q3te7o7lb" path="res://assets/tiles/farm/Tiny House.png" id="2_tex"]
+[ext_resource type="Texture2D" uid="uid://bh23rvbpv5oo0" path="res://assets/tiles/farm/Door, windows, and chimney.png" id="3_dwc"]
+[ext_resource type="PackedScene" uid="uid://b60dxqtucsl50" path="res://levels/house_interior/house_interior.tscn" id="4_int"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_idqra"]
+size = Vector2(70, 44.5)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_door"]
+size = Vector2(16, 20)
+
+[sub_resource type="Animation" id="Animation_idqra"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Visuals/DoorSprite:hframes")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [1]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Visuals/DoorSprite:vframes")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [1]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Visuals/DoorSprite:texture")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("3_dwc")]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Visuals/DoorSprite:region_enabled")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Visuals/DoorSprite:region_rect")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Rect2(112.50481, 3.0711563, 14.618713, 22.849403)]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Visuals/DoorSprite:frame")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="Animation_open"]
+resource_name = "open_door"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Visuals/DoorSprite:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [Vector2(1, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Visuals/DoorSprite:hframes")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [2]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Visuals/DoorSprite:vframes")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [1]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Visuals/DoorSprite:texture")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("3_dwc")]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Visuals/DoorSprite:region_enabled")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Visuals/DoorSprite:region_rect")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [Rect2(112.50481, 3.0711563, 31.418137, 22.849403)]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("Visuals/DoorSprite:frame")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [0, 1]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_door"]
+_data = {
+&"RESET": SubResource("Animation_idqra"),
+&"open_door": SubResource("Animation_open")
+}
+
+[node name="PlayerHouse" type="StaticBody2D" unique_id=58970720]
+collision_layer = 5
+script = ExtResource("1_lh3cv")
+interior_scene = ExtResource("4_int")
+
+# O nó Visuals agrupa todos os sprites visuais da casa
+# position = (0, 0) garante que o pivot do Y-sort fica no chão (pé da casa)
+[node name="Visuals" type="Node2D" parent="." unique_id=644743784]
+
+# Retângulo escuro simulando o interior/sombra da porta
+[node name="InteriorDark" type="ColorRect" parent="Visuals" unique_id=459123919]
+offset_left = -15.0
+offset_top = -31.0
+offset_right = 15.0
+offset_bottom = -1.0
+color = Color(0.12, 0.08, 0.05, 1)
+
+# Sprite da cor principal da parede da casa
+[node name="WallColor" type="Sprite2D" parent="Visuals" unique_id=1709529722]
+position = Vector2(0, -29)
+texture = ExtResource("2_tex")
+region_enabled = true
+region_rect = Rect2(244.87814, 84.762955, 69.464905, 59.41156)
+
+# Sprite de detalhe da parede (textura de tijolos/madeira)
+[node name="Wall" type="Sprite2D" parent="Visuals" unique_id=132926814]
+position = Vector2(0, -38)
+texture = ExtResource("3_dwc")
+region_enabled = true
+region_rect = Rect2(129.52957, 112.253006, 12.903259, 14.74659)
+
+# Sprite da moldura de madeira da entrada/janela
+[node name="WoodFrame" type="Sprite2D" parent="Visuals" unique_id=1951663274]
+position = Vector2(0, -24)
+texture = ExtResource("2_tex")
+region_enabled = true
+region_rect = Rect2(383.79282, 189.66496, 48.326202, 49.365234)
+
+# Sprite da porta (animável: aberta/fechada)
+[node name="DoorSprite" type="Sprite2D" parent="Visuals" unique_id=890795452]
+position = Vector2(-7, -23)
+texture = ExtResource("3_dwc")
+centered = false
+region_enabled = true
+region_rect = Rect2(112.50481, 3.0711563, 14.618713, 22.849403)
+
+# Sprite da janela da casa
+[node name="Window" type="Sprite2D" parent="Visuals" unique_id=946658031]
+position = Vector2(0, -39)
+texture = ExtResource("3_dwc")
+region_enabled = true
+region_rect = Rect2(113.314285, 112.357025, 13.730019, 14.569069)
+
+# Sprite do telhado principal da casa
+[node name="Roof" type="Sprite2D" parent="Visuals" unique_id=1481673433]
+position = Vector2(0, -46)
+texture = ExtResource("2_tex")
+region_enabled = true
+region_rect = Rect2(162.83206, 9.824095, 74.115845, 63.741882)
+
+# Sprite do complemento do telhado (chaminé, detalhes)
+[node name="RoofComplement" type="Sprite2D" parent="Visuals" unique_id=1190293825]
+position = Vector2(0, -65)
+texture = ExtResource("2_tex")
+region_enabled = true
+region_rect = Rect2(514.93567, 264.2635, 10.589966, 39.978577)
+
+# Colisão principal da casa — centralizada verticalmente no body da construção
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1832908901]
+position = Vector2(0, -22.25)
+shape = SubResource("RectangleShape2D_idqra")
+
+# Área de detecção da porta — posicionada no chão na entrada da casa
+[node name="DoorArea" type="Area2D" parent="." unique_id=734395254]
+position = Vector2(-2, 5)
+collision_layer = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DoorArea" unique_id=654388159]
+visible = false
+z_index = 2
+shape = SubResource("RectangleShape2D_door")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1375309926]
+libraries/ = SubResource("AnimationLibrary_door")
