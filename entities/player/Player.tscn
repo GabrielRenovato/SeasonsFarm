@@ -1,42 +1,35 @@
 [gd_scene format=3 uid="uid://dtm3gi5e5socn"]
 
 [ext_resource type="Script" uid="uid://ct5ahm33ihbw1" path="res://entities/player/player.gd" id="1_4kuee"]
-[ext_resource type="Texture2D" uid="uid://b7av87s82jddj" path="res://assets/sprites/player/separate/walk/char1_walk.png" id="2_ov1oi"]
-[ext_resource type="Texture2D" uid="uid://bd1qtk5qnfk6w" path="res://assets/sprites/player/separate/walk/hair/bob_walk.png" id="3_20koh"]
-[ext_resource type="Texture2D" uid="uid://d4jlo3t5k3r4q" path="res://assets/sprites/player/separate/pickaxe/tool/pickaxe_wood.png" id="5_20koh"]
-[ext_resource type="Texture2D" uid="uid://c4may5hox2dc6" path="res://assets/sprites/player/separate/walk/clothes/basic_walk.png" id="5_ejd4k"]
+[ext_resource type="Texture2D" uid="uid://cfexdppfsl84q" path="res://assets/sprites/Character/PNG/2. Walk/Skins/1.png" id="2_ov1oi"]
+[ext_resource type="Texture2D" uid="uid://cknkxi414hkgn" path="res://assets/sprites/Character/PNG/2. Walk/Hair's/Standard/Brown.png" id="3_20koh"]
+[ext_resource type="Texture2D" uid="uid://cxv7hshud7ffq" path="res://assets/sprites/Character/PNG/4. Pickaxe, Hoe and Catching insects/Weapons/Pickaxe/1.png" id="5_20koh"]
 [ext_resource type="Script" uid="uid://bljtp8a13beeo" path="res://entities/player/movement_component.gd" id="5_tpg5x"]
-[ext_resource type="Texture2D" uid="uid://cykqrcydn2svr" path="res://assets/sprites/player/separate/axe/clothes/basic_axe.png" id="6_2xrq6"]
-[ext_resource type="Texture2D" uid="uid://clqh66lfihgk2" path="res://assets/sprites/player/separate/axe/hair/bob_axe.png" id="6_180ig"]
-[ext_resource type="Texture2D" uid="uid://cgemxqhdwavtb" path="res://assets/sprites/player/separate/walk/panths/pants_walk.png" id="6_kswpp"]
-[ext_resource type="Texture2D" uid="uid://d0ryckv6ixxqf" path="res://assets/sprites/player/separate/hoe/hair/bob_hoe.png" id="6_npwbq"]
-[ext_resource type="Texture2D" uid="uid://bpimp3vxt8aao" path="res://assets/sprites/player/separate/axe/without/char1_axe_without.png" id="6_ov1oi"]
-[ext_resource type="Texture2D" uid="uid://dukkacqme0wy8" path="res://assets/sprites/player/separate/axe/clothes/overall_axe.png" id="7_eac1a"]
-[ext_resource type="Texture2D" uid="uid://bvwad30ucpm5s" path="res://assets/sprites/player/separate/water/tool/wateringcan_red.png" id="7_geaob"]
+[ext_resource type="Texture2D" uid="uid://xdw32gaws4rg" path="res://assets/sprites/Character/PNG/5. Axe and Sickle/Hair's/Standard/Brown.png" id="6_180ig"]
+[ext_resource type="Texture2D" uid="uid://ct1wuplwtwodu" path="res://assets/sprites/Character/PNG/2. Walk/Clothers/Farm/Blue.png" id="6_kswpp"]
+[ext_resource type="Texture2D" uid="uid://cixujfxypg2b6" path="res://assets/sprites/Character/PNG/5. Axe and Sickle/Skins/1.png" id="6_ov1oi"]
 [ext_resource type="Script" uid="uid://bcd4qim3vvao1" path="res://entities/player/tool_component.gd" id="7_npwbq"]
-[ext_resource type="Texture2D" uid="uid://xg5lyllg13ml" path="res://assets/sprites/player/separate/pickaxe/hair/bob_pickaxe.png" id="8_7oing"]
-[ext_resource type="Texture2D" uid="uid://clev7wqfy6ue8" path="res://assets/sprites/player/separate/hoe/without/char1_hoe_without.png" id="8_ov1oi"]
-[ext_resource type="Texture2D" uid="uid://bfwr2r0085umv" path="res://assets/sprites/player/separate/axe/tool/axe_wood.png" id="8_rn7t0"]
-[ext_resource type="Texture2D" uid="uid://dnx674qd8g6h3" path="res://assets/sprites/player/separate/axe/panths/pants_axe.png" id="9_v5i4m"]
-[ext_resource type="Texture2D" uid="uid://cmu5uidyeph8v" path="res://assets/sprites/player/separate/hoe/clothes/basic_hoe.png" id="10_pi3ps"]
-[ext_resource type="Texture2D" uid="uid://05whh8y012xp" path="res://assets/sprites/player/separate/hoe/tool/hoe_wood.png" id="10_rn7t0"]
-[ext_resource type="Texture2D" uid="uid://1jp1dbxww7b" path="res://assets/sprites/player/separate/pickaxe/without/char1_pickaxe_without.png" id="11_8qjgm"]
-[ext_resource type="Texture2D" uid="uid://b3ouo7ue416t6" path="res://assets/sprites/player/separate/carry/char1_carry.png" id="12_x3qp0"]
-[ext_resource type="Texture2D" uid="uid://bf6pej72bboiu" path="res://assets/sprites/player/separate/carry/clothes/basic_carry.png" id="13_76i7i"]
-[ext_resource type="Texture2D" uid="uid://4nic7fs6igyf" path="res://assets/sprites/player/separate/carry/panths/pants_carry.png" id="14_mndc6"]
-[ext_resource type="Texture2D" uid="uid://ds02hccf58fb5" path="res://assets/sprites/player/separate/hoe/panths/pants_hoe.png" id="14_p1lr0"]
-[ext_resource type="Texture2D" uid="uid://c2bcusx1r7q6r" path="res://assets/sprites/player/separate/carry/hair/bob_carry.png" id="15_1hh02"]
-[ext_resource type="Texture2D" uid="uid://cvpuruqdnyjsg" path="res://assets/sprites/player/separate/pickaxe/clothes/basic_pickaxe.png" id="15_2xrq6"]
-[ext_resource type="Texture2D" uid="uid://bookogbhafiw3" path="res://assets/sprites/player/separate/fish/panths/pants_fish.png" id="18_05p8n"]
-[ext_resource type="Texture2D" uid="uid://blx563j0iajfx" path="res://assets/sprites/player/separate/fish/tool/fishingrod_brown.png" id="18_bvphr"]
-[ext_resource type="Texture2D" uid="uid://c5qcyrlwj8y5m" path="res://assets/sprites/player/separate/pickaxe/panths/pants_pickaxe.png" id="18_v5i4m"]
-[ext_resource type="Texture2D" uid="uid://c7hw4medwboq5" path="res://assets/sprites/player/separate/fish/without/char1_fish_without.png" id="19_eac1a"]
-[ext_resource type="Texture2D" uid="uid://x0y0jf5340op" path="res://assets/sprites/player/separate/fish/hair/bob_fish.png" id="22_ijyjs"]
-[ext_resource type="Texture2D" uid="uid://rslubabq744r" path="res://assets/sprites/player/separate/water/without/char1_water_without.png" id="27_qsmrd"]
-[ext_resource type="Texture2D" uid="uid://dq66r1airy4ht" path="res://assets/sprites/player/separate/water/clothes/basic_water.png" id="28_jtlb7"]
-[ext_resource type="Texture2D" uid="uid://da2xl2euwvk6c" path="res://assets/sprites/player/separate/water/panths/pants_water.png" id="29_ye1dr"]
-[ext_resource type="Texture2D" uid="uid://dcisgd2sdlmq1" path="res://assets/sprites/player/separate/water/hair/bob_water.png" id="30_bvphr"]
-[ext_resource type="Texture2D" uid="uid://ck78l6i8pjgso" path="res://assets/sprites/player/separate/water/tool/wateringcan_purple.png" id="36_eac1a"]
+[ext_resource type="Texture2D" uid="uid://ds4p1px2nhltl" path="res://assets/sprites/Character/PNG/4. Pickaxe, Hoe and Catching insects/Hair's/Standard/Brown.png" id="8_7oing"]
+[ext_resource type="Texture2D" uid="uid://dg5ewesna35j5" path="res://assets/sprites/Character/PNG/5. Axe and Sickle/Weapons/Axe/1.png" id="8_rn7t0"]
+[ext_resource type="Texture2D" uid="uid://c6q6neysvlw7c" path="res://assets/sprites/Character/PNG/5. Axe and Sickle/Clothers/Farm/Blue.png" id="9_v5i4m"]
+[ext_resource type="Texture2D" uid="uid://b2o4f86paaixd" path="res://assets/sprites/Character/PNG/4. Pickaxe, Hoe and Catching insects/Weapons/Hoe/1.png" id="10_rn7t0"]
+[ext_resource type="Texture2D" uid="uid://cxjihrlrwph0x" path="res://assets/sprites/Character/PNG/4. Pickaxe, Hoe and Catching insects/Skins/1.png" id="11_8qjgm"]
+[ext_resource type="Texture2D" uid="uid://f17jvsvlpnkt" path="res://assets/sprites/Character/PNG/13.1 Carrying - Walk/Skins/1.png" id="12_x3qp0"]
+[ext_resource type="Texture2D" uid="uid://oibrn3yuowyq" path="res://assets/sprites/Character/PNG/13.1 Carrying - Walk/Clothers/Farm/Blue.png" id="14_mndc6"]
+[ext_resource type="Texture2D" uid="uid://d17g70al58gjp" path="res://assets/sprites/Character/PNG/13.1 Carrying - Walk/Hair's/Standard/Brown.png" id="15_1hh02"]
+[ext_resource type="Texture2D" uid="uid://bn4sw6d63j0b2" path="res://assets/sprites/Character/PNG/12. Fishing - Cast/Clothers/Farm/Blue.png" id="18_05p8n"]
+[ext_resource type="Texture2D" uid="uid://0hbhg8ns7rgv" path="res://assets/sprites/Character/PNG/12. Fishing - Cast/Weapons/1.png" id="18_bvphr"]
+[ext_resource type="Texture2D" uid="uid://dud5vpe3eoa7j" path="res://assets/sprites/Character/PNG/4. Pickaxe, Hoe and Catching insects/Clothers/Farm/Blue.png" id="18_v5i4m"]
+[ext_resource type="Texture2D" uid="uid://b35sxbiqinob0" path="res://assets/sprites/Character/PNG/12. Fishing - Cast/Skins/1.png" id="19_eac1a"]
+[ext_resource type="Texture2D" uid="uid://dv2euabg2ojpr" path="res://assets/sprites/Character/PNG/12. Fishing - Cast/Hair's/Standard/Brown.png" id="22_ijyjs"]
+[ext_resource type="Texture2D" uid="uid://bysqf6fpwnlre" path="res://assets/sprites/Character/PNG/7. Watering/Skins/1.png" id="27_qsmrd"]
+[ext_resource type="Texture2D" uid="uid://cmkypaowg5lj8" path="res://assets/sprites/Character/PNG/7. Watering/Clothers/Farm/Blue.png" id="29_ye1dr"]
+[ext_resource type="Texture2D" uid="uid://byymcjaienw0q" path="res://assets/sprites/Character/PNG/7. Watering/Hair's/Standard/Brown.png" id="30_bvphr"]
+[ext_resource type="Texture2D" uid="uid://dntm3xew2aad7" path="res://assets/sprites/Character/PNG/7. Watering/Weapons/Watering/1.png" id="36_eac1a"]
+[ext_resource type="Texture2D" uid="uid://d36eg365xbmof" path="res://assets/sprites/Character/PNG/13. Carrying - Idle/Skins/1.png" id="new_carry_idle_skin"]
+[ext_resource type="Texture2D" uid="uid://nmv8t50spdw1" path="res://assets/sprites/Character/PNG/1. Idle/Clothers/Farm/Blue.png" id="new_idle_cloth"]
+[ext_resource type="Texture2D" uid="uid://2ag76moho361" path="res://assets/sprites/Character/PNG/1. Idle/Hair's/Standard/Brown.png" id="new_idle_hair"]
+[ext_resource type="Texture2D" uid="uid://cfkn16gm8dp7i" path="res://assets/sprites/Character/PNG/1. Idle/Skins/1.png" id="new_idle_skin"]
 [ext_resource type="Script" uid="uid://b4jy0k4fkodko" path="res://core/utils/safe_sprite.gd" id="safe_sprite_script"]
 
 [sub_resource type="Gradient" id="Gradient_shadow"]
@@ -221,7 +214,7 @@ tracks/13/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("5_ejd4k")]
+"values": [ExtResource("6_kswpp")]
 }
 tracks/14/type = "value"
 tracks/14/imported = false
@@ -669,7 +662,7 @@ tracks/15/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("7_eac1a")]
+"values": [ExtResource("9_v5i4m")]
 }
 tracks/16/type = "value"
 tracks/16/imported = false
@@ -842,7 +835,7 @@ tracks/29/keys = {
 
 [sub_resource type="Animation" id="Animation_x3qp0"]
 resource_name = "axe_left"
-length = 0.33333334
+length = 1.0333333
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -1021,7 +1014,7 @@ tracks/14/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("6_2xrq6")]
+"values": [ExtResource("9_v5i4m")]
 }
 tracks/15/type = "value"
 tracks/15/imported = false
@@ -1373,7 +1366,7 @@ tracks/14/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("6_2xrq6")]
+"values": [ExtResource("9_v5i4m")]
 }
 tracks/15/type = "value"
 tracks/15/imported = false
@@ -1725,7 +1718,7 @@ tracks/14/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("6_2xrq6")]
+"values": [ExtResource("9_v5i4m")]
 }
 tracks/15/type = "value"
 tracks/15/imported = false
@@ -2053,7 +2046,7 @@ tracks/12/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("13_76i7i")]
+"values": [ExtResource("14_mndc6")]
 }
 tracks/13/type = "value"
 tracks/13/imported = false
@@ -2201,7 +2194,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("12_x3qp0")]
+"values": [ExtResource("new_carry_idle_skin")]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -2345,7 +2338,7 @@ tracks/12/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("13_76i7i")]
+"values": [ExtResource("14_mndc6")]
 }
 tracks/13/type = "value"
 tracks/13/imported = false
@@ -2493,7 +2486,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("12_x3qp0")]
+"values": [ExtResource("new_carry_idle_skin")]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -2637,7 +2630,7 @@ tracks/12/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("13_76i7i")]
+"values": [ExtResource("14_mndc6")]
 }
 tracks/13/type = "value"
 tracks/13/imported = false
@@ -2785,7 +2778,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("12_x3qp0")]
+"values": [ExtResource("new_carry_idle_skin")]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -2929,7 +2922,7 @@ tracks/12/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("13_76i7i")]
+"values": [ExtResource("14_mndc6")]
 }
 tracks/13/type = "value"
 tracks/13/imported = false
@@ -3077,7 +3070,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("12_x3qp0")]
+"values": [ExtResource("new_carry_idle_skin")]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -3221,7 +3214,7 @@ tracks/12/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("13_76i7i")]
+"values": [ExtResource("14_mndc6")]
 }
 tracks/13/type = "value"
 tracks/13/imported = false
@@ -3513,7 +3506,7 @@ tracks/12/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("13_76i7i")]
+"values": [ExtResource("14_mndc6")]
 }
 tracks/13/type = "value"
 tracks/13/imported = false
@@ -3805,7 +3798,7 @@ tracks/12/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("13_76i7i")]
+"values": [ExtResource("14_mndc6")]
 }
 tracks/13/type = "value"
 tracks/13/imported = false
@@ -4097,7 +4090,7 @@ tracks/12/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("13_76i7i")]
+"values": [ExtResource("14_mndc6")]
 }
 tracks/13/type = "value"
 tracks/13/imported = false
@@ -5301,7 +5294,7 @@ tracks/2/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("8_ov1oi")]
+"values": [ExtResource("11_8qjgm")]
 }
 tracks/3/type = "value"
 tracks/3/imported = false
@@ -5313,7 +5306,7 @@ tracks/3/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("6_npwbq")]
+"values": [ExtResource("8_7oing")]
 }
 tracks/4/type = "value"
 tracks/4/imported = false
@@ -5457,7 +5450,7 @@ tracks/15/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("10_pi3ps")]
+"values": [ExtResource("18_v5i4m")]
 }
 tracks/16/type = "value"
 tracks/16/imported = false
@@ -5529,7 +5522,7 @@ tracks/21/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("14_p1lr0")]
+"values": [ExtResource("18_v5i4m")]
 }
 tracks/22/type = "value"
 tracks/22/imported = false
@@ -5665,7 +5658,7 @@ tracks/2/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("8_ov1oi")]
+"values": [ExtResource("11_8qjgm")]
 }
 tracks/3/type = "value"
 tracks/3/imported = false
@@ -5677,7 +5670,7 @@ tracks/3/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("6_npwbq")]
+"values": [ExtResource("8_7oing")]
 }
 tracks/4/type = "value"
 tracks/4/imported = false
@@ -5809,7 +5802,7 @@ tracks/14/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("10_pi3ps")]
+"values": [ExtResource("18_v5i4m")]
 }
 tracks/15/type = "value"
 tracks/15/imported = false
@@ -5881,7 +5874,7 @@ tracks/20/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("14_p1lr0")]
+"values": [ExtResource("18_v5i4m")]
 }
 tracks/21/type = "value"
 tracks/21/imported = false
@@ -6017,7 +6010,7 @@ tracks/2/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("8_ov1oi")]
+"values": [ExtResource("11_8qjgm")]
 }
 tracks/3/type = "value"
 tracks/3/imported = false
@@ -6029,7 +6022,7 @@ tracks/3/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("6_npwbq")]
+"values": [ExtResource("8_7oing")]
 }
 tracks/4/type = "value"
 tracks/4/imported = false
@@ -6161,7 +6154,7 @@ tracks/14/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("10_pi3ps")]
+"values": [ExtResource("18_v5i4m")]
 }
 tracks/15/type = "value"
 tracks/15/imported = false
@@ -6233,7 +6226,7 @@ tracks/20/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("14_p1lr0")]
+"values": [ExtResource("18_v5i4m")]
 }
 tracks/21/type = "value"
 tracks/21/imported = false
@@ -6369,7 +6362,7 @@ tracks/2/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("8_ov1oi")]
+"values": [ExtResource("11_8qjgm")]
 }
 tracks/3/type = "value"
 tracks/3/imported = false
@@ -6381,7 +6374,7 @@ tracks/3/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("6_npwbq")]
+"values": [ExtResource("8_7oing")]
 }
 tracks/4/type = "value"
 tracks/4/imported = false
@@ -6513,7 +6506,7 @@ tracks/14/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("10_pi3ps")]
+"values": [ExtResource("18_v5i4m")]
 }
 tracks/15/type = "value"
 tracks/15/imported = false
@@ -6585,7 +6578,7 @@ tracks/20/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("14_p1lr0")]
+"values": [ExtResource("18_v5i4m")]
 }
 tracks/21/type = "value"
 tracks/21/imported = false
@@ -6721,7 +6714,7 @@ tracks/2/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("3_20koh")]
+"values": [ExtResource("new_idle_hair")]
 }
 tracks/3/type = "value"
 tracks/3/imported = false
@@ -6733,7 +6726,7 @@ tracks/3/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("2_ov1oi")]
+"values": [ExtResource("new_idle_skin")]
 }
 tracks/4/type = "value"
 tracks/4/imported = false
@@ -6793,7 +6786,7 @@ tracks/8/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("5_ejd4k")]
+"values": [ExtResource("new_idle_cloth")]
 }
 tracks/9/type = "value"
 tracks/9/imported = false
@@ -6965,7 +6958,7 @@ tracks/2/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("3_20koh")]
+"values": [ExtResource("new_idle_hair")]
 }
 tracks/3/type = "value"
 tracks/3/imported = false
@@ -6977,7 +6970,7 @@ tracks/3/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("2_ov1oi")]
+"values": [ExtResource("new_idle_skin")]
 }
 tracks/4/type = "value"
 tracks/4/imported = false
@@ -7049,7 +7042,7 @@ tracks/9/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("5_ejd4k")]
+"values": [ExtResource("new_idle_cloth")]
 }
 tracks/10/type = "value"
 tracks/10/imported = false
@@ -7221,7 +7214,7 @@ tracks/2/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("3_20koh")]
+"values": [ExtResource("new_idle_hair")]
 }
 tracks/3/type = "value"
 tracks/3/imported = false
@@ -7233,7 +7226,7 @@ tracks/3/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("2_ov1oi")]
+"values": [ExtResource("new_idle_skin")]
 }
 tracks/4/type = "value"
 tracks/4/imported = false
@@ -7305,7 +7298,7 @@ tracks/9/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("5_ejd4k")]
+"values": [ExtResource("new_idle_cloth")]
 }
 tracks/10/type = "value"
 tracks/10/imported = false
@@ -7477,7 +7470,7 @@ tracks/2/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("3_20koh")]
+"values": [ExtResource("new_idle_hair")]
 }
 tracks/3/type = "value"
 tracks/3/imported = false
@@ -7489,7 +7482,7 @@ tracks/3/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("2_ov1oi")]
+"values": [ExtResource("new_idle_skin")]
 }
 tracks/4/type = "value"
 tracks/4/imported = false
@@ -7549,7 +7542,7 @@ tracks/8/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("5_ejd4k")]
+"values": [ExtResource("new_idle_cloth")]
 }
 tracks/9/type = "value"
 tracks/9/imported = false
@@ -7889,7 +7882,7 @@ tracks/15/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("15_2xrq6")]
+"values": [ExtResource("18_v5i4m")]
 }
 tracks/16/type = "value"
 tracks/16/imported = false
@@ -8253,7 +8246,7 @@ tracks/15/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("15_2xrq6")]
+"values": [ExtResource("18_v5i4m")]
 }
 tracks/16/type = "value"
 tracks/16/imported = false
@@ -8617,7 +8610,7 @@ tracks/15/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("15_2xrq6")]
+"values": [ExtResource("18_v5i4m")]
 }
 tracks/16/type = "value"
 tracks/16/imported = false
@@ -8981,7 +8974,7 @@ tracks/15/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("15_2xrq6")]
+"values": [ExtResource("18_v5i4m")]
 }
 tracks/16/type = "value"
 tracks/16/imported = false
@@ -9262,7 +9255,7 @@ tracks/8/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("5_ejd4k")]
+"values": [ExtResource("6_kswpp")]
 }
 tracks/9/type = "value"
 tracks/9/imported = false
@@ -9423,7 +9416,7 @@ tracks/21/keys = {
 
 [sub_resource type="Animation" id="Animation_pi3ps"]
 resource_name = "walk_left"
-length = 0.46666667
+length = 1.2
 loop_mode = 1
 tracks/0/type = "value"
 tracks/0/imported = false
@@ -9543,7 +9536,7 @@ tracks/9/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("5_ejd4k")]
+"values": [ExtResource("6_kswpp")]
 }
 tracks/10/type = "value"
 tracks/10/imported = false
@@ -9812,7 +9805,7 @@ tracks/9/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("5_ejd4k")]
+"values": [ExtResource("6_kswpp")]
 }
 tracks/10/type = "value"
 tracks/10/imported = false
@@ -10069,7 +10062,7 @@ tracks/8/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("5_ejd4k")]
+"values": [ExtResource("6_kswpp")]
 }
 tracks/9/type = "value"
 tracks/9/imported = false
@@ -10373,7 +10366,7 @@ tracks/12/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("28_jtlb7")]
+"values": [ExtResource("29_ye1dr")]
 }
 tracks/13/type = "value"
 tracks/13/imported = false
@@ -10517,7 +10510,7 @@ tracks/24/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("7_geaob")]
+"values": [ExtResource("36_eac1a")]
 }
 tracks/25/type = "value"
 tracks/25/imported = false
@@ -10737,7 +10730,7 @@ tracks/12/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("28_jtlb7")]
+"values": [ExtResource("29_ye1dr")]
 }
 tracks/13/type = "value"
 tracks/13/imported = false
@@ -11101,7 +11094,7 @@ tracks/12/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("28_jtlb7")]
+"values": [ExtResource("29_ye1dr")]
 }
 tracks/13/type = "value"
 tracks/13/imported = false
@@ -11245,7 +11238,7 @@ tracks/24/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("7_geaob")]
+"values": [ExtResource("36_eac1a")]
 }
 tracks/25/type = "value"
 tracks/25/imported = false
@@ -11465,7 +11458,7 @@ tracks/12/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("28_jtlb7")]
+"values": [ExtResource("29_ye1dr")]
 }
 tracks/13/type = "value"
 tracks/13/imported = false
@@ -11609,7 +11602,7 @@ tracks/24/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("7_geaob")]
+"values": [ExtResource("36_eac1a")]
 }
 tracks/25/type = "value"
 tracks/25/imported = false
@@ -11971,7 +11964,7 @@ vframes = 4
 script = ExtResource("safe_sprite_script")
 
 [node name="Clothe" type="Sprite2D" parent="Body" unique_id=1352049259]
-texture = ExtResource("5_ejd4k")
+texture = ExtResource("6_kswpp")
 hframes = 80
 vframes = 4
 script = ExtResource("safe_sprite_script")
@@ -11995,7 +11988,6 @@ libraries/ = SubResource("AnimationLibrary_p1lr0")
 
 [node name="AnimationTree" type="AnimationTree" parent="." unique_id=2070598990]
 tree_root = SubResource("AnimationNodeStateMachine_7oing")
-anim_player = NodePath("../AnimationPlayer")
 parameters/Axe/blend_position = Vector2(0, 0)
 parameters/Cary/blend_position = Vector2(0, 0)
 parameters/CaryIdle/blend_position = Vector2(0, 0)
@@ -12037,6 +12029,7 @@ position_smoothing_speed = 15.0
 position = Vector2(0, -16)
 hframes = 5
 vframes = 4
+frame = 11
 script = ExtResource("safe_sprite_script")
 
 [node name="Area2D" type="Area2D" parent="Tool" unique_id=1186050250]

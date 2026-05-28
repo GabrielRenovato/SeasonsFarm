@@ -1,7 +1,21 @@
 extends Node2D
 
 @export var tree_scene: PackedScene
-@export var stump_scene: PackedScene = preload("res://objects/nature/stump.tscn")
+@export var stump_scene: PackedScene
+
+var stump_variations: Array[PackedScene] = [
+	preload("res://objects/nature/birch_stump.tscn"),
+	preload("res://objects/nature/mahogany_stump.tscn"),
+	preload("res://objects/nature/maple_stump.tscn"),
+	preload("res://objects/nature/pine_stump.tscn")
+]
+
+var tree_variations: Array[PackedScene] = [
+	preload("res://objects/nature/birch_tree.tscn"),
+	preload("res://objects/nature/mahogany_tree.tscn"),
+	preload("res://objects/nature/maple_tree.tscn"),
+	preload("res://objects/nature/pine_tree.tscn")
+]
 
 @export_group("Procedural Generation")
 @export var spawn_trees: bool = true
@@ -37,9 +51,12 @@ func _ready() -> void:
 		canvas_modulate.name = "DayNightCycle"
 		add_child(canvas_modulate)
 
+	if TimeManager.has_signal("day_changed"):
+		TimeManager.day_changed.connect(_on_day_changed)
+
 
 func generate_environment_procedurally() -> void:
-	if not tree_scene:
+	if tree_variations.is_empty() and not tree_scene:
 		push_warning("MapManager: tree_scene is not assigned!")
 		return
 		
@@ -112,15 +129,30 @@ func generate_environment_procedurally() -> void:
 						break
 				
 				if not too_close:
-					var new_tree = tree_scene.instantiate()
+					var new_tree = tree_variations.pick_random().instantiate() if not tree_variations.is_empty() else tree_scene.instantiate()
+					
+					# Randomize growth stage (more likely to be FULL)
+					var rand_val = randf()
+					if rand_val < 0.1:
+						new_tree.current_stage = 0 # SEED
+					elif rand_val < 0.2:
+						new_tree.current_stage = 1 # SPROUT
+					elif rand_val < 0.3:
+						new_tree.current_stage = 2 # SAPLING
+					elif rand_val < 0.4:
+						new_tree.current_stage = 3 # SMALL
+					else:
+						new_tree.current_stage = 4 # FULL
+						
 					new_tree.global_position = world_position
 					add_child(new_tree)
+					
 					spawned_positions.append(world_position)
 					spawned_trees_count += 1
 					continue # Skip stump check if tree is spawned
 
 		# 2. Attempt stump spawn (outside forest noise patches, more scattered)
-		if spawn_stumps and stump_scene and noise_val <= spawn_threshold:
+		if spawn_stumps and (stump_scene or not stump_variations.is_empty()) and noise_val <= spawn_threshold:
 			if rng.randf() < stump_spawn_chance:
 				var too_close := false
 				for pos in spawned_positions:
@@ -129,10 +161,79 @@ func generate_environment_procedurally() -> void:
 						break
 				
 				if not too_close:
-					var new_stump = stump_scene.instantiate()
+					var new_stump = stump_variations.pick_random().instantiate() if not stump_variations.is_empty() else stump_scene.instantiate()
 					new_stump.global_position = world_position
 					add_child(new_stump)
 					spawned_positions.append(world_position)
 					spawned_stumps_count += 1
 				
 	print("MapManager: Procedurally generated ", spawned_trees_count, " trees and ", spawned_stumps_count, " stumps using seed ", noise.seed)
+
+func _on_day_changed(_day: int) -> void:
+	# Centralized daily update to optimize signal connections and enforce population caps
+	var trees: Array[Node] = []
+	for child in get_children():
+		# Identify active trees (must have the current_stage property, which stumps do not)
+		if child is StaticBody2D and "current_stage" in child:
+			trees.append(child)
+			
+	var tree_count = trees.size()
+	
+	# 1. Update growth stages and manage seed spreading
+	for tree in trees:
+		if tree.current_stage < 4: # GrowthStage.FULL is stage 4
+			# 20% growth chance
+			if randf() <= 0.2:
+				tree.current_stage += 1
+				tree._update_appearance()
+		else:
+			# Fully grown trees spread seeds only if we are below population limit (max 100 trees)
+			# 2% spread chance per day prevents rapid overpopulation
+			if tree_count < 100 and randf() <= 0.02:
+				tree._spread_seed()
+				tree_count += 1
+				
+	# 2. Spawn a new random wild seed somewhere (15% chance per day) ONLY if under population cap (max 80 trees)
+	if tree_count < 80 and randf() <= 0.15:
+		_spawn_random_wild_seed()
+
+func _spawn_random_wild_seed() -> void:
+	if not ground_layer or tree_variations.is_empty():
+		return
+		
+	var used_cells = ground_layer.get_used_cells()
+	if used_cells.is_empty():
+		return
+		
+	# Try up to 10 random valid cells
+	for attempt in range(10):
+		var cell = used_cells.pick_random()
+		
+		# Check if grass_layer has grass here (if so, skip or allow)
+		if has_node("Grass_layer") and $Grass_layer.get_cell_source_id(cell) != -1:
+			continue
+			
+		var world_position = ground_layer.map_to_local(cell)
+		
+		# Prevent spawning too close to player or farmhouse
+		if has_node("Player") and world_position.distance_to($Player.global_position) < 80.0:
+			continue
+		if has_node("Farmhouse") and world_position.distance_to($Farmhouse.global_position) < 140.0:
+			continue
+			
+		# Enforce distance to other trees or stumps
+		var too_close = false
+		for child in get_children():
+			if child is StaticBody2D and (child.has_method("take_damage") or "stump" in child.name.to_lower()):
+				if child.global_position.distance_to(world_position) < min_tree_distance:
+					too_close = true
+					break
+					
+		if not too_close:
+			var random_tree_scene = tree_variations.pick_random()
+			var new_tree = random_tree_scene.instantiate()
+			new_tree.current_stage = 0 # GrowthStage.SEED
+			new_tree.global_position = world_position
+			add_child(new_tree)
+			print("MapManager: Spawned new wild seed of type ", random_tree_scene.resource_path, " at ", world_position)
+			break

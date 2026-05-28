@@ -51,7 +51,7 @@ func setup_default_inventory() -> void:
 	mining.id = "pickaxe"
 	mining.name = "Picareta"
 	mining.is_tool = true
-	mining.tool_type = "Mining"
+	mining.tool_type = "Pickaxe"
 	mining.icon_color = Color(0.1, 0.6, 0.8)
 	mining.icon_texture = _get_tool_frame(pick_sheet, 15)
 	
@@ -107,7 +107,7 @@ func _get_tool_frame(sheet: Texture2D, frame_index: int) -> AtlasTexture:
 	var frame_w = 32
 	var frame_h = 32
 	var col = frame_index % cols
-	var row = frame_index / cols
+	var row = int(frame_index / float(cols))
 	var tex = AtlasTexture.new()
 	tex.atlas = sheet
 	# Crop a 20x20 area adjusted for where the tools actually are in the 32x32 frame
@@ -124,7 +124,7 @@ func _get_seed_frame(sheet: Texture2D, frame_index: int) -> AtlasTexture:
 	var cols = 7
 	var size = 16
 	var col = frame_index % cols
-	var row = frame_index / cols
+	var row = int(frame_index / float(cols))
 	var tex = AtlasTexture.new()
 	tex.atlas = sheet
 	tex.region = Rect2(col * size, row * size, size, size)
@@ -137,7 +137,7 @@ func _get_item_frame(sheet: Texture2D, frame_index: int) -> AtlasTexture:
 	var cols = 10
 	var size = 16
 	var col = frame_index % cols
-	var row = frame_index / cols
+	var row = int(frame_index / float(cols))
 	var tex = AtlasTexture.new()
 	tex.atlas = sheet
 	tex.region = Rect2(col * size, row * size, size, size)

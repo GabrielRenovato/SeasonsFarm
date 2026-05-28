@@ -19,6 +19,8 @@ func _apply_customization() -> void:
 		
 	# Apply Hair Color modulation directly to the hair sprite node
 	var hair_node = animation_player.get_node_or_null("../Body/har")
+	if not hair_node:
+		hair_node = animation_player.get_node_or_null("../Hair")
 	if hair_node:
 		hair_node.modulate = CustomizationManager.hair_color
 
@@ -37,31 +39,60 @@ func _apply_customization() -> void:
 						var old_res_path = old_tex.resource_path
 						var new_res_path = old_res_path
 						
-						if "Body/har:texture" in str_path:
-							new_res_path = _replace_prefix(old_res_path, CustomizationManager.available_hairstyles, CustomizationManager.current_hair)
-						elif "Body/Clothe:texture" in str_path:
-							new_res_path = _replace_prefix(old_res_path, CustomizationManager.available_clothes, CustomizationManager.current_clothes)
-						elif "Body/Lags:texture" in str_path:
-							new_res_path = _replace_prefix(old_res_path, CustomizationManager.available_pants, CustomizationManager.current_pants)
+						if "Body/har:texture" in str_path or str_path == "Hair:texture":
+							new_res_path = _get_new_path(old_res_path, "hair")
+						elif "Body/Clothe:texture" in str_path or str_path == "Clothes:texture":
+							new_res_path = _get_new_path(old_res_path, "clothes")
+						elif "Body/Lags:texture" in str_path or str_path == "Pants:texture":
+							new_res_path = _get_new_path(old_res_path, "pants")
+						elif str_path == "Eyes:texture":
+							new_res_path = _get_new_path(old_res_path, "eyes")
 						elif str_path == "Body:texture" or str_path.ends_with("/Body:texture"):
-							new_res_path = _replace_prefix(old_res_path, CustomizationManager.available_bodies, CustomizationManager.current_body)
+							new_res_path = _get_new_path(old_res_path, "body")
 						
 						# If path changed and resource exists, load and apply it
 						if new_res_path != old_res_path and ResourceLoader.exists(new_res_path):
 							var new_tex = load(new_res_path)
 							anim.track_set_key_value(track_idx, key_idx, new_tex)
 
-func _replace_prefix(path: String, available_prefixes: Array, target_prefix: String) -> String:
-	var file_name = path.get_file()
-	var dir_path = path.get_base_dir()
-	
-	# Sort prefixes by length descending to match more specific prefixes first (e.g. "pants_suit" before "pants")
-	var sorted_prefixes = available_prefixes.duplicate()
-	sorted_prefixes.sort_custom(func(a, b): return a.length() > b.length())
-	
-	for prefix in sorted_prefixes:
-		if file_name.begins_with(prefix + "_"):
-			var new_file_name = file_name.replace(prefix + "_", target_prefix + "_")
-			return dir_path + "/" + new_file_name
-	return path
-
+func _get_new_path(old_path: String, track_type: String) -> String:
+	if "Character/PNG" in old_path:
+		var file_name = old_path.get_file()
+		var dir_path = old_path.get_base_dir()
+		
+		if track_type == "hair":
+			var parent_dir = dir_path.get_base_dir()
+			return parent_dir + "/" + CustomizationManager.current_hair + "/" + file_name
+		elif track_type == "clothes":
+			return dir_path + "/" + CustomizationManager.current_clothes + ".png"
+		elif track_type == "body":
+			return dir_path + "/" + CustomizationManager.current_body + ".png"
+		elif track_type == "eyes":
+			return dir_path + "/" + CustomizationManager.current_eyes + ".png"
+		return old_path
+	else:
+		var target_prefix = ""
+		var available_prefixes = []
+		if track_type == "hair":
+			target_prefix = CustomizationManager.current_hair
+			available_prefixes = CustomizationManager.available_hairstyles
+		elif track_type == "clothes":
+			target_prefix = CustomizationManager.current_clothes
+			available_prefixes = CustomizationManager.available_clothes
+		elif track_type == "pants":
+			target_prefix = CustomizationManager.current_pants
+			available_prefixes = CustomizationManager.available_pants
+		elif track_type == "body":
+			target_prefix = CustomizationManager.current_body
+			available_prefixes = CustomizationManager.available_bodies
+			
+		var file_name = old_path.get_file()
+		var dir_path = old_path.get_base_dir()
+		var sorted_prefixes = available_prefixes.duplicate()
+		sorted_prefixes.sort_custom(func(a, b): return a.length() > b.length())
+		
+		for prefix in sorted_prefixes:
+			if file_name.begins_with(prefix + "_"):
+				var new_file_name = file_name.replace(prefix + "_", target_prefix + "_")
+				return dir_path + "/" + new_file_name
+		return old_path

@@ -20,6 +20,7 @@ var is_using_tool: bool = false
 var _active_tool_in_use: String = ""
 var strict_direction: Vector2 = Vector2.DOWN
 var _pending_hit_direction: Vector2 = Vector2.ZERO
+var _pending_target_map_position: Vector2i = Vector2i.ZERO
 var is_carrying: bool = false
 var _carry_item: ItemData
 var _carry_sprite: Sprite2D
@@ -76,8 +77,8 @@ func _update_strict_direction(direction: Vector2) -> void:
 		elif abs(direction.y) > abs(direction.x):
 			strict_direction = Vector2(0, sign(direction.y))
 	if is_carrying:
-		animation_tree.set("parameters/Cary/blend_position", strict_direction)
-		animation_tree.set("parameters/CaryIdle/blend_position", strict_direction)
+		animation_tree.set("parameters/CarryWalk/blend_position", strict_direction)
+		animation_tree.set("parameters/CarryIdle/blend_position", strict_direction)
 		_update_carry_sprite_position()
 
 func _update_carry_sprite_position() -> void:
@@ -162,9 +163,9 @@ func _on_slot_changed(_index: int) -> void:
 		if is_carrying:
 			_carry_item = item
 			_show_carry_sprite(item)
-			animation_tree.set("parameters/Cary/blend_position", strict_direction)
-			animation_tree.set("parameters/CaryIdle/blend_position", strict_direction)
-			state_machine.travel("CaryIdle")
+			animation_tree.set("parameters/CarryWalk/blend_position", strict_direction)
+			animation_tree.set("parameters/CarryIdle/blend_position", strict_direction)
+			state_machine.travel("CarryIdle")
 		else:
 			_hide_carry_sprite()
 			_carry_item = null
@@ -209,16 +210,10 @@ func handle_tool_use(direction: Vector2) -> void:
 			is_using_tool = true
 			_active_tool_in_use = tool_name
 			_pending_hit_direction = strict_direction
+			_pending_target_map_position = target_map_position
 			
 			animation_tree.set("parameters/" + tool_name + "/blend_position", strict_direction)
 			state_machine.travel(tool_name)
-			
-			if tool_name == "Hoe":
-				if FarmManager:
-					FarmManager.till_soil(target_map_position)
-			elif tool_name == "Water":
-				if FarmManager:
-					FarmManager.water_soil(target_map_position)
 		
 		else:
 			_attempt_planting()
@@ -265,7 +260,7 @@ func _hit_objects_in_direction() -> void:
 			target_node.take_damage(1, actor.global_position, _active_tool_in_use)
 			hit_something = true
 			
-			if _active_tool_in_use == "Axe" or _active_tool_in_use == "Mining":
+			if _active_tool_in_use == "Pickaxe":
 				var effect_instance = HIT_EFFECT_SCENE.instantiate()
 				actor.get_parent().add_child(effect_instance)
 				effect_instance.global_position = hit_origin
@@ -284,14 +279,20 @@ func _flash_debug_rect(flash_color: Color) -> void:
 
 func _on_animation_finished(_animation_name: StringName) -> void:
 	if is_using_tool:
-		if _active_tool_in_use == "Axe" or _active_tool_in_use == "Mining":
+		if _active_tool_in_use == "Axe" or _active_tool_in_use == "Pickaxe":
 			_hit_objects_in_direction()
+		elif _active_tool_in_use == "Hoe":
+			if FarmManager:
+				FarmManager.till_soil(_pending_target_map_position)
+		elif _active_tool_in_use == "Water":
+			if FarmManager:
+				FarmManager.water_soil(_pending_target_map_position)
 		
 		is_using_tool = false
 		_active_tool_in_use = ""
 		if is_carrying:
 			_show_carry_sprite(_carry_item)
-			state_machine.travel("CaryIdle")
+			state_machine.travel("CarryIdle")
 		else:
 			state_machine.travel("Idle")
 

@@ -18,9 +18,9 @@ func _ready() -> void:
 
 func _update_blend_positions() -> void:
 	animation_tree.set("parameters/Idle/blend_position", last_direction)
-	animation_tree.set("parameters/Walk/blend_position", last_direction)
-	animation_tree.set("parameters/Cary/blend_position", last_direction)
-	animation_tree.set("parameters/CaryIdle/blend_position", last_direction)
+	animation_tree.set("parameters/Run/blend_position", last_direction)
+	animation_tree.set("parameters/CarryWalk/blend_position", last_direction)
+	animation_tree.set("parameters/CarryIdle/blend_position", last_direction)
 	if tool_component:
 		tool_component._update_strict_direction(last_direction)
 
@@ -44,12 +44,12 @@ func handle_movement() -> void:
 			last_direction = new_direction
 			_update_blend_positions()
 
-		var target_state = "Cary" if carrying else "Walk"
+		var target_state = "CarryWalk" if carrying else "Run"
 		state_machine.travel(target_state)
 		actor.velocity = input_direction * movement_speed
 	else:
 		_update_blend_positions()
-		var target_state = "CaryIdle" if carrying else "Idle"
+		var target_state = "CarryIdle" if carrying else "Idle"
 		state_machine.travel(target_state)
 		actor.velocity = Vector2.ZERO
 		

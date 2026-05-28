@@ -2,10 +2,12 @@ extends CanvasLayer
 
 @onready var body_preview: Sprite2D = $CenterContainer/PanelContainer/MarginContainer/HBoxContainer/LeftVBox/PreviewArea/BodyPreview
 @onready var legs_preview: Sprite2D = $CenterContainer/PanelContainer/MarginContainer/HBoxContainer/LeftVBox/PreviewArea/BodyPreview/LagsPreview
+@onready var eyes_preview: Sprite2D = $CenterContainer/PanelContainer/MarginContainer/HBoxContainer/LeftVBox/PreviewArea/BodyPreview/EyesPreview
 @onready var clothes_preview: Sprite2D = $CenterContainer/PanelContainer/MarginContainer/HBoxContainer/LeftVBox/PreviewArea/BodyPreview/ClothePreview
 @onready var hair_preview: Sprite2D = $CenterContainer/PanelContainer/MarginContainer/HBoxContainer/LeftVBox/PreviewArea/BodyPreview/HairPreview
 
 @onready var body_label: Label = $CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer/BodyHBox/BodyLabel
+@onready var eyes_label: Label = $CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer/EyesHBox/EyesLabel
 @onready var hair_label: Label = $CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer/HairHBox/HairLabel
 @onready var clothes_label: Label = $CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer/ClothesHBox/ClothesLabel
 @onready var pants_label: Label = $CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer/PantsHBox/PantsLabel
@@ -37,6 +39,9 @@ func _ready() -> void:
 	# Body/Skin
 	$CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer/BodyHBox/PrevBody.pressed.connect(func(): CustomizationManager.prev_body())
 	$CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer/BodyHBox/NextBody.pressed.connect(func(): CustomizationManager.next_body())
+	# Eyes
+	$CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer/EyesHBox/PrevEyes.pressed.connect(func(): CustomizationManager.prev_eyes())
+	$CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer/EyesHBox/NextEyes.pressed.connect(func(): CustomizationManager.next_eyes())
 	# Hair
 	$CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer/HairHBox/PrevHair.pressed.connect(func(): CustomizationManager.prev_hair())
 	$CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer/HairHBox/NextHair.pressed.connect(func(): CustomizationManager.next_hair())
@@ -56,23 +61,12 @@ func _ready() -> void:
 	# Initial UI state load
 	_update_ui()
 
-	# Start Active Walk Cycle Preview at 8 FPS
-	animation_timer = Timer.new()
-	animation_timer.wait_time = 0.125
-	animation_timer.autostart = true
-	animation_timer.timeout.connect(_on_animation_tick)
-	add_child(animation_timer)
-
-func _on_animation_tick() -> void:
-	# Front-facing walk animation has 8 columns/frames (0 to 7) on the first row
-	preview_frame = (preview_frame + 1) % 8
-	_update_preview_frames()
-
 func _update_preview_frames() -> void:
-	body_preview.frame = preview_frame
-	legs_preview.frame = preview_frame
-	clothes_preview.frame = preview_frame
-	hair_preview.frame = preview_frame
+	body_preview.frame = 0
+	if legs_preview.texture != null: legs_preview.frame = 0
+	if clothes_preview.texture != null: clothes_preview.frame = 0
+	if hair_preview.texture != null: hair_preview.frame = 0
+	if eyes_preview.texture != null: eyes_preview.frame = 0
 
 func _build_color_swatches() -> void:
 	# Clear any previous children (safety precaution)
@@ -118,6 +112,7 @@ func _update_ui() -> void:
 	var body_idx = CustomizationManager.available_bodies.find(CustomizationManager.current_body)
 	body_label.text = " Pele: Pele " + str(body_idx + 1) + " "
 	
+	eyes_label.text = " Olhos: " + CustomizationManager.current_eyes.capitalize() + " "
 	hair_label.text = " Cabelo: " + CustomizationManager.current_hair.capitalize() + " "
 	clothes_label.text = " Roupa: " + CustomizationManager.current_clothes.capitalize() + " "
 	
@@ -129,36 +124,39 @@ func _update_ui() -> void:
 
 	# 3. Dynamic Textures & Frames for bug-free previews
 	# Body/Skin Preview
-	var body_path = "res://assets/sprites/player/separate/walk/" + CustomizationManager.current_body + "_walk.png"
+	var body_path = "res://assets/sprites/Character/PNG/1. Idle/Skins/" + CustomizationManager.current_body + ".png"
 	if ResourceLoader.exists(body_path):
 		var tex = load(body_path)
 		body_preview.texture = tex
-		body_preview.hframes = int(tex.get_width() / 32)
-		body_preview.vframes = int(tex.get_height() / 32)
+		body_preview.hframes = int(max(1, tex.get_width() / 32.0))
+		body_preview.vframes = int(max(1, tex.get_height() / 32.0))
+		
+	# Eyes Preview
+	var eyes_path = "res://assets/sprites/Character/PNG/1. Idle/Eyes/Male/" + CustomizationManager.current_eyes + ".png"
+	if ResourceLoader.exists(eyes_path):
+		var tex = load(eyes_path)
+		eyes_preview.texture = tex
+		eyes_preview.hframes = int(max(1, tex.get_width() / 32.0))
+		eyes_preview.vframes = int(max(1, tex.get_height() / 32.0))
 
-	# Legs/Pants Preview
-	var legs_path = "res://assets/sprites/player/separate/walk/panths/" + CustomizationManager.current_pants + "_walk.png"
-	if ResourceLoader.exists(legs_path):
-		var tex = load(legs_path)
-		legs_preview.texture = tex
-		legs_preview.hframes = int(tex.get_width() / 32)
-		legs_preview.vframes = int(tex.get_height() / 32)
+	# Legs/Pants Preview - HIDDEN for now as new assets don't separate pants
+	legs_preview.texture = null
 
 	# Clothes Preview
-	var clothes_path = "res://assets/sprites/player/separate/walk/clothes/" + CustomizationManager.current_clothes + "_walk.png"
+	var clothes_path = "res://assets/sprites/Character/PNG/1. Idle/Clothers/Farm/" + CustomizationManager.current_clothes + ".png"
 	if ResourceLoader.exists(clothes_path):
 		var tex = load(clothes_path)
 		clothes_preview.texture = tex
-		clothes_preview.hframes = int(tex.get_width() / 32)
-		clothes_preview.vframes = int(tex.get_height() / 32)
+		clothes_preview.hframes = int(max(1, tex.get_width() / 32.0))
+		clothes_preview.vframes = int(max(1, tex.get_height() / 32.0))
 
 	# Hair Preview
-	var hair_path = "res://assets/sprites/player/separate/walk/hair/" + CustomizationManager.current_hair + "_walk.png"
+	var hair_path = "res://assets/sprites/Character/PNG/1. Idle/Hair's/" + CustomizationManager.current_hair + "/Brown.png"
 	if ResourceLoader.exists(hair_path):
 		var tex = load(hair_path)
 		hair_preview.texture = tex
-		hair_preview.hframes = int(tex.get_width() / 32)
-		hair_preview.vframes = int(tex.get_height() / 32)
+		hair_preview.hframes = int(max(1, tex.get_width() / 32.0))
+		hair_preview.vframes = int(max(1, tex.get_height() / 32.0))
 		
 	# Apply Hair Modulate Color in Preview
 	hair_preview.modulate = CustomizationManager.hair_color

@@ -3,7 +3,7 @@ extends Node
 signal time_changed(day: int, hour: int, minute: int)
 signal day_changed(day: int)
 
-@export var minute_duration: float = 1.0 # 1 real-world second = 1 in-game minute
+@export var minute_duration: float = 0.64166667 # 1200 in-game minutes (6 AM to 2 AM) = 770 real-world seconds
 
 var minute: int = 0
 var hour: int = 6 # Start at 6:00 AM
@@ -45,8 +45,13 @@ func _add_minute() -> void:
 		hour += 1
 		if hour >= 24:
 			hour = 0
-			day += 1
-			emit_signal("day_changed", day)
-			print("TimeManager: Natural day rollover. Day: ", day)
+			
+	if hour == 2 and minute == 0:
+		day += 1
+		hour = 6
+		minute = 0
+		time_accumulator = 0.0
+		emit_signal("day_changed", day)
+		print("TimeManager: Natural day rollover at 2:00 AM. Day: ", day)
 	
 	emit_signal("time_changed", day, hour, minute)

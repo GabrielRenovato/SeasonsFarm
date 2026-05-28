@@ -4,28 +4,29 @@ signal customization_changed
 
 # Complete lists matching the real game assets in walk directories
 var available_hairstyles = [
-	"bob", "braids", "buzzcut", "curly", "emo", "extra_long", 
-	"french_curl", "gentleman", "long_straight", "midiwave", 
-	"ponytail", "spacebuns", "wavy"
+	"Fawn", "Iridessa", "Josh", "Lyria", "Sebastian", "Silvermist", "Standard"
+]
+
+var available_eyes = [
+	"Black", "Blue", "Brown", "Green"
 ]
 
 var available_clothes = [
-	"basic", "clown", "dress", "floral", "overalls", 
-	"sailor_bow", "sailor", "shoes", "skirt", "skull", "spaghetti", 
-	"sporty", "stripe", "suit"
+	"Blue", "Green", "Pink", "Purple", "Red"
 ]
 
 var available_bodies = [
-	"char1", "char2", "char3", "char4", "char5", "char6", "char7", "char8"
+	"1", "2", "3", "4"
 ]
 
 var available_pants = [
 	"pants", "pants_suit"
 ]
 
-var current_hair: String = "bob"
-var current_clothes: String = "basic"
-var current_body: String = "char1"
+var current_hair: String = "Standard"
+var current_eyes: String = "Black"
+var current_clothes: String = "Blue"
+var current_body: String = "1"
 var current_pants: String = "pants"
 var hair_color: Color = Color(1.0, 1.0, 1.0, 1.0) # Modulate color for hair
 
@@ -42,6 +43,11 @@ func set_clothes(clothes_name: String) -> void:
 func set_body(body_name: String) -> void:
 	if body_name in available_bodies and current_body != body_name:
 		current_body = body_name
+		customization_changed.emit()
+
+func set_eyes(eyes_name: String) -> void:
+	if eyes_name in available_eyes and current_eyes != eyes_name:
+		current_eyes = eyes_name
 		customization_changed.emit()
 
 func set_pants(pants_name: String) -> void:
@@ -83,6 +89,16 @@ func prev_body() -> void:
 	var idx = available_bodies.find(current_body)
 	idx = (idx - 1 + available_bodies.size()) % available_bodies.size()
 	set_body(available_bodies[idx])
+
+func next_eyes() -> void:
+	var idx = available_eyes.find(current_eyes)
+	idx = (idx + 1) % available_eyes.size()
+	set_eyes(available_eyes[idx])
+
+func prev_eyes() -> void:
+	var idx = available_eyes.find(current_eyes)
+	idx = (idx - 1 + available_eyes.size()) % available_eyes.size()
+	set_eyes(available_eyes[idx])
 
 func next_pants() -> void:
 	var idx = available_pants.find(current_pants)

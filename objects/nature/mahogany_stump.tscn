@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="PackedScene" uid="uid://cwawdpfdm21s3" path="res://objects/nature/stump.tscn" id="1_base"]
+[ext_resource type="Texture2D" path="res://assets/sprites/tree/Common/Shadow/Mahogany Tree.png" id="2_tex"]
+
+[node name="Stump" instance=ExtResource("1_base")]
+
+[node name="Sprite2D" parent="." index="0"]
+position = Vector2(0, -21)
+texture = ExtResource("2_tex")
+region_enabled = false
+hframes = 12
+vframes = 2
+frame = 8

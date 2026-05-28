@@ -8,25 +8,23 @@ signal crop_harvested(pos: Vector2i, crop_id: String)
 const TILLED_DIRT_SOURCE_ID = 0
 const SEED_MOUND_COORDS = Vector2i(8, 9)
 
-# 16-Tile Autotiler Map mapping neighbor bitmask (UP=1, RIGHT=2, DOWN=4, LEFT=8)
-# to exact atlas coordinates in the Sprout Lands dry tilled dirt sheet.
 const AUTO_TILE_MAP = {
-	0: Vector2i(14, 40),  # Isolated single tile
-	1: Vector2i(15, 40),  # Neighbor UP only (Bottom end tile)
-	2: Vector2i(16, 40),  # Neighbor RIGHT only (Left end tile)
-	3: Vector2i(17, 40),  # Neighbors UP and RIGHT (Bottom-Left corner)
-	4: Vector2i(14, 41),  # Neighbor DOWN only (Top end tile)
-	5: Vector2i(15, 41),  # Neighbors UP and DOWN (Vertical tunnel/straight)
-	6: Vector2i(16, 41),  # Neighbors DOWN and RIGHT (Top-Left corner)
-	7: Vector2i(17, 41),  # Neighbors UP, RIGHT, DOWN (Left T-junction)
-	8: Vector2i(14, 42),  # Neighbor LEFT only (Right end tile)
-	9: Vector2i(15, 42),  # Neighbors UP and LEFT (Bottom-Right corner)
-	10: Vector2i(16, 42), # Neighbors LEFT and RIGHT (Horizontal tunnel/straight)
-	11: Vector2i(17, 42), # Neighbors UP, LEFT, RIGHT (Bottom T-junction)
-	12: Vector2i(14, 43), # Neighbors DOWN and LEFT (Top-Right corner)
-	13: Vector2i(15, 43), # Neighbors UP, DOWN, LEFT (Right T-junction)
-	14: Vector2i(16, 43), # Neighbors DOWN, LEFT, RIGHT (Top T-junction)
-	15: Vector2i(17, 43), # All neighbors (Center)
+	0: Vector2i(0, 3),
+	1: Vector2i(0, 2),
+	2: Vector2i(1, 3),
+	3: Vector2i(1, 2),
+	4: Vector2i(0, 0),
+	5: Vector2i(0, 1),
+	6: Vector2i(1, 0),
+	7: Vector2i(1, 1),
+	8: Vector2i(3, 3),
+	9: Vector2i(3, 2),
+	10: Vector2i(2, 3),
+	11: Vector2i(2, 2),
+	12: Vector2i(3, 0),
+	13: Vector2i(3, 1),
+	14: Vector2i(2, 0),
+	15: Vector2i(2, 1),
 }
 
 # Crop configs specifying row index in spritesheet and max stages
@@ -64,9 +62,6 @@ func _ready() -> void:
 		print("FarmManager: Connected to TimeManager.day_changed signal.")
 	else:
 		push_error("FarmManager: TimeManager autoload not found!")
-	
-	# Fetch dirt layer
-	_find_dirt_layer()
 
 func _find_dirt_layer() -> void:
 	dirt_layer = get_tree().get_first_node_in_group("dirt_layer") as TileMapLayer
@@ -192,18 +187,18 @@ func _update_soil_visuals(pos: Vector2i) -> void:
 	var left = _is_soil_tilled(pos + Vector2i.LEFT)
 	
 	var mask = (1 if up else 0) | (2 if right else 0) | (4 if down else 0) | (8 if left else 0)
-	var base_coords = AUTO_TILE_MAP.get(mask, Vector2i(14, 40))
+	var base_coords = AUTO_TILE_MAP.get(mask, Vector2i(0, 3))
 	
-	if data.watered:
-		# A terra molhada equivalente está exatamente 4 colunas à direita (+4 em X)
-		var wet_coords = base_coords + Vector2i(4, 0)
-		dirt_layer.set_cell(pos, TILLED_DIRT_SOURCE_ID, wet_coords)
-	else:
-		dirt_layer.set_cell(pos, TILLED_DIRT_SOURCE_ID, base_coords)
-		
-	# Não desenhamos mais a cova redundante na SeedLayer, pois o sprite da própria planta (Crop) já possui sua base visual de terra.
+	# Sempre desenha a terra seca na DirtLayer usando a textura original (fonte 1)
+	dirt_layer.set_cell(pos, 1, base_coords)
+	
+	# Usa a SeedLayer para aplicar o efeito molhado por cima, usando a nova imagem (fonte 1)
 	if seed_layer:
-		seed_layer.set_cell(pos, -1)
+		if data.watered:
+			var wet_coords = base_coords + Vector2i(12, 0)
+			seed_layer.set_cell(pos, 1, wet_coords)
+		else:
+			seed_layer.set_cell(pos, -1)
 
 func _is_soil_tilled(pos: Vector2i) -> bool:
 	return farm_data.has(pos) and farm_data[pos].tilled

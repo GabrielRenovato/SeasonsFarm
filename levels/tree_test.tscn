@@ -1,0 +1,41 @@
+[gd_scene load_steps=7 format=3 uid="uid://ctree_test"]
+
+[ext_resource type="PackedScene" uid="uid://bx7olxx11lmmi" path="res://objects/nature/tree.tscn" id="1_base"]
+[ext_resource type="PackedScene" uid="uid://cbirchtreetscn" path="res://objects/nature/birch_tree.tscn" id="2_birch"]
+[ext_resource type="PackedScene" uid="uid://cmahoganytreetscn" path="res://objects/nature/mahogany_tree.tscn" id="3_mahogany"]
+[ext_resource type="PackedScene" uid="uid://cmapletreetscn" path="res://objects/nature/maple_tree.tscn" id="4_maple"]
+[ext_resource type="PackedScene" uid="uid://cpinetreetscn" path="res://objects/nature/pine_tree.tscn" id="5_pine"]
+
+[node name="TreeTest" type="Node2D"]
+y_sort_enabled = true
+
+[node name="ColorRect" type="ColorRect" parent="."]
+z_index = -1
+offset_left = -200.0
+offset_top = -200.0
+offset_right = 500.0
+offset_bottom = 300.0
+color = Color(0.333333, 0.490196, 0.27451, 1)
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(150, 50)
+zoom = Vector2(3, 3)
+
+[node name="BirchTree" parent="." instance=ExtResource("2_birch")]
+position = Vector2(40, 50)
+
+[node name="MahoganyTree" parent="." instance=ExtResource("3_mahogany")]
+position = Vector2(100, 50)
+
+[node name="MapleTree" parent="." instance=ExtResource("4_maple")]
+position = Vector2(160, 50)
+
+[node name="PineTree" parent="." instance=ExtResource("5_pine")]
+position = Vector2(220, 50)
+
+[node name="Label" type="Label" parent="."]
+offset_left = 6.0
+offset_top = 80.0
+offset_right = 295.0
+offset_bottom = 103.0
+text = "Use sua ferramenta para testar as árvores"

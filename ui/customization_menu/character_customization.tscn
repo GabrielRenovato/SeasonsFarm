@@ -58,6 +58,8 @@ scale = Vector2(3, 3)
 
 [node name="LagsPreview" type="Sprite2D" parent="CenterContainer/PanelContainer/MarginContainer/HBoxContainer/LeftVBox/PreviewArea/BodyPreview"]
 
+[node name="EyesPreview" type="Sprite2D" parent="CenterContainer/PanelContainer/MarginContainer/HBoxContainer/LeftVBox/PreviewArea/BodyPreview"]
+
 [node name="ClothePreview" type="Sprite2D" parent="CenterContainer/PanelContainer/MarginContainer/HBoxContainer/LeftVBox/PreviewArea/BodyPreview"]
 
 [node name="HairPreview" type="Sprite2D" parent="CenterContainer/PanelContainer/MarginContainer/HBoxContainer/LeftVBox/PreviewArea/BodyPreview"]
@@ -97,6 +99,29 @@ text = " Pele: Pele 1 "
 horizontal_alignment = 1
 
 [node name="NextBody" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer/BodyHBox"]
+custom_minimum_size = Vector2(22, 18)
+layout_mode = 2
+theme_override_font_sizes/font_size = 8
+text = ">"
+
+[node name="EyesHBox" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="PrevEyes" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer/EyesHBox"]
+custom_minimum_size = Vector2(22, 18)
+layout_mode = 2
+theme_override_font_sizes/font_size = 8
+text = "<"
+
+[node name="EyesLabel" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer/EyesHBox"]
+custom_minimum_size = Vector2(130, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 10
+text = " Olhos: Preto "
+horizontal_alignment = 1
+
+[node name="NextEyes" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer/EyesHBox"]
 custom_minimum_size = Vector2(22, 18)
 layout_mode = 2
 theme_override_font_sizes/font_size = 8
