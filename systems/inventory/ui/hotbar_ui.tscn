@@ -5,7 +5,7 @@
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_hotbar_base"]
 atlas = ExtResource("2_slots")
-region = Rect2(0, 240, 224, 48)
+region = Rect2(6, 249, 165, 29)
 filter_clip = true
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_hotbar_bg"]

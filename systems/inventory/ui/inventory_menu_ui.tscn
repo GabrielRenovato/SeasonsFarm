@@ -23,7 +23,7 @@ margin_bottom = 0
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_tab_red"]
 atlas = ExtResource("3_extras")
-region = Rect2(0, 0, 44, 24)
+region = Rect2(0, 3, 384, 28)
 filter_clip = true
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_tab_active"]
@@ -39,7 +39,7 @@ margin_bottom = 0
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_tab_gray"]
 atlas = ExtResource("3_extras")
-region = Rect2(88, 0, 44, 24)
+region = Rect2(0, 66, 384, 28)
 filter_clip = true
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_tab_inactive"]
@@ -55,7 +55,7 @@ margin_bottom = 0
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_tab_orange"]
 atlas = ExtResource("3_extras")
-region = Rect2(44, 0, 44, 24)
+region = Rect2(0, 35, 384, 28)
 filter_clip = true
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_tab_hover"]
