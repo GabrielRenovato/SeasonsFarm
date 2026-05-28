@@ -1,23 +1,23 @@
 [gd_scene load_steps=3 format=3 uid="uid://chotbarui123"]
 
 [ext_resource type="Script" path="res://systems/inventory/ui/hotbar_ui.gd" id="1_hotbar"]
+[ext_resource type="Texture2D" uid="uid://cj3dpirwna2xp" path="res://assets/sprites/ui/Inventory/Slots.png" id="2_slots"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hotbar_bg"]
-bg_color = Color(0.12, 0.12, 0.12, 0.85)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.25, 0.25, 0.25, 1)
-corner_radius_top_left = 5
-corner_radius_top_right = 5
-corner_radius_bottom_right = 5
-corner_radius_bottom_left = 5
-expand_margin_left = 3.0
-expand_margin_top = 3.0
-expand_margin_right = 3.0
-expand_margin_bottom = 3.0
-anti_aliasing = false
+[sub_resource type="AtlasTexture" id="AtlasTexture_hotbar_base"]
+atlas = ExtResource("2_slots")
+region = Rect2(0, 240, 224, 48)
+filter_clip = true
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_hotbar_bg"]
+texture = SubResource("AtlasTexture_hotbar_base")
+content_margin_left = 2
+content_margin_top = 2
+content_margin_right = 2
+content_margin_bottom = 2
+expand_margin_left = 4
+expand_margin_top = 4
+expand_margin_right = 4
+expand_margin_bottom = 4
 
 [node name="HotbarUI" type="PanelContainer"]
 anchors_preset = 7
@@ -33,7 +33,7 @@ grow_horizontal = 2
 grow_vertical = 0
 size_flags_horizontal = 4
 size_flags_vertical = 8
-theme_override_styles/panel = SubResource("StyleBoxFlat_hotbar_bg")
+theme_override_styles/panel = SubResource("StyleBoxTexture_hotbar_bg")
 script = ExtResource("1_hotbar")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]

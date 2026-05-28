@@ -3,7 +3,6 @@ class_name SlotUI
 
 @onready var item_icon: TextureRect = $MarginContainer/ItemIcon
 @onready var quantity_label: Label = $MarginContainer/QuantityLabel
-@onready var active_border: ReferenceRect = $ActiveBorder
 
 var slot_index: int = -1
 var inventory_data: InventoryData
@@ -43,7 +42,7 @@ func update_ui() -> void:
 			quantity_label.text = str(slot_data.quantity)
 
 func set_active(is_active: bool) -> void:
-	active_border.visible = is_active
+	self_modulate = Color(1.3, 1.3, 0.6, 1) if is_active else Color.WHITE
 
 # Drag & Drop Implementation
 func _get_drag_data(_at_position: Vector2) -> Variant:
