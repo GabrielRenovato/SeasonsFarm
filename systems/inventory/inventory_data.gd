@@ -163,7 +163,11 @@ func setup_default_inventory() -> void:
 ## Busca o arquivo em:
 ##   res://assets/sprites/icons/Weapons and Armor/[N]. [Tier]/[ToolName].png
 ## O tier "Wood" fica na pasta "1. Wood", "Cooper" em "2. Cooper", etc.
-func _get_tool_icon(tool_name: String, tier: String) -> Texture2D:
+##
+## Cada PNG tem 32x16 com DOIS icones lado a lado:
+##   - Esquerda (0,0,16,16)  = icone limpo, sem contorno branco  <-- usamos este
+##   - Direita  (16,0,16,16) = icone com contorno branco
+func _get_tool_icon(tool_name: String, tier: String) -> AtlasTexture:
 	# Mapa de tier para o numero da pasta (ex: "Wood" -> "1. Wood")
 	var tier_folder_map: Dictionary = {
 		"Wood":     "1. Wood",
@@ -183,21 +187,23 @@ func _get_tool_icon(tool_name: String, tier: String) -> Texture2D:
 	# Monta o caminho base para o icone
 	var base_path = "res://assets/sprites/icons/Weapons and Armor/%s/%s.png" % [folder, tool_name]
 	
-	# Tenta carregar o icone direto
 	var texture = load(base_path) as Texture2D
-	if texture != null:
-		return texture
 	
 	# Fallback: tier Wood tem "Watering can" (c minusculo), outros tiers tem "Watering Can"
-	# Tenta variante com inicial minuscula da ultima palavra
-	if tool_name == "Watering Can":
+	if texture == null and tool_name == "Watering Can":
 		var alt_path = "res://assets/sprites/icons/Weapons and Armor/%s/Watering can.png" % folder
 		texture = load(alt_path) as Texture2D
-		if texture != null:
-			return texture
 	
-	push_warning("[InventoryData] Tool icon not found: " + base_path)
-	return null
+	if texture == null:
+		push_warning("[InventoryData] Tool icon not found: " + base_path)
+		return null
+	
+	# Recorta so a metade ESQUERDA do PNG (16x16 sem contorno branco).
+	# O PNG tem 32x16: coluna 0 = sem outline, coluna 1 = com outline branco.
+	var atlas = AtlasTexture.new()
+	atlas.atlas = texture
+	atlas.region = Rect2(0, 0, 16, 16)  # metade esquerda = icone limpo
+	return atlas
 
 ## Extracts a single 32x32 frame from a tool spritesheet (5 columns x 4 rows)
 func _get_tool_frame(sheet: Texture2D, frame_index: int) -> AtlasTexture:
