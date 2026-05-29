@@ -7,7 +7,7 @@ signal active_slot_changed(index: int)
 @export var slots: Array[SlotData] = []
 var active_slot_index: int = 0:
 	set(value):
-		active_slot_index = clamp(value, 0, 9) # Apenas 10 slots na hotbar
+		active_slot_index = clamp(value, 0, 11) # 12 slots na hotbar
 		active_slot_changed.emit(active_slot_index)
 
 func get_active_item() -> ItemData:
@@ -17,8 +17,8 @@ func get_active_item() -> ItemData:
 
 func setup_default_inventory() -> void:
 	slots.clear()
-	# Cria 40 slots (10 hotbar + 30 inventario)
-	for i in range(40):
+	# Cria 36 slots (12 hotbar + 24 inventario) para bater com stardew
+	for i in range(36):
 		var sd = SlotData.new()
 		sd.quantity = 0
 		slots.append(sd)

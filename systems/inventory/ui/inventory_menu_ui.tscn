@@ -63,10 +63,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -130.0
-offset_top = -80.0
-offset_right = 130.0
-offset_bottom = 80.0
+offset_left = -160.0
+offset_top = -110.0
+offset_right = 160.0
+offset_bottom = 110.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 0
@@ -192,9 +192,9 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 0
-theme_override_constants/horizontal_separation = 1
-theme_override_constants/vertical_separation = 1
-columns = 10
+theme_override_constants/horizontal_separation = 2
+theme_override_constants/vertical_separation = 2
+columns = 12
 
 [node name="FallbackContent" type="CenterContainer" parent="ContentPanel/MarginContainer/TabContents"]
 unique_name_in_owner = true
