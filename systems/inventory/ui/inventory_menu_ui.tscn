@@ -1,20 +1,22 @@
 [gd_scene load_steps=12 format=3 uid="uid://cinventorymenuui123"]
 
 [ext_resource type="Script" uid="uid://cfpsmptf7188l" path="res://systems/inventory/ui/inventory_menu_ui.gd" id="1_invmenu"]
-[ext_resource type="Texture2D" uid="uid://cleanbgbookuid" path="res://assets/sprites/ui/new_inventory/book_bg_clean.png" id="2_book_bg"]
-[ext_resource type="Texture2D" uid="uid://cleantabbaruid" path="res://assets/sprites/ui/new_inventory/tabs_bar.png" id="3_tabs"]
+[ext_resource type="Texture2D" uid="uid://c666y61sflx7x" path="res://assets/sprites/ui/new_inventory/book_bg_clean.png" id="2_book_bg"]
+[ext_resource type="Texture2D" uid="uid://328fofo725u6" path="res://assets/sprites/ui/new_inventory/tabs_bar.png" id="3_tabs"]
 
-[ext_resource type="Texture2D" uid="uid://cleantabactiveuid" path="res://assets/sprites/ui/new_inventory/tab_active_clean.png" id="4_tab_active"]
-[ext_resource type="Texture2D" uid="uid://cleantabinactiveuid" path="res://assets/sprites/ui/new_inventory/tab_inactive_clean.png" id="5_tab_inactive"]
+[ext_resource type="Texture2D" uid="uid://dw47u54kyao16" path="res://assets/sprites/ui/new_inventory/tab_active_clean.png" id="4_tab_active"]
+[ext_resource type="Texture2D" uid="uid://bi4k4p36kifvc" path="res://assets/sprites/ui/new_inventory/tab_inactive_clean.png" id="5_tab_inactive"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_menu_bg"]
 texture = ExtResource("2_book_bg")
-texture_margin_left = 100.0
-texture_margin_top = 10.0
+texture_margin_left = 96.0
+texture_margin_top = 46.0
 texture_margin_right = 10.0
 texture_margin_bottom = 12.0
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
 content_margin_left = 102.0
-content_margin_top = 12.0
+content_margin_top = 46.0
 content_margin_right = 12.0
 content_margin_bottom = 14.0
 
@@ -57,10 +59,11 @@ offset_right = 147.0
 offset_bottom = 90.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 0
+theme_override_constants/separation = -28
 script = ExtResource("1_invmenu")
 
 [node name="TabsContainer" type="HBoxContainer" parent="."]
+z_index = 1
 layout_mode = 2
 theme_override_constants/separation = 2
 alignment = 1
