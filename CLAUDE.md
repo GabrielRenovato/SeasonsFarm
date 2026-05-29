@@ -46,7 +46,7 @@ CustomizationManager.customization_changed → CustomizationComponent (player sp
 
 ### Player (Component-Based)
 
-`entities/player/Player.tscn` is a `CharacterBody2D` with three child components:
+`entities/player/player.tscn` is a `CharacterBody2D` with three child components:
 
 - **`MovementComponent`** — WASD, animation state (idle/run/carry variants), max 150 px/s
 - **`ToolComponent`** — tool detection from active slot, animation triggers, tile-based hit detection, carrying sprite for non-tool items

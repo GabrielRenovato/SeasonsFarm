@@ -1,8 +1,8 @@
-[gd_scene format=4 uid="uid://ty6fnl1pystt"]
+[gd_scene format=4 uid="uid://tkvsch4enynt"]
 
-[ext_resource type="Script" uid="uid://bafb7y1btsjh6" path="res://core/autoloads/MapManager.gd" id="1_h12un"]
+[ext_resource type="Script" uid="uid://bafb7y1btsjh6" path="res://levels/main_farm/map_manager.gd" id="1_h12un"]
 [ext_resource type="PackedScene" uid="uid://bx7olxx11lmmi" path="res://objects/nature/tree.tscn" id="3_2i7y8"]
-[ext_resource type="PackedScene" uid="uid://dcidvjprd2yj" path="res://entities/player/Player.tscn" id="7_b4i1y"]
+[ext_resource type="PackedScene" uid="uid://dcidvjprd2yj" path="res://entities/player/player.tscn" id="7_b4i1y"]
 [ext_resource type="PackedScene" uid="uid://cx6gijkm0d1ab" path="res://objects/buildings/player_house.tscn" id="11_lmmvm"]
 [ext_resource type="TileSet" uid="uid://mmhwedrixnho" path="res://levels/main_farm/tilesets/tileset_dirt_layer.tres" id="ts_dirt"]
 [ext_resource type="TileSet" uid="uid://mrklqmqans6k" path="res://levels/main_farm/tilesets/tileset_fence_layer.tres" id="ts_fence"]
@@ -12,7 +12,7 @@
 [ext_resource type="TileSet" uid="uid://cqsriuu77nu5i" path="res://levels/main_farm/tilesets/tileset_spawn_layer.tres" id="ts_spawn"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_lmmvm"]
-size = Vector2(198, 3000)
+size = Vector2(198, 2955)
 
 [node name="Farm" type="Node2D" unique_id=1337363122]
 y_sort_enabled = true
@@ -56,6 +56,25 @@ tile_set = ExtResource("ts_spawn")
 [node name="PlayerTeste" parent="." unique_id=1305772278 instance=ExtResource("7_b4i1y")]
 position = Vector2(486, 10)
 
+[node name="StaticBody2D3" type="StaticBody2D" parent="." unique_id=1678776377]
+position = Vector2(-686, 688)
+collision_layer = 255
+collision_mask = 7
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D3" unique_id=624409358]
+position = Vector2(70, -6)
+shape = SubResource("RectangleShape2D_lmmvm")
+
+[node name="StaticBody2D2" type="StaticBody2D" parent="." unique_id=2129931135]
+position = Vector2(1500, 1494)
+collision_layer = 255
+collision_mask = 7
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D2" unique_id=1990239344]
+position = Vector2(-1168, 22)
+rotation = 1.5707964
+shape = SubResource("RectangleShape2D_lmmvm")
+
 [node name="StaticBody2D" type="StaticBody2D" parent="." unique_id=318047770]
 position = Vector2(750, 747)
 collision_layer = 255
@@ -67,3 +86,13 @@ shape = SubResource("RectangleShape2D_lmmvm")
 
 [node name="PlayerHouse" parent="." unique_id=947142001 instance=ExtResource("11_lmmvm")]
 position = Vector2(392, -12)
+
+[node name="StaticBody2D4" type="StaticBody2D" parent="." unique_id=16291688]
+position = Vector2(264, -413)
+rotation = 1.5707964
+collision_layer = 255
+collision_mask = 7
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D4" unique_id=1806128295]
+position = Vector2(70, -6)
+shape = SubResource("RectangleShape2D_lmmvm")

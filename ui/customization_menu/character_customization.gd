@@ -166,6 +166,6 @@ func _update_ui() -> void:
 
 func _on_close() -> void:
 	if get_tree().current_scene == self:
-		get_tree().change_scene_to_file("res://levels/main_farm/Farm.tscn")
+		get_tree().change_scene_to_file("res://levels/main_farm/farm.tscn")
 	else:
 		queue_free()

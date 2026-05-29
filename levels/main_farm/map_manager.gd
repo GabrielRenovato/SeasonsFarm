@@ -44,7 +44,7 @@ func _ready() -> void:
 		generate_environment_procedurally()
 
 	# Dynamic Day/Night Cycle CanvasModulate
-	var day_night_script = load("res://core/autoloads/day_night_cycle.gd")
+	var day_night_script = load("res://levels/main_farm/day_night_cycle.gd")
 	if day_night_script:
 		var canvas_modulate = CanvasModulate.new()
 		canvas_modulate.set_script(day_night_script)
