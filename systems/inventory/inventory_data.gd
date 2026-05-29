@@ -55,13 +55,18 @@ func setup_default_inventory() -> void:
 	water.tool_type = "Water"
 	water.icon_texture = _get_item_frame(items_sheet, 20) # Garrafa (placeholder)
 	
+	# Usa os seed_x/seed_y do FarmManager.CROP_CONFIGS para garantir que o icone
+	# sempre bate exatamente com a semente que sera plantada
 	var carrot_seeds = ItemData.new()
 	carrot_seeds.id = "carrot_seeds"
 	carrot_seeds.name = "Carrot Seeds"
 	carrot_seeds.is_seed = true
 	carrot_seeds.crop_type = "carrot"
 	carrot_seeds.icon_color = Color(1.0, 1.0, 1.0)
-	carrot_seeds.icon_texture = _get_seed_bag_icon(0, 80)      # Spring row 5
+	carrot_seeds.icon_texture = _get_seed_bag_icon(
+		FarmManager.CROP_CONFIGS["carrot"]["seed_x"],
+		FarmManager.CROP_CONFIGS["carrot"]["seed_y"]
+	)
 
 	var strawberry_seeds = ItemData.new()
 	strawberry_seeds.id = "strawberry_seeds"
@@ -69,7 +74,10 @@ func setup_default_inventory() -> void:
 	strawberry_seeds.is_seed = true
 	strawberry_seeds.crop_type = "strawberry"
 	strawberry_seeds.icon_color = Color(1.0, 1.0, 1.0)
-	strawberry_seeds.icon_texture = _get_seed_bag_icon(0, 16)  # Spring row 1
+	strawberry_seeds.icon_texture = _get_seed_bag_icon(
+		FarmManager.CROP_CONFIGS["strawberry"]["seed_x"],
+		FarmManager.CROP_CONFIGS["strawberry"]["seed_y"]
+	)
 
 	var tomato_seeds = ItemData.new()
 	tomato_seeds.id = "tomato_seeds"
@@ -77,7 +85,10 @@ func setup_default_inventory() -> void:
 	tomato_seeds.is_seed = true
 	tomato_seeds.crop_type = "tomato"
 	tomato_seeds.icon_color = Color(1.0, 1.0, 1.0)
-	tomato_seeds.icon_texture = _get_seed_bag_icon(146, 48)    # Summer row 3
+	tomato_seeds.icon_texture = _get_seed_bag_icon(
+		FarmManager.CROP_CONFIGS["tomato"]["seed_x"],
+		FarmManager.CROP_CONFIGS["tomato"]["seed_y"]
+	)
 
 	var melon_seeds = ItemData.new()
 	melon_seeds.id = "melon_seeds"
@@ -85,7 +96,10 @@ func setup_default_inventory() -> void:
 	melon_seeds.is_seed = true
 	melon_seeds.crop_type = "melon"
 	melon_seeds.icon_color = Color(1.0, 1.0, 1.0)
-	melon_seeds.icon_texture = _get_seed_bag_icon(146, 128)    # Summer row 8
+	melon_seeds.icon_texture = _get_seed_bag_icon(
+		FarmManager.CROP_CONFIGS["melon"]["seed_x"],
+		FarmManager.CROP_CONFIGS["melon"]["seed_y"]
+	)
 
 	var pumpkin_seeds = ItemData.new()
 	pumpkin_seeds.id = "pumpkin_seeds"
@@ -93,7 +107,10 @@ func setup_default_inventory() -> void:
 	pumpkin_seeds.is_seed = true
 	pumpkin_seeds.crop_type = "pumpkin"
 	pumpkin_seeds.icon_color = Color(1.0, 1.0, 1.0)
-	pumpkin_seeds.icon_texture = _get_seed_bag_icon(290, 16)   # Fall row 1
+	pumpkin_seeds.icon_texture = _get_seed_bag_icon(
+		FarmManager.CROP_CONFIGS["pumpkin"]["seed_x"],
+		FarmManager.CROP_CONFIGS["pumpkin"]["seed_y"]
+	)
 
 	var beetroot_seeds = ItemData.new()
 	beetroot_seeds.id = "beetroot_seeds"
@@ -101,7 +118,10 @@ func setup_default_inventory() -> void:
 	beetroot_seeds.is_seed = true
 	beetroot_seeds.crop_type = "beetroot"
 	beetroot_seeds.icon_color = Color(1.0, 1.0, 1.0)
-	beetroot_seeds.icon_texture = _get_seed_bag_icon(290, 0)   # Fall row 0
+	beetroot_seeds.icon_texture = _get_seed_bag_icon(
+		FarmManager.CROP_CONFIGS["beetroot"]["seed_x"],
+		FarmManager.CROP_CONFIGS["beetroot"]["seed_y"]
+	)
 
 	slots[0].item = hoe
 	slots[0].quantity = 1
