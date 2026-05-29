@@ -1,7 +1,6 @@
 [gd_scene format=3 uid="uid://cslotui123"]
 
 [ext_resource type="Script" uid="uid://dfas4lhuceinq" path="res://systems/inventory/ui/slot_ui.gd" id="1_slotui"]
-[ext_resource type="Texture2D" uid="uid://chh3m2hxacfjb" path="res://assets/sprites/player/separate/axe/tool/axe.png" id="2_ujfas"]
 [ext_resource type="Texture2D" uid="uid://cj3dpirwna2xp" path="res://assets/sprites/ui/Inventory/Slots.png" id="3_slots"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_slot"]
@@ -11,41 +10,33 @@ filter_clip = true
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_slot_bg"]
 texture = SubResource("AtlasTexture_slot")
-content_margin_left = 0
-content_margin_top = 0
-content_margin_right = 0
-content_margin_bottom = 0
-margin_left = 0
-margin_top = 0
-margin_right = 0
-margin_bottom = 0
-expand_margin_left = 0
-expand_margin_top = 0
-expand_margin_right = 0
-expand_margin_bottom = 0
+content_margin_left = 1
+content_margin_top = 1
+content_margin_right = 1
+content_margin_bottom = 1
 
-[node name="SlotUI" type="PanelContainer" unique_id=1229524394]
-custom_minimum_size = Vector2(20, 20)
+[node name="SlotUI" type="PanelContainer"]
+custom_minimum_size = Vector2(16, 16)
 size_flags_horizontal = 4
 size_flags_vertical = 4
 theme_override_styles/panel = SubResource("StyleBoxTexture_slot_bg")
 script = ExtResource("1_slotui")
 
-[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1671416910]
+[node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 2
-theme_override_constants/margin_left = 2
-theme_override_constants/margin_top = 2
-theme_override_constants/margin_right = 2
-theme_override_constants/margin_bottom = 2
+theme_override_constants/margin_left = 1
+theme_override_constants/margin_top = 1
+theme_override_constants/margin_right = 1
+theme_override_constants/margin_bottom = 1
 
-[node name="ItemIcon" type="TextureRect" parent="MarginContainer" unique_id=107494197]
+[node name="ItemIcon" type="TextureRect" parent="MarginContainer"]
 visible = false
 layout_mode = 2
 mouse_filter = 2
 expand_mode = 1
 stretch_mode = 5
 
-[node name="QuantityLabel" type="Label" parent="MarginContainer" unique_id=1154810259]
+[node name="QuantityLabel" type="Label" parent="MarginContainer"]
 visible = false
 layout_mode = 2
 size_flags_horizontal = 8
@@ -56,4 +47,3 @@ theme_override_font_sizes/font_size = 6
 text = "1"
 horizontal_alignment = 2
 vertical_alignment = 2
-

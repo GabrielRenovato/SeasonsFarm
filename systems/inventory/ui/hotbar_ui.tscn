@@ -5,7 +5,7 @@
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_hotbar_base"]
 atlas = ExtResource("2_slots")
-region = Rect2(6, 249, 165, 29)
+region = Rect2(6, 125, 165, 28)
 filter_clip = true
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_hotbar_bg"]
@@ -14,10 +14,10 @@ content_margin_left = 2
 content_margin_top = 2
 content_margin_right = 2
 content_margin_bottom = 2
-expand_margin_left = 4
-expand_margin_top = 4
-expand_margin_right = 4
-expand_margin_bottom = 4
+expand_margin_left = 1
+expand_margin_top = 1
+expand_margin_right = 1
+expand_margin_bottom = 1
 
 [node name="HotbarUI" type="PanelContainer"]
 anchors_preset = 7
@@ -25,10 +25,10 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -144.0
+offset_left = -82.0
 offset_top = -30.0
-offset_right = 144.0
-offset_bottom = -6.0
+offset_right = 83.0
+offset_bottom = -2.0
 grow_horizontal = 2
 grow_vertical = 0
 size_flags_horizontal = 4
@@ -45,5 +45,5 @@ theme_override_constants/margin_bottom = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
 layout_mode = 2
-theme_override_constants/separation = 4
+theme_override_constants/separation = 1
 alignment = 1

@@ -7,7 +7,7 @@ signal active_slot_changed(index: int)
 @export var slots: Array[SlotData] = []
 var active_slot_index: int = 0:
 	set(value):
-		active_slot_index = clamp(value, 0, 11)
+		active_slot_index = clamp(value, 0, 9) # Apenas 10 slots na hotbar
 		active_slot_changed.emit(active_slot_index)
 
 func get_active_item() -> ItemData:
@@ -17,7 +17,8 @@ func get_active_item() -> ItemData:
 
 func setup_default_inventory() -> void:
 	slots.clear()
-	for i in range(36):
+	# Cria 40 slots (10 hotbar + 30 inventario)
+	for i in range(40):
 		var sd = SlotData.new()
 		sd.quantity = 0
 		slots.append(sd)
@@ -30,10 +31,10 @@ func setup_default_inventory() -> void:
 	var water_sheet = load("res://assets/sprites/player/separate/water/tool/wateringcan_red.png")
 	var seeds_sheet = load("res://assets/sprites/seeds/seeds.png")
 	
-	# Add default tools
+	# Add default tools (nomes em ingles para global launch)
 	var hoe = ItemData.new()
 	hoe.id = "hoe"
-	hoe.name = "Enxada"
+	hoe.name = "Hoe"
 	hoe.is_tool = true
 	hoe.tool_type = "Hoe"
 	hoe.icon_color = Color(0.8, 0.4, 0.1)
@@ -41,7 +42,7 @@ func setup_default_inventory() -> void:
 	
 	var axe = ItemData.new()
 	axe.id = "axe"
-	axe.name = "Machado"
+	axe.name = "Axe"
 	axe.is_tool = true
 	axe.tool_type = "Axe"
 	axe.icon_color = Color(0.8, 0.1, 0.1)
@@ -49,7 +50,7 @@ func setup_default_inventory() -> void:
 	
 	var mining = ItemData.new()
 	mining.id = "pickaxe"
-	mining.name = "Picareta"
+	mining.name = "Pickaxe"
 	mining.is_tool = true
 	mining.tool_type = "Pickaxe"
 	mining.icon_color = Color(0.1, 0.6, 0.8)
@@ -57,7 +58,7 @@ func setup_default_inventory() -> void:
 	
 	var water = ItemData.new()
 	water.id = "watering_can"
-	water.name = "Regador"
+	water.name = "Watering Can"
 	water.is_tool = true
 	water.tool_type = "Water"
 	water.icon_color = Color(0.1, 0.4, 0.9)
@@ -65,7 +66,7 @@ func setup_default_inventory() -> void:
 	
 	var carrot_seeds = ItemData.new()
 	carrot_seeds.id = "carrot_seeds"
-	carrot_seeds.name = "Semente de Cenoura"
+	carrot_seeds.name = "Carrot Seeds"
 	carrot_seeds.is_seed = true
 	carrot_seeds.crop_type = "carrot"
 	carrot_seeds.icon_color = Color(1.0, 1.0, 1.0)
@@ -73,7 +74,7 @@ func setup_default_inventory() -> void:
 
 	var strawberry_seeds = ItemData.new()
 	strawberry_seeds.id = "strawberry_seeds"
-	strawberry_seeds.name = "Semente de Morango"
+	strawberry_seeds.name = "Strawberry Seeds"
 	strawberry_seeds.is_seed = true
 	strawberry_seeds.crop_type = "strawberry"
 	strawberry_seeds.icon_color = Color(1.0, 1.0, 1.0)
@@ -81,7 +82,7 @@ func setup_default_inventory() -> void:
 
 	var tomato_seeds = ItemData.new()
 	tomato_seeds.id = "tomato_seeds"
-	tomato_seeds.name = "Semente de Tomate"
+	tomato_seeds.name = "Tomato Seeds"
 	tomato_seeds.is_seed = true
 	tomato_seeds.crop_type = "tomato"
 	tomato_seeds.icon_color = Color(1.0, 1.0, 1.0)
@@ -89,7 +90,7 @@ func setup_default_inventory() -> void:
 
 	var melon_seeds = ItemData.new()
 	melon_seeds.id = "melon_seeds"
-	melon_seeds.name = "Semente de Melão"
+	melon_seeds.name = "Melon Seeds"
 	melon_seeds.is_seed = true
 	melon_seeds.crop_type = "melon"
 	melon_seeds.icon_color = Color(1.0, 1.0, 1.0)
@@ -97,7 +98,7 @@ func setup_default_inventory() -> void:
 
 	var pumpkin_seeds = ItemData.new()
 	pumpkin_seeds.id = "pumpkin_seeds"
-	pumpkin_seeds.name = "Semente de Abóbora"
+	pumpkin_seeds.name = "Pumpkin Seeds"
 	pumpkin_seeds.is_seed = true
 	pumpkin_seeds.crop_type = "pumpkin"
 	pumpkin_seeds.icon_color = Color(1.0, 1.0, 1.0)
@@ -105,7 +106,7 @@ func setup_default_inventory() -> void:
 
 	var beetroot_seeds = ItemData.new()
 	beetroot_seeds.id = "beetroot_seeds"
-	beetroot_seeds.name = "Semente de Beterraba"
+	beetroot_seeds.name = "Beetroot Seeds"
 	beetroot_seeds.is_seed = true
 	beetroot_seeds.crop_type = "beetroot"
 	beetroot_seeds.icon_color = Color(1.0, 1.0, 1.0)

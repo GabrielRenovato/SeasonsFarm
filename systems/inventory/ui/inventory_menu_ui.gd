@@ -2,7 +2,6 @@ extends VBoxContainer
 class_name InventoryMenuUI
 
 @onready var grid_container: GridContainer = %GridContainer
-@onready var close_button: Button = %CloseButton
 
 # Tab buttons
 @onready var btn_inventory: Button = %BtnInventory
@@ -11,8 +10,6 @@ class_name InventoryMenuUI
 @onready var btn_map: Button = %BtnMap
 @onready var btn_crafting: Button = %BtnCrafting
 @onready var btn_collections: Button = %BtnCollections
-@onready var btn_options: Button = %BtnOptions
-@onready var btn_exit: Button = %BtnExit
 
 # Content panels
 @onready var inventory_content: VBoxContainer = %InventoryContent
@@ -26,9 +23,10 @@ var active_style: StyleBox
 var inactive_style: StyleBox
 var hover_style: StyleBox
 
-enum Tab { INVENTORY, SKILLS, RELATIONSHIPS, MAP, CRAFTING, COLLECTIONS, OPTIONS }
+enum Tab { INVENTORY, SKILLS, RELATIONSHIPS, MAP, CRAFTING, COLLECTIONS }
 var current_tab: Tab = Tab.INVENTORY
 
+# Configura o menu de inventário
 func setup(p_inventory_data: InventoryData) -> void:
 	inventory_data = p_inventory_data
 	
@@ -36,48 +34,48 @@ func setup(p_inventory_data: InventoryData) -> void:
 		inventory_data.inventory_updated.disconnect(update_slots)
 	inventory_data.inventory_updated.connect(update_slots)
 	
-	# Clear existing children
+	# Limpa filhos existentes
 	for child in grid_container.get_children():
 		child.queue_free()
 		
-	# Instantiate 36 slots in the 3x12 GridContainer
-	for i in range(36):
+	# Instancia 30 slots no GridContainer (5 colunas x 6 linhas)
+	# O índice de inventário aqui soma +10 pois a hotbar pega os primeiros 10
+	for i in range(30):
+		var slot_index = i + 10 # Slots 10 a 39
 		var slot_ui = SLOT_UI_SCENE.instantiate()
 		grid_container.add_child(slot_ui)
-		slot_ui.setup(inventory_data, i)
+		slot_ui.setup(inventory_data, slot_index)
 
+# Atualiza visual dos slots
 func update_slots() -> void:
 	for slot_ui in grid_container.get_children():
 		if is_instance_valid(slot_ui):
 			slot_ui.update_ui()
 
 func _ready() -> void:
-	# Extract styles from existing button configurations
+	# Extrai os estilos das configurações existentes dos botões
 	active_style = btn_inventory.get_theme_stylebox("normal")
 	inactive_style = btn_skills.get_theme_stylebox("normal")
 	hover_style = btn_inventory.get_theme_stylebox("hover")
 
-	# Hook up button presses
+	# Conecta os botões para trocar de abas
 	btn_inventory.pressed.connect(func(): select_tab(Tab.INVENTORY))
 	btn_skills.pressed.connect(func(): select_tab(Tab.SKILLS))
 	btn_relationships.pressed.connect(func(): select_tab(Tab.RELATIONSHIPS))
 	btn_map.pressed.connect(func(): select_tab(Tab.MAP))
 	btn_crafting.pressed.connect(func(): select_tab(Tab.CRAFTING))
 	btn_collections.pressed.connect(func(): select_tab(Tab.COLLECTIONS))
-	btn_options.pressed.connect(func(): select_tab(Tab.OPTIONS))
-	btn_exit.pressed.connect(func(): visible = false)
-	
-	if close_button:
-		close_button.pressed.connect(func(): visible = false)
 
-	# Initial UI update
+	# Atualização inicial da UI
 	select_tab(Tab.INVENTORY)
 
+# Seleciona uma aba
 func select_tab(tab: Tab) -> void:
 	current_tab = tab
 	_update_tab_buttons_styling()
 	_update_content_visibility()
 
+# Atualiza os estilos dos botões (ativo vs inativo)
 func _update_tab_buttons_styling() -> void:
 	var tabs_buttons_map = {
 		Tab.INVENTORY: btn_inventory,
@@ -85,8 +83,7 @@ func _update_tab_buttons_styling() -> void:
 		Tab.RELATIONSHIPS: btn_relationships,
 		Tab.MAP: btn_map,
 		Tab.CRAFTING: btn_crafting,
-		Tab.COLLECTIONS: btn_collections,
-		Tab.OPTIONS: btn_options
+		Tab.COLLECTIONS: btn_collections
 	}
 	
 	for tab_key in tabs_buttons_map:
@@ -98,8 +95,9 @@ func _update_tab_buttons_styling() -> void:
 			button.add_theme_stylebox_override("normal", inactive_style)
 			button.add_theme_stylebox_override("focus", inactive_style)
 
+# Atualiza qual painel de conteúdo é exibido
 func _update_content_visibility() -> void:
-	# Hide all main content nodes first
+	# Esconde todos os painéis principais primeiro
 	inventory_content.visible = false
 	fallback_content.visible = false
 	
@@ -108,19 +106,16 @@ func _update_content_visibility() -> void:
 			inventory_content.visible = true
 		Tab.SKILLS:
 			fallback_content.visible = true
-			fallback_label.text = "🔨 Habilidades\n(Tela em Desenvolvimento)"
+			fallback_label.text = "🔨 Skills\n(Development)"
 		Tab.RELATIONSHIPS:
 			fallback_content.visible = true
-			fallback_label.text = "❤️ Relações\n(Tela em Desenvolvimento)"
+			fallback_label.text = "❤️ Relationships\n(Development)"
 		Tab.MAP:
 			fallback_content.visible = true
-			fallback_label.text = "🗺️ Mapa\n(Tela em Desenvolvimento)"
+			fallback_label.text = "🗺️ Map\n(Development)"
 		Tab.CRAFTING:
 			fallback_content.visible = true
-			fallback_label.text = "⚙️ Criação\n(Tela em Desenvolvimento)"
+			fallback_label.text = "⚙️ Crafting\n(Development)"
 		Tab.COLLECTIONS:
 			fallback_content.visible = true
-			fallback_label.text = "⭐ Coleções\n(Tela em Desenvolvimento)"
-		Tab.OPTIONS:
-			fallback_content.visible = true
-			fallback_label.text = "🔧 Opções\n(Tela em Desenvolvimento)"
+			fallback_label.text = "⭐ Collections\n(Development)"

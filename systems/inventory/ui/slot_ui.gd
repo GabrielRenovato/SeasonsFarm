@@ -1,23 +1,35 @@
 extends PanelContainer
 class_name SlotUI
 
+# Referências para os elementos visuais do slot
 @onready var item_icon: TextureRect = $MarginContainer/ItemIcon
 @onready var quantity_label: Label = $MarginContainer/QuantityLabel
 
+# Cor que o slot fica quando está selecionado na hotbar (dourado quente)
+@export var active_color: Color = Color(1.4, 1.2, 0.7, 1.0)
+# Cor normal do slot (sem seleção)
+@export var normal_color: Color = Color(1.0, 1.0, 1.0, 1.0)
+
+# Índice desse slot no array do inventário
 var slot_index: int = -1
+# Referência aos dados do inventário completo
 var inventory_data: InventoryData
+# Dados específicos deste slot (item + quantidade)
 var slot_data: SlotData
 
+# Configura o slot com os dados do inventário e seu índice
 func setup(p_inventory_data: InventoryData, p_slot_index: int) -> void:
 	inventory_data = p_inventory_data
 	slot_index = p_slot_index
 	slot_data = inventory_data.slots[slot_index]
 	update_ui()
 
+# Atualiza o visual do slot baseado nos dados atuais
 func update_ui() -> void:
-	# Refresh slot_data reference in case slots were swapped or modified
+	# Pega a referência atualizada caso os slots tenham sido trocados
 	slot_data = inventory_data.slots[slot_index]
 	
+	# Se o slot está vazio, esconde ícone e quantidade
 	if slot_data == null or slot_data.item == null or slot_data.quantity <= 0:
 		item_icon.visible = false
 		quantity_label.visible = false
@@ -26,26 +38,34 @@ func update_ui() -> void:
 		item_icon.visible = true
 		tooltip_text = slot_data.item.name
 		
+		# Mostra o ícone do item (textura real ou placeholder colorido)
 		if slot_data.item.icon_texture != null:
 			item_icon.texture = slot_data.item.icon_texture
 			item_icon.self_modulate = Color.WHITE
 		else:
+			# Cria um placeholder colorido se não tiver textura
 			var placeholder = PlaceholderTexture2D.new()
-			placeholder.size = Vector2(16, 16)
+			placeholder.size = Vector2(14, 14)
 			item_icon.texture = placeholder
 			item_icon.self_modulate = slot_data.item.icon_color
 		
+		# Ferramentas não mostram quantidade (são únicas)
 		if slot_data.item.is_tool:
 			quantity_label.visible = false
 		else:
 			quantity_label.visible = true
 			quantity_label.text = str(slot_data.quantity)
 
+# Muda a cor do slot pra indicar se está selecionado na hotbar
 func set_active(is_active: bool) -> void:
-	self_modulate = Color(1.3, 1.3, 0.6, 1) if is_active else Color.WHITE
+	self_modulate = active_color if is_active else normal_color
 
-# Drag & Drop Implementation
+# === DRAG & DROP ===
+# Permite arrastar itens entre slots
+
+# Cria os dados de arrasto quando o jogador clica e arrasta
 func _get_drag_data(_at_position: Vector2) -> Variant:
+	# Não permite arrastar slot vazio
 	if slot_data == null or slot_data.item == null:
 		return null
 		
@@ -54,18 +74,19 @@ func _get_drag_data(_at_position: Vector2) -> Variant:
 		"inventory_data": inventory_data
 	}
 	
-	# Create a visual drag preview
+	# Cria uma previa visual do item sendo arrastado
 	var preview = PanelContainer.new()
-	preview.custom_minimum_size = Vector2(20, 20)
+	preview.custom_minimum_size = Vector2(16, 16)
 	
-	# Copy slot style or apply basic panel style
+	# Copia o estilo visual do slot pro preview
 	var style_box = get_theme_stylebox("panel").duplicate()
 	preview.add_theme_stylebox_override("panel", style_box)
 	
+	# Adiciona o ícone do item no preview
 	var preview_icon = TextureRect.new()
 	preview_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	preview_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	preview_icon.custom_minimum_size = Vector2(16, 16)
+	preview_icon.custom_minimum_size = Vector2(14, 14)
 	preview_icon.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	preview_icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	
@@ -73,7 +94,7 @@ func _get_drag_data(_at_position: Vector2) -> Variant:
 		preview_icon.texture = slot_data.item.icon_texture
 	else:
 		var placeholder = PlaceholderTexture2D.new()
-		placeholder.size = Vector2(16, 16)
+		placeholder.size = Vector2(14, 14)
 		preview_icon.texture = placeholder
 		preview_icon.self_modulate = slot_data.item.icon_color
 		
@@ -82,12 +103,15 @@ func _get_drag_data(_at_position: Vector2) -> Variant:
 	set_drag_preview(preview)
 	return drag_data
 
+# Verifica se esse slot pode receber um item arrastado
 func _can_drop_data(_at_position: Vector2, data: Variant) -> bool:
 	return data is Dictionary and data.has("slot_index") and data.has("inventory_data")
 
+# Executa a troca quando um item é solto neste slot
 func _drop_data(_at_position: Vector2, data: Variant) -> void:
 	var from_index = data.slot_index
 	var from_inventory = data.inventory_data
 	
+	# Só troca se for do mesmo inventário
 	if from_inventory == inventory_data:
 		inventory_data.swap_slots(from_index, slot_index)
