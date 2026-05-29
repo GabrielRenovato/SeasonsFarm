@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://celjgkv22e1gu"]
+[gd_scene format=3 uid="uid://opjh14fqpl4"]
 
 [ext_resource type="Texture2D" uid="uid://c6q6neysvlw7c" path="res://assets/sprites/Character/PNG/5. Axe and Sickle/Clothers/Farm/Blue.png" id="axe_cloth"]
 [ext_resource type="Texture2D" uid="uid://bejmgbpicfj45" path="res://assets/sprites/Character/PNG/5. Axe and Sickle/Eyes/Male/Black.png" id="axe_eyes"]
@@ -56,7 +56,7 @@
 [ext_resource type="Texture2D" uid="uid://dntm3xew2aad7" path="res://assets/sprites/Character/PNG/7. Watering/Weapons/Watering/1.png" id="water_tool"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_player_col"]
-size = Vector2(8, 8)
+size = Vector2(9, 2)
 
 [sub_resource type="Animation" id="Animation_RESET"]
 length = 0.001
@@ -12891,7 +12891,7 @@ y_sort_enabled = true
 script = ExtResource("script_player")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=39782406]
-position = Vector2(0, -4)
+position = Vector2(0.5, -7)
 shape = SubResource("RectangleShape2D_player_col")
 
 [node name="Body" type="Sprite2D" parent="." unique_id=1701481614]

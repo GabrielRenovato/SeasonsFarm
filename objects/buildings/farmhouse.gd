@@ -18,9 +18,13 @@ extends StaticBody2D
 
 var window_light: PointLight2D = null  # Luz da janela (acende à noite)
 
+var _player_in_range: bool = false  # Player está perto da porta?
+var _is_opening: bool = false       # Evita acionar a porta várias vezes
+
 func _ready() -> void:
-	# Conecta o sinal: quando alguém entrar na área da porta, chama a função
+	# Detecta quando o player entra/sai do alcance da porta
 	door_area.body_entered.connect(_on_door_area_body_entered)
+	door_area.body_exited.connect(_on_door_area_body_exited)
 	# Cria a luz dinâmica da janela em código (sem precisar de nó na cena)
 	_setup_window_light()
 
@@ -49,6 +53,10 @@ func _setup_window_light() -> void:
 	add_child(window_light)
 
 func _process(_delta: float) -> void:
+	# Abre a porta se o player estiver perto e apertar o botão da ferramenta
+	if _player_in_range and not _is_opening and Input.is_action_just_pressed("use_tool"):
+		_open_door()
+
 	# Atualiza a energia da luz da janela baseado no horário do jogo
 	if not window_light or not is_instance_valid(window_light):
 		return
@@ -77,20 +85,30 @@ func _process(_delta: float) -> void:
 	window_light.energy = lerp(window_light.energy, target_energy, 0.1)
 
 
-# Chamado quando um corpo entra na área de detecção da porta
-# O Y-sort está configurado corretamente: o nó raiz (StaticBody2D) 
+# Player entrou no alcance da porta: agora ele pode abri-la com o botão da ferramenta
+func _on_door_area_body_entered(body: Node2D) -> void:
+	if body is CharacterBody2D:
+		_player_in_range = true
+
+# Player saiu do alcance da porta
+func _on_door_area_body_exited(body: Node2D) -> void:
+	if body is CharacterBody2D:
+		_player_in_range = false
+
+# Abre a porta e troca para o interior da casa
+# O Y-sort está configurado corretamente: o nó raiz (StaticBody2D)
 # fica no "pé" da construção, permitindo que o player passe na frente
 # ou atrás da casa dependendo de sua posição Y relativa
-func _on_door_area_body_entered(body: Node2D) -> void:
-	# Só o player (CharacterBody2D) pode entrar pela porta
-	if body is CharacterBody2D:
-		if interior_scene != null:
-			if animation_player != null:
-				# Anima a abertura da porta e aguarda terminar antes de trocar de cena
-				animation_player.play("open_door")
-				await animation_player.animation_finished
-				get_tree().change_scene_to_packed(interior_scene)
-			else:
-				print("FALHOU: animation_player é NULO")
-		else:
-			print("FALHOU: interior_scene é NULO")
+func _open_door() -> void:
+	if interior_scene == null:
+		print("FALHOU: interior_scene é NULO")
+		return
+	if animation_player == null:
+		print("FALHOU: animation_player é NULO")
+		return
+
+	_is_opening = true
+	# Anima a abertura da porta e aguarda terminar antes de trocar de cena
+	animation_player.play("open_door")
+	await animation_player.animation_finished
+	get_tree().change_scene_to_packed(interior_scene)

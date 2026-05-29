@@ -17,6 +17,8 @@ var tree_variations: Array[PackedScene] = [
 	preload("res://objects/nature/pine_tree.tscn")
 ]
 
+@export var rock_scene: PackedScene = preload("res://objects/rock/rock.tscn")
+
 @export_group("Procedural Generation")
 @export var spawn_trees: bool = true
 @export var spawn_stumps: bool = true
@@ -32,6 +34,11 @@ var tree_variations: Array[PackedScene] = [
 
 ## Random chance (0.0 to 1.0) to spawn a stump on any valid ground cell outside of forests.
 @export_range(0.0, 1.0, 0.01) var stump_spawn_chance: float = 0.04
+
+## Whether to scatter mineable rocks across the map.
+@export var spawn_rocks: bool = true
+## Random chance (0.0 to 1.0) to spawn a rock on any valid ground cell.
+@export_range(0.0, 1.0, 0.01) var rock_spawn_chance: float = 0.05
 
 @onready var ground_layer: TileMapLayer = $GroundLayer
 
@@ -99,6 +106,7 @@ func generate_environment_procedurally() -> void:
 	var spawned_positions: Array[Vector2] = []
 	var spawned_trees_count := 0
 	var spawned_stumps_count := 0
+	var spawned_rocks_count := 0
 
 	for cell in used_cells:
 		# Check if there is grass on top of this dirt. If so, skip spawning here.
@@ -151,7 +159,23 @@ func generate_environment_procedurally() -> void:
 					spawned_trees_count += 1
 					continue # Skip stump check if tree is spawned
 
-		# 2. Attempt stump spawn (outside forest noise patches, more scattered)
+		# 2. Attempt rock spawn (scattered across any valid ground cell)
+		if spawn_rocks and rock_scene and rng.randf() < rock_spawn_chance:
+			var rock_too_close := false
+			for pos in spawned_positions:
+				if world_position.distance_to(pos) < min_tree_distance:
+					rock_too_close = true
+					break
+
+			if not rock_too_close:
+				var new_rock = rock_scene.instantiate()
+				new_rock.global_position = world_position
+				add_child(new_rock)
+				spawned_positions.append(world_position)
+				spawned_rocks_count += 1
+				continue # Skip stump check if rock is spawned
+
+		# 3. Attempt stump spawn (outside forest noise patches, more scattered)
 		if spawn_stumps and (stump_scene or not stump_variations.is_empty()) and noise_val <= spawn_threshold:
 			if rng.randf() < stump_spawn_chance:
 				var too_close := false
@@ -167,7 +191,7 @@ func generate_environment_procedurally() -> void:
 					spawned_positions.append(world_position)
 					spawned_stumps_count += 1
 				
-	print("MapManager: Procedurally generated ", spawned_trees_count, " trees and ", spawned_stumps_count, " stumps using seed ", noise.seed)
+	print("MapManager: Procedurally generated ", spawned_trees_count, " trees, ", spawned_rocks_count, " rocks and ", spawned_stumps_count, " stumps using seed ", noise.seed)
 
 func _on_day_changed(_day: int) -> void:
 	# Centralized daily update to optimize signal connections and enforce population caps
@@ -196,6 +220,16 @@ func _on_day_changed(_day: int) -> void:
 	# 2. Spawn a new random wild seed somewhere (15% chance per day) ONLY if under population cap (max 80 trees)
 	if tree_count < 80 and randf() <= 0.15:
 		_spawn_random_wild_seed()
+
+	# 3. Respawn rocks daily (rocks do not grow; new ones simply appear over time)
+	if spawn_rocks and rock_scene:
+		var rock_count := 0
+		for child in get_children():
+			if child is StaticBody2D and "is_breaking" in child:
+				rock_count += 1
+		# 25% chance per day to add a new rock, capped at 40 rocks
+		if rock_count < 40 and randf() <= 0.25:
+			_spawn_random_rock()
 
 func _spawn_random_wild_seed() -> void:
 	if not ground_layer or tree_variations.is_empty():
@@ -236,4 +270,43 @@ func _spawn_random_wild_seed() -> void:
 			new_tree.global_position = world_position
 			add_child(new_tree)
 			print("MapManager: Spawned new wild seed of type ", random_tree_scene.resource_path, " at ", world_position)
+			break
+
+func _spawn_random_rock() -> void:
+	if not ground_layer or not rock_scene:
+		return
+
+	var used_cells = ground_layer.get_used_cells()
+	if used_cells.is_empty():
+		return
+
+	# Try up to 10 random valid cells
+	for attempt in range(10):
+		var cell = used_cells.pick_random()
+
+		# Skip cells covered by grass
+		if has_node("Grass_layer") and $Grass_layer.get_cell_source_id(cell) != -1:
+			continue
+
+		var world_position = ground_layer.map_to_local(cell)
+
+		# Prevent spawning too close to player or farmhouse
+		if has_node("Player") and world_position.distance_to($Player.global_position) < 80.0:
+			continue
+		if has_node("PlayerHouse") and world_position.distance_to($PlayerHouse.global_position) < 140.0:
+			continue
+
+		# Enforce distance to other objects (trees, stumps and rocks)
+		var too_close = false
+		for child in get_children():
+			if child is StaticBody2D and (child.has_method("take_damage") or "stump" in child.name.to_lower()):
+				if child.global_position.distance_to(world_position) < min_tree_distance:
+					too_close = true
+					break
+
+		if not too_close:
+			var new_rock = rock_scene.instantiate()
+			new_rock.global_position = world_position
+			add_child(new_rock)
+			print("MapManager: Spawned new rock at ", world_position)
 			break

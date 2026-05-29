@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://drk0stn3pickp"]
+
+[ext_resource type="Texture2D" uid="uid://d4lkia0d8r8jk" path="res://assets/sprites/Props/Spring/Ground stones.png" id="1_stone"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_stone"]
+atlas = ExtResource("1_stone")
+region = Rect2(0, 16, 16, 16)
+
+[node name="Stone" type="Area2D"]
+scale = Vector2(0.7, 0.7)
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+y_sort_enabled = true
+position = Vector2(0, -6)
+texture = SubResource("AtlasTexture_stone")
