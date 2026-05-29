@@ -21,7 +21,7 @@ region = Rect2(39, 3, 22, 22)
 filter_clip = true
 
 [node name="SlotUI" type="PanelContainer"]
-custom_minimum_size = Vector2(22, 22)
+custom_minimum_size = Vector2(16, 16)
 size_flags_horizontal = 4
 size_flags_vertical = 4
 theme_override_styles/panel = SubResource("StyleBoxTexture_slot_bg")

@@ -18,6 +18,16 @@ var slot_data: SlotData
 func _ready() -> void:
 	if not show_background:
 		add_theme_stylebox_override("panel", StyleBoxEmpty.new())
+		# Ajusta os slots da hotbar para 15x15 para alinharem perfeitamente com os espaços desenhados (165px)
+		custom_minimum_size = Vector2(15, 15)
+		size = Vector2(15, 15)
+		# Aumenta a margem interna para os itens ficarem menores e mais bonitos na hotbar
+		var mc = $MarginContainer
+		mc.add_theme_constant_override("margin_left", 2)
+		mc.add_theme_constant_override("margin_right", 2)
+		mc.add_theme_constant_override("margin_top", 2)
+		mc.add_theme_constant_override("margin_bottom", 2)
+	
 	highlight_rect.visible = false
 
 # Configura o slot com os dados do inventário e seu índice

@@ -10,14 +10,10 @@ filter_clip = true
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_hotbar_bg"]
 texture = SubResource("AtlasTexture_hotbar_base")
-texture_margin_left = 6.0
-texture_margin_top = 6.0
-texture_margin_right = 6.0
-texture_margin_bottom = 6.0
-content_margin_left = 4.0
-content_margin_top = 6.0
-content_margin_right = 4.0
-content_margin_bottom = 4.0
+content_margin_left = 3
+content_margin_top = 6
+content_margin_right = 2
+content_margin_bottom = 2
 
 [node name="HotbarUI" type="PanelContainer"]
 anchors_preset = 7
@@ -25,9 +21,9 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -138.0
+offset_left = -82.0
 offset_top = -32.0
-offset_right = 138.0
+offset_right = 83.0
 offset_bottom = -3.0
 grow_horizontal = 2
 grow_vertical = 0

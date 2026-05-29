@@ -7,7 +7,7 @@ signal active_slot_changed(index: int)
 @export var slots: Array[SlotData] = []
 var active_slot_index: int = 0:
 	set(value):
-		active_slot_index = clamp(value, 0, 11) # 12 slots na hotbar
+		active_slot_index = clamp(value, 0, 9) # Apenas 10 slots na hotbar
 		active_slot_changed.emit(active_slot_index)
 
 func get_active_item() -> ItemData:
