@@ -61,7 +61,7 @@ func setup_default_inventory() -> void:
 	carrot_seeds.is_seed = true
 	carrot_seeds.crop_type = "carrot"
 	carrot_seeds.icon_color = Color(1.0, 1.0, 1.0)
-	carrot_seeds.icon_texture = _get_seed_bag_icon(0, 96)      # Spring row 6
+	carrot_seeds.icon_texture = _get_seed_bag_icon(0, 80)      # Spring row 5
 
 	var strawberry_seeds = ItemData.new()
 	strawberry_seeds.id = "strawberry_seeds"
@@ -69,7 +69,7 @@ func setup_default_inventory() -> void:
 	strawberry_seeds.is_seed = true
 	strawberry_seeds.crop_type = "strawberry"
 	strawberry_seeds.icon_color = Color(1.0, 1.0, 1.0)
-	strawberry_seeds.icon_texture = _get_seed_bag_icon(0, 32)  # Spring row 2
+	strawberry_seeds.icon_texture = _get_seed_bag_icon(0, 16)  # Spring row 1
 
 	var tomato_seeds = ItemData.new()
 	tomato_seeds.id = "tomato_seeds"
@@ -77,7 +77,7 @@ func setup_default_inventory() -> void:
 	tomato_seeds.is_seed = true
 	tomato_seeds.crop_type = "tomato"
 	tomato_seeds.icon_color = Color(1.0, 1.0, 1.0)
-	tomato_seeds.icon_texture = _get_seed_bag_icon(146, 64)    # Summer row 4
+	tomato_seeds.icon_texture = _get_seed_bag_icon(146, 48)    # Summer row 3
 
 	var melon_seeds = ItemData.new()
 	melon_seeds.id = "melon_seeds"
@@ -85,7 +85,7 @@ func setup_default_inventory() -> void:
 	melon_seeds.is_seed = true
 	melon_seeds.crop_type = "melon"
 	melon_seeds.icon_color = Color(1.0, 1.0, 1.0)
-	melon_seeds.icon_texture = _get_seed_bag_icon(146, 144)    # Summer row 9
+	melon_seeds.icon_texture = _get_seed_bag_icon(146, 128)    # Summer row 8
 
 	var pumpkin_seeds = ItemData.new()
 	pumpkin_seeds.id = "pumpkin_seeds"
@@ -93,7 +93,7 @@ func setup_default_inventory() -> void:
 	pumpkin_seeds.is_seed = true
 	pumpkin_seeds.crop_type = "pumpkin"
 	pumpkin_seeds.icon_color = Color(1.0, 1.0, 1.0)
-	pumpkin_seeds.icon_texture = _get_seed_bag_icon(290, 32)   # Fall row 2
+	pumpkin_seeds.icon_texture = _get_seed_bag_icon(290, 16)   # Fall row 1
 
 	var beetroot_seeds = ItemData.new()
 	beetroot_seeds.id = "beetroot_seeds"
@@ -101,7 +101,7 @@ func setup_default_inventory() -> void:
 	beetroot_seeds.is_seed = true
 	beetroot_seeds.crop_type = "beetroot"
 	beetroot_seeds.icon_color = Color(1.0, 1.0, 1.0)
-	beetroot_seeds.icon_texture = _get_seed_bag_icon(290, 16)  # Fall row 1
+	beetroot_seeds.icon_texture = _get_seed_bag_icon(290, 0)   # Fall row 0
 
 	slots[0].item = hoe
 	slots[0].quantity = 1
