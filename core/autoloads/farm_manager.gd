@@ -27,19 +27,63 @@ const AUTO_TILE_MAP = {
 	15: Vector2i(2, 1),
 }
 
-# Crop configs specifying row index in spritesheet and max stages
+# Crop configs with texture for growth and seed bag icon position in All Crops.png
+# All Crops.png layout: Spring panel x=0, Summer panel x=146, Fall panel x=290
+# Seed bag for crop N in a panel: Rect2(panel_x, N*16, 16, 16)  (alphabetical order)
 const CROP_CONFIGS = {
+	"carrot": {
+		"name": "Cenoura",
+		"texture_path": "res://assets/sprites/novosCrops/Spring/Carrot.png",
+		"season": "spring", "stages": 6, "frame_size": 16,
+		# frames 0=seed, 1=also-seed (skip), 2=sprout, 3-5=growth, 6=empty(skip), 7=harvest
+		"frame_map": [0, 2, 3, 4, 5, 7],
+		"harvest_item": "carrot",
+		"seed_x": 0, "seed_y": 96     # All Crops.png Spring row 6
+	},
+	"strawberry": {
+		"name": "Morango",
+		"texture_path": "res://assets/sprites/novosCrops/Spring/Strawberry.png",
+		"season": "spring", "stages": 7, "frame_size": 16,
+		# frame 0=seed, 1=sprout, ..., 6=empty(skip), 7=harvest
+		"frame_map": [0, 1, 2, 3, 4, 5, 7],
+		"harvest_item": "strawberry",
+		"seed_x": 0, "seed_y": 32     # All Crops.png Spring row 2
+	},
 	"tomato": {
 		"name": "Tomate",
-		"row": 1,
-		"stages": 6,
-		"harvest_item": "tomato"
+		"texture_path": "res://assets/sprites/novosCrops/Summer/Tomato.png",
+		"season": "summer", "stages": 8, "frame_size": 16,
+		# frames 7,8=empty(skip), 9=harvest
+		"frame_map": [0, 1, 2, 3, 4, 5, 6, 9],
+		"harvest_item": "tomato",
+		"seed_x": 146, "seed_y": 64   # All Crops.png Summer row 4
 	},
-	"turnip": {
-		"name": "Nabo",
-		"row": 0,
-		"stages": 6,
-		"harvest_item": "turnip"
+	"melon": {
+		"name": "Melão",
+		"texture_path": "res://assets/sprites/novosCrops/Summer/Melon.png",
+		"season": "summer", "stages": 7, "frame_size": 16,
+		# frames 6,7,8=empty(skip), 9=harvest
+		"frame_map": [0, 1, 2, 3, 4, 5, 9],
+		"harvest_item": "melon",
+		"seed_x": 146, "seed_y": 144  # All Crops.png Summer row 9
+	},
+	"pumpkin": {
+		"name": "Abóbora",
+		"texture_path": "res://assets/sprites/novosCrops/Fall/Pumpkin.png",
+		"season": "fall", "stages": 6, "frame_size": 16,
+		# frame 1=empty(skip), frames 0,2-5,7 valid
+		"frame_map": [0, 2, 3, 4, 5, 7],
+		"harvest_item": "pumpkin",
+		"seed_x": 290, "seed_y": 32   # All Crops.png Fall row 2
+	},
+	"beetroot": {
+		"name": "Beterraba",
+		"texture_path": "res://assets/sprites/novosCrops/Fall/Beetroot.png",
+		"season": "fall", "stages": 6, "frame_size": 16,
+		# frames 0,1=seeds (skip 1), 2=sprout, ..., 6=empty(skip), 7=harvest
+		"frame_map": [0, 2, 3, 4, 5, 7],
+		"harvest_item": "beetroot",
+		"seed_x": 290, "seed_y": 16   # All Crops.png Fall row 1
 	}
 }
 
@@ -124,8 +168,8 @@ func plant_seed(pos: Vector2i, crop_id: String, crop_node: Node2D) -> bool:
 		
 		# Sincroniza o crop com o seu estado inicial
 		if crop_node and crop_node.has_method("setup_crop"):
-			var config = CROP_CONFIGS.get(crop_id, {"row": 0, "stages": 6})
-			crop_node.setup_crop(crop_id, config.row, config.stages, 0, pos)
+			var config = CROP_CONFIGS.get(crop_id, {"texture_path": "", "stages": 7, "frame_size": 16, "frame_map": []})
+			crop_node.setup_crop(crop_id, config.texture_path, config.frame_size, config.stages, config.get("frame_map", []), 0, pos)
 			
 		emit_signal("crop_planted", pos, crop_id)
 		emit_signal("soil_changed", pos, farm_data[pos])

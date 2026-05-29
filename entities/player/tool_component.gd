@@ -201,7 +201,11 @@ func handle_tool_use(direction: Vector2) -> void:
 			if tile_data.crop_id != "":
 				var crop_node = tile_data.crop_node
 				if is_instance_valid(crop_node) and crop_node.has_method("is_fully_grown") and crop_node.is_fully_grown():
-					_harvest_crop_at(target_map_position)
+					is_using_tool = true
+					_active_tool_in_use = "Harvest"
+					_pending_target_map_position = target_map_position
+					animation_tree.set("parameters/Sickle/blend_position", strict_direction)
+					state_machine.travel("Sickle")
 					return
 		
 		var tool_name = get_current_tool()
@@ -287,7 +291,9 @@ func _on_animation_finished(_animation_name: StringName) -> void:
 		elif _active_tool_in_use == "Water":
 			if FarmManager:
 				FarmManager.water_soil(_pending_target_map_position)
-		
+		elif _active_tool_in_use == "Harvest":
+			_do_harvest(_pending_target_map_position)
+
 		is_using_tool = false
 		_active_tool_in_use = ""
 		if is_carrying:
@@ -345,4 +351,35 @@ func _harvest_crop_at(target_position: Vector2i) -> void:
 			new_item.icon_color = Color(1.0, 1.0, 1.0)
 			new_item.icon_texture = inventory_data._get_item_frame(items_sprite_sheet, 7)
 			
+		inventory_data.add_item(new_item, 1)
+
+func _get_crop_harvest_icon(crop_id: String) -> Texture2D:
+	if not FarmManager:
+		return null
+	var config = FarmManager.CROP_CONFIGS.get(crop_id, {})
+	if config.is_empty():
+		return null
+	var texture = load(config.get("texture_path", "")) as Texture2D
+	if texture == null:
+		return null
+	var fs = config.get("frame_size", 16)
+	var stages = config.get("stages", 8)
+	var atlas = AtlasTexture.new()
+	atlas.atlas = texture
+	atlas.region = Rect2((stages - 1) * fs, 0, fs, fs)
+	return atlas
+
+func _do_harvest(target_position: Vector2i) -> void:
+	if not FarmManager or not inventory_data:
+		return
+
+	var crop_id = FarmManager.harvest_crop(target_position)
+	if crop_id != "":
+		var config = FarmManager.CROP_CONFIGS.get(crop_id, {})
+		var new_item = ItemData.new()
+		new_item.id = crop_id
+		new_item.name = config.get("name", crop_id)
+		new_item.icon_color = Color.WHITE
+		new_item.icon_texture = _get_crop_harvest_icon(crop_id)
+
 		inventory_data.add_item(new_item, 1)

@@ -63,39 +63,83 @@ func setup_default_inventory() -> void:
 	water.icon_color = Color(0.1, 0.4, 0.9)
 	water.icon_texture = _get_tool_frame(water_sheet, 15)
 	
+	var carrot_seeds = ItemData.new()
+	carrot_seeds.id = "carrot_seeds"
+	carrot_seeds.name = "Semente de Cenoura"
+	carrot_seeds.is_seed = true
+	carrot_seeds.crop_type = "carrot"
+	carrot_seeds.icon_color = Color(1.0, 1.0, 1.0)
+	carrot_seeds.icon_texture = _get_seed_bag_icon(0, 96)      # Spring row 6
+
+	var strawberry_seeds = ItemData.new()
+	strawberry_seeds.id = "strawberry_seeds"
+	strawberry_seeds.name = "Semente de Morango"
+	strawberry_seeds.is_seed = true
+	strawberry_seeds.crop_type = "strawberry"
+	strawberry_seeds.icon_color = Color(1.0, 1.0, 1.0)
+	strawberry_seeds.icon_texture = _get_seed_bag_icon(0, 32)  # Spring row 2
+
 	var tomato_seeds = ItemData.new()
 	tomato_seeds.id = "tomato_seeds"
 	tomato_seeds.name = "Semente de Tomate"
 	tomato_seeds.is_seed = true
 	tomato_seeds.crop_type = "tomato"
 	tomato_seeds.icon_color = Color(1.0, 1.0, 1.0)
-	tomato_seeds.icon_texture = _get_seed_frame(seeds_sheet, 1)
-	
-	var turnip_seeds = ItemData.new()
-	turnip_seeds.id = "turnip_seeds"
-	turnip_seeds.name = "Semente de Nabo"
-	turnip_seeds.is_seed = true
-	turnip_seeds.crop_type = "turnip"
-	turnip_seeds.icon_color = Color(1.0, 1.0, 1.0)
-	turnip_seeds.icon_texture = _get_seed_frame(seeds_sheet, 0)
-	
+	tomato_seeds.icon_texture = _get_seed_bag_icon(146, 64)    # Summer row 4
+
+	var melon_seeds = ItemData.new()
+	melon_seeds.id = "melon_seeds"
+	melon_seeds.name = "Semente de Melão"
+	melon_seeds.is_seed = true
+	melon_seeds.crop_type = "melon"
+	melon_seeds.icon_color = Color(1.0, 1.0, 1.0)
+	melon_seeds.icon_texture = _get_seed_bag_icon(146, 144)    # Summer row 9
+
+	var pumpkin_seeds = ItemData.new()
+	pumpkin_seeds.id = "pumpkin_seeds"
+	pumpkin_seeds.name = "Semente de Abóbora"
+	pumpkin_seeds.is_seed = true
+	pumpkin_seeds.crop_type = "pumpkin"
+	pumpkin_seeds.icon_color = Color(1.0, 1.0, 1.0)
+	pumpkin_seeds.icon_texture = _get_seed_bag_icon(290, 32)   # Fall row 2
+
+	var beetroot_seeds = ItemData.new()
+	beetroot_seeds.id = "beetroot_seeds"
+	beetroot_seeds.name = "Semente de Beterraba"
+	beetroot_seeds.is_seed = true
+	beetroot_seeds.crop_type = "beetroot"
+	beetroot_seeds.icon_color = Color(1.0, 1.0, 1.0)
+	beetroot_seeds.icon_texture = _get_seed_bag_icon(290, 16)  # Fall row 1
+
 	slots[0].item = hoe
 	slots[0].quantity = 1
-	
+
 	slots[1].item = axe
 	slots[1].quantity = 1
-	
+
 	slots[2].item = mining
 	slots[2].quantity = 1
-	
+
 	slots[3].item = water
 	slots[3].quantity = 1
-	
-	slots[4].item = tomato_seeds
-	slots[4].quantity = 10
-	
-	slots[5].item = turnip_seeds
-	slots[5].quantity = 10
+
+	slots[4].item = carrot_seeds
+	slots[4].quantity = 5
+
+	slots[5].item = strawberry_seeds
+	slots[5].quantity = 5
+
+	slots[6].item = tomato_seeds
+	slots[6].quantity = 5
+
+	slots[7].item = melon_seeds
+	slots[7].quantity = 5
+
+	slots[8].item = pumpkin_seeds
+	slots[8].quantity = 5
+
+	slots[9].item = beetroot_seeds
+	slots[9].quantity = 5
 	
 	inventory_updated.emit()
 
@@ -141,6 +185,18 @@ func _get_item_frame(sheet: Texture2D, frame_index: int) -> AtlasTexture:
 	var tex = AtlasTexture.new()
 	tex.atlas = sheet
 	tex.region = Rect2(col * size, row * size, size, size)
+	return tex
+
+## Extracts a seed bag icon from All Crops.png using direct pixel coordinates.
+## All Crops.png: Spring panel x=0, Summer panel x=146, Fall panel x=290.
+## Crop N in a panel is at y = N * 16. Use seed_x and seed_y from CROP_CONFIGS.
+func _get_seed_bag_icon(seed_x: int, seed_y: int) -> AtlasTexture:
+	var texture = load("res://assets/sprites/crops/All Crops.png") as Texture2D
+	if texture == null:
+		return null
+	var tex = AtlasTexture.new()
+	tex.atlas = texture
+	tex.region = Rect2(seed_x, seed_y, 16, 16)
 	return tex
 
 func swap_slots(index_a: int, index_b: int) -> void:
