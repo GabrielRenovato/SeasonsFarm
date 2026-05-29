@@ -150,6 +150,22 @@ func _deserialize_inventory(slots_data: Array) -> void:
 					atlas.atlas = all_crops
 					atlas.region = Rect2(cfg.get("seed_x", 0) + rarity_col * 16, cfg.get("seed_y", 0), 16, 16)
 					item.icon_texture = atlas
+			elif item.id == "wood":
+				# Restaura o ícone da madeira a partir do items.png
+				var items_png = load("res://assets/sprites/ui/items.png") as Texture2D
+				if items_png:
+					var atlas := AtlasTexture.new()
+					atlas.atlas = items_png
+					atlas.region = Rect2(0, 112, 16, 16)
+					item.icon_texture = atlas
+			elif item.id == "stone":
+				# Restaura o ícone da pedra a partir de Ground stones.png
+				var stones_png = load("res://assets/sprites/Props/Spring/Ground stones.png") as Texture2D
+				if stones_png:
+					var atlas := AtlasTexture.new()
+					atlas.atlas = stones_png
+					atlas.region = Rect2(0, 16, 16, 16)
+					item.icon_texture = atlas
 
 		_inventory_data.slots[idx].item = item
 		_inventory_data.slots[idx].quantity = int(entry.get("quantity", 1))

@@ -1,13 +1,17 @@
-[gd_scene format=3 uid="uid://c41yftrv5xj4c"]
+[gd_scene load_steps=3 format=3 uid="uid://c41yftrv5xj4c"]
 
-[ext_resource type="Texture2D" uid="uid://bcy4eb17hixcm" path="res://assets/sprites/ui/items.png" id="1_8ljhs"]
+[ext_resource type="Script" path="res://objects/collectible.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://bcy4eb17hixcm" path="res://assets/sprites/ui/items.png" id="2_texture"]
 
 [node name="Wood" type="Area2D" unique_id=349830655]
 scale = Vector2(0.4, 0.4)
+script = ExtResource("1_script")
+item_id = "wood"
+item_name = "Wood"
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=63569296]
 y_sort_enabled = true
 position = Vector2(1.9073486e-06, -7.500004)
-texture = ExtResource("1_8ljhs")
+texture = ExtResource("2_texture")
 region_enabled = true
 region_rect = Rect2(-0.15680885, 112.83581, 16.711775, 14.2847595)

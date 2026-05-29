@@ -1,13 +1,17 @@
-[gd_scene format=3 uid="uid://drk0stn3pickp"]
+[gd_scene load_steps=4 format=3 uid="uid://drk0stn3pickp"]
 
-[ext_resource type="Texture2D" uid="uid://d4lkia0d8r8jk" path="res://assets/sprites/Props/Spring/Ground stones.png" id="1_stone"]
+[ext_resource type="Script" path="res://objects/collectible.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://d4lkia0d8r8jk" path="res://assets/sprites/Props/Spring/Ground stones.png" id="2_stone"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_stone"]
-atlas = ExtResource("1_stone")
+atlas = ExtResource("2_stone")
 region = Rect2(0, 16, 16, 16)
 
 [node name="Stone" type="Area2D"]
 scale = Vector2(0.7, 0.7)
+script = ExtResource("1_script")
+item_id = "stone"
+item_name = "Stone"
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 y_sort_enabled = true
