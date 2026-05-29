@@ -7,7 +7,7 @@
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_book"]
 atlas = ExtResource("2_book")
-region = Rect2(3, 4, 186, 178)
+region = Rect2(0, 0, 256, 220)
 filter_clip = true
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_menu_bg"]
@@ -63,10 +63,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -93.0
-offset_top = -98.0
-offset_right = 93.0
-offset_bottom = 98.0
+offset_left = -130.0
+offset_top = -80.0
+offset_right = 130.0
+offset_bottom = 80.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 0
@@ -190,11 +190,11 @@ stretch_mode = 1
 [node name="GridContainer" type="GridContainer" parent="ContentPanel/MarginContainer/TabContents/InventoryContent"]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 0
+size_flags_horizontal = 4
 size_flags_vertical = 0
 theme_override_constants/horizontal_separation = 1
 theme_override_constants/vertical_separation = 1
-columns = 5
+columns = 10
 
 [node name="FallbackContent" type="CenterContainer" parent="ContentPanel/MarginContainer/TabContents"]
 unique_name_in_owner = true

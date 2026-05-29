@@ -38,7 +38,7 @@ func setup(p_inventory_data: InventoryData) -> void:
 	for child in grid_container.get_children():
 		child.queue_free()
 		
-	# Instancia 40 slots no GridContainer (8 linhas x 5 colunas)
+	# Instancia 40 slots no GridContainer (4 linhas x 10 colunas)
 	# Assim todos os itens, incluindo os da hotbar (0-9), aparecem no menu de inventário
 	for i in range(40):
 		var slot_index = i # Slots 0 a 39
