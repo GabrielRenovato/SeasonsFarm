@@ -185,11 +185,11 @@ collision_layer = 5
 script = ExtResource("1_lh3cv")
 interior_scene = ExtResource("4_int")
 
-# O nó Visuals agrupa todos os sprites visuais da casa
-# position = (0, 0) garante que o pivot do Y-sort fica no chão (pé da casa)
+; O nó Visuals agrupa todos os sprites visuais da casa
+; position = (0, 0) garante que o pivot do Y-sort fica no chão (pé da casa)
 [node name="Visuals" type="Node2D" parent="." unique_id=644743784]
 
-# Retângulo escuro simulando o interior/sombra da porta
+; Retângulo escuro simulando o interior/sombra da porta
 [node name="InteriorDark" type="ColorRect" parent="Visuals" unique_id=459123919]
 offset_left = -15.0
 offset_top = -31.0
@@ -197,28 +197,28 @@ offset_right = 15.0
 offset_bottom = -1.0
 color = Color(0.12, 0.08, 0.05, 1)
 
-# Sprite da cor principal da parede da casa
+; Sprite da cor principal da parede da casa
 [node name="WallColor" type="Sprite2D" parent="Visuals" unique_id=1709529722]
 position = Vector2(0, -29)
 texture = ExtResource("2_tex")
 region_enabled = true
 region_rect = Rect2(244.87814, 84.762955, 69.464905, 59.41156)
 
-# Sprite de detalhe da parede (textura de tijolos/madeira)
+; Sprite de detalhe da parede (textura de tijolos/madeira)
 [node name="Wall" type="Sprite2D" parent="Visuals" unique_id=132926814]
 position = Vector2(0, -38)
 texture = ExtResource("3_dwc")
 region_enabled = true
 region_rect = Rect2(129.52957, 112.253006, 12.903259, 14.74659)
 
-# Sprite da moldura de madeira da entrada/janela
+; Sprite da moldura de madeira da entrada/janela
 [node name="WoodFrame" type="Sprite2D" parent="Visuals" unique_id=1951663274]
 position = Vector2(0, -24)
 texture = ExtResource("2_tex")
 region_enabled = true
 region_rect = Rect2(383.79282, 189.66496, 48.326202, 49.365234)
 
-# Sprite da porta (animável: aberta/fechada)
+; Sprite da porta (animável: aberta/fechada)
 [node name="DoorSprite" type="Sprite2D" parent="Visuals" unique_id=890795452]
 position = Vector2(-7, -23)
 texture = ExtResource("3_dwc")
@@ -226,33 +226,33 @@ centered = false
 region_enabled = true
 region_rect = Rect2(112.50481, 3.0711563, 14.618713, 22.849403)
 
-# Sprite da janela da casa
+; Sprite da janela da casa
 [node name="Window" type="Sprite2D" parent="Visuals" unique_id=946658031]
 position = Vector2(0, -39)
 texture = ExtResource("3_dwc")
 region_enabled = true
 region_rect = Rect2(113.314285, 112.357025, 13.730019, 14.569069)
 
-# Sprite do telhado principal da casa
+; Sprite do telhado principal da casa
 [node name="Roof" type="Sprite2D" parent="Visuals" unique_id=1481673433]
 position = Vector2(0, -46)
 texture = ExtResource("2_tex")
 region_enabled = true
 region_rect = Rect2(162.83206, 9.824095, 74.115845, 63.741882)
 
-# Sprite do complemento do telhado (chaminé, detalhes)
+; Sprite do complemento do telhado (chaminé, detalhes)
 [node name="RoofComplement" type="Sprite2D" parent="Visuals" unique_id=1190293825]
 position = Vector2(0, -65)
 texture = ExtResource("2_tex")
 region_enabled = true
 region_rect = Rect2(514.93567, 264.2635, 10.589966, 39.978577)
 
-# Colisão principal da casa — centralizada verticalmente no body da construção
+; Colisão principal da casa — centralizada verticalmente no body da construção
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1832908901]
 position = Vector2(0, -22.25)
 shape = SubResource("RectangleShape2D_idqra")
 
-# Área de detecção da porta — posicionada no chão na entrada da casa
+; Área de detecção da porta — posicionada no chão na entrada da casa
 [node name="DoorArea" type="Area2D" parent="." unique_id=734395254]
 position = Vector2(-2, 5)
 collision_layer = 4

@@ -91,8 +91,8 @@ func generate_environment_procedurally() -> void:
 	# Fetch farmhouse position to prevent spawning trees on top of it
 	var farmhouse_pos := Vector2.ZERO
 	var check_farmhouse := false
-	if has_node("Farmhouse"):
-		farmhouse_pos = $Farmhouse.global_position
+	if has_node("PlayerHouse"):
+		farmhouse_pos = $PlayerHouse.global_position
 		check_farmhouse = true
 
 	# Keep track of spawned positions to enforce minimum distance between trees/stumps
@@ -218,7 +218,7 @@ func _spawn_random_wild_seed() -> void:
 		# Prevent spawning too close to player or farmhouse
 		if has_node("Player") and world_position.distance_to($Player.global_position) < 80.0:
 			continue
-		if has_node("Farmhouse") and world_position.distance_to($Farmhouse.global_position) < 140.0:
+		if has_node("PlayerHouse") and world_position.distance_to($PlayerHouse.global_position) < 140.0:
 			continue
 			
 		# Enforce distance to other trees or stumps
