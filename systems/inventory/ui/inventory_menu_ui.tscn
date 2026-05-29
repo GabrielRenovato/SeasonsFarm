@@ -13,8 +13,6 @@ texture_margin_left = 96.0
 texture_margin_top = 46.0
 texture_margin_right = 10.0
 texture_margin_bottom = 12.0
-axis_stretch_horizontal = 1
-axis_stretch_vertical = 1
 content_margin_left = 102.0
 content_margin_top = 46.0
 content_margin_right = 12.0
@@ -41,11 +39,6 @@ content_margin_top = 2
 content_margin_right = 2
 content_margin_bottom = 2
 modulate_color = Color(1.2, 1.2, 1.2, 1)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_separator"]
-atlas = ExtResource("3_tabs")
-region = Rect2(10, 41, 180, 2)
-filter_clip = true
 
 [node name="InventoryMenuUI" type="VBoxContainer"]
 anchors_preset = 8
@@ -171,13 +164,6 @@ theme_override_font_sizes/font_size = 9
 text = "Inventory"
 vertical_alignment = 1
 
-[node name="Separator" type="TextureRect" parent="ContentPanel/MarginContainer/TabContents/InventoryContent"]
-layout_mode = 2
-custom_minimum_size = Vector2(0, 4)
-texture = SubResource("AtlasTexture_separator")
-expand_mode = 1
-stretch_mode = 1
-
 [node name="GridContainer" type="GridContainer" parent="ContentPanel/MarginContainer/TabContents/InventoryContent"]
 unique_name_in_owner = true
 layout_mode = 2
@@ -185,7 +171,7 @@ size_flags_horizontal = 4
 size_flags_vertical = 0
 theme_override_constants/horizontal_separation = 3
 theme_override_constants/vertical_separation = 3
-columns = 12
+columns = 9
 
 [node name="FallbackContent" type="CenterContainer" parent="ContentPanel/MarginContainer/TabContents"]
 unique_name_in_owner = true

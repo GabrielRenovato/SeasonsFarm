@@ -43,7 +43,7 @@ func setup(p_inventory_data: InventoryData) -> void:
 	for i in range(36):
 		var slot_index = i # Slots 0 a 35
 		var slot_ui = SLOT_UI_SCENE.instantiate()
-		slot_ui.custom_minimum_size = Vector2(22, 22) # Força 22x22 apenas no menu
+		slot_ui.custom_minimum_size = Vector2(18, 18) # Força 18x18 no menu
 		grid_container.add_child(slot_ui)
 		slot_ui.setup(inventory_data, slot_index)
 
