@@ -1,35 +1,30 @@
-[gd_scene format=3 uid="uid://cslotui123"]
+[gd_scene load_steps=3 format=3 uid="uid://cslotui123"]
 
 [ext_resource type="Script" uid="uid://dfas4lhuceinq" path="res://systems/inventory/ui/slot_ui.gd" id="1_slotui"]
-[ext_resource type="Texture2D" uid="uid://bjypb7xi4d5gj" path="res://assets/sprites/ui/new_inventory/slot_clean.png" id="2_slot"]
-[ext_resource type="Texture2D" uid="uid://6gatiruv4oqa" path="res://assets/sprites/ui/new_inventory/slot_highlight.png" id="3_slot_hl"]
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_slot_bg"]
-texture = ExtResource("2_slot")
-content_margin_left = 2
-content_margin_top = 2
-content_margin_right = 2
-content_margin_bottom = 2
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_slot"]
+bg_color = Color(0.8, 0.6, 0.4, 0.4)
 
 [node name="SlotUI" type="PanelContainer"]
-custom_minimum_size = Vector2(18, 18)
+custom_minimum_size = Vector2(24, 24)
 size_flags_horizontal = 4
 size_flags_vertical = 4
-theme_override_styles/panel = SubResource("StyleBoxTexture_slot_bg")
+theme_override_styles/panel = SubResource("StyleBoxFlat_slot")
 script = ExtResource("1_slotui")
 
-[node name="HighlightRect" type="TextureRect" parent="."]
+[node name="HighlightRect" type="ReferenceRect" parent="."]
 visible = false
 layout_mode = 2
-texture = ExtResource("3_slot_hl")
-expand_mode = 1
+border_color = Color(1, 0.9, 0.2, 1)
+border_width = 2.0
+editor_only = false
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 2
-theme_override_constants/margin_left = 1
-theme_override_constants/margin_top = 1
-theme_override_constants/margin_right = 1
-theme_override_constants/margin_bottom = 1
+theme_override_constants/margin_left = 2
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 2
+theme_override_constants/margin_bottom = 2
 
 [node name="ItemIcon" type="TextureRect" parent="MarginContainer"]
 visible = false
@@ -45,7 +40,7 @@ size_flags_horizontal = 8
 size_flags_vertical = 8
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 2
-theme_override_font_sizes/font_size = 6
+theme_override_font_sizes/font_size = 8
 text = "1"
 horizontal_alignment = 2
 vertical_alignment = 2

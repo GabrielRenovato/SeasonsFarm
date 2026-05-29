@@ -6,7 +6,7 @@ class_name SlotUI
 # Referências para os elementos visuais do slot
 @onready var item_icon: TextureRect = $MarginContainer/ItemIcon
 @onready var quantity_label: Label = $MarginContainer/QuantityLabel
-@onready var highlight_rect: TextureRect = $HighlightRect
+@onready var highlight_rect: ReferenceRect = $HighlightRect
 
 # Índice desse slot no array do inventário
 var slot_index: int = -1
@@ -17,16 +17,25 @@ var slot_data: SlotData
 
 func _ready() -> void:
 	if not show_background:
-		add_theme_stylebox_override("panel", StyleBoxEmpty.new())
-		# Ajusta os slots da hotbar para 15x15 para alinharem perfeitamente com os espaços desenhados (165px)
-		custom_minimum_size = Vector2(15, 15)
-		size = Vector2(15, 15)
-		# Aumenta a margem interna para os itens ficarem menores e mais bonitos na hotbar
+		# Hotbar: cria um quadradinho escuro semi-transparente para separar cada item
+		var sb := StyleBoxFlat.new()
+		sb.bg_color = Color(0.0, 0.0, 0.0, 0.3)   # fundo escuro semi-transparente
+		sb.border_width_left = 1
+		sb.border_width_top = 1
+		sb.border_width_right = 1
+		sb.border_width_bottom = 1
+		sb.border_color = Color(0.3, 0.15, 0.0, 0.8)  # borda marrom escura
+		sb.corner_radius_top_left = 2
+		sb.corner_radius_top_right = 2
+		sb.corner_radius_bottom_right = 2
+		sb.corner_radius_bottom_left = 2
+		add_theme_stylebox_override("panel", sb)
+		custom_minimum_size = Vector2(28, 28)
 		var mc = $MarginContainer
-		mc.add_theme_constant_override("margin_left", 2)
-		mc.add_theme_constant_override("margin_right", 2)
-		mc.add_theme_constant_override("margin_top", 2)
-		mc.add_theme_constant_override("margin_bottom", 2)
+		mc.add_theme_constant_override("margin_left", 3)
+		mc.add_theme_constant_override("margin_right", 3)
+		mc.add_theme_constant_override("margin_top", 3)
+		mc.add_theme_constant_override("margin_bottom", 3)
 	
 	highlight_rect.visible = false
 

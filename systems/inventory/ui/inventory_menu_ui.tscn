@@ -1,193 +1,108 @@
-[gd_scene load_steps=12 format=3 uid="uid://cinventorymenuui123"]
+[gd_scene format=3 uid="uid://bbrh0lca33olm"]
 
-[ext_resource type="Script" uid="uid://cfpsmptf7188l" path="res://systems/inventory/ui/inventory_menu_ui.gd" id="1_invmenu"]
-[ext_resource type="Texture2D" uid="uid://c666y61sflx7x" path="res://assets/sprites/ui/new_inventory/book_bg_clean.png" id="2_book_bg"]
-[ext_resource type="Texture2D" uid="uid://328fofo725u6" path="res://assets/sprites/ui/new_inventory/tabs_bar.png" id="3_tabs"]
+[ext_resource type="Script" uid="uid://cox8cnpy2wkpn" path="res://systems/inventory/ui/inventory_menu_ui.gd" id="1_invmenu"]
 
-[ext_resource type="Texture2D" uid="uid://dw47u54kyao16" path="res://assets/sprites/ui/new_inventory/tab_active_clean.png" id="4_tab_active"]
-[ext_resource type="Texture2D" uid="uid://bi4k4p36kifvc" path="res://assets/sprites/ui/new_inventory/tab_inactive_clean.png" id="5_tab_inactive"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wood"]
+bg_color = Color(0.76, 0.52, 0.25, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.48, 0.24, 0.08, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_menu_bg"]
-texture = ExtResource("2_book_bg")
-texture_margin_left = 96.0
-texture_margin_top = 46.0
-texture_margin_right = 10.0
-texture_margin_bottom = 12.0
-content_margin_left = 102.0
-content_margin_top = 46.0
-content_margin_right = 12.0
-content_margin_bottom = 14.0
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_paper"]
+bg_color = Color(0.96, 0.87, 0.7, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.76, 0.52, 0.25, 1)
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_tab_active"]
-texture = ExtResource("4_tab_active")
-content_margin_left = 2
-content_margin_top = 2
-content_margin_right = 2
-content_margin_bottom = 2
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_tab_inactive"]
-texture = ExtResource("5_tab_inactive")
-content_margin_left = 2
-content_margin_top = 2
-content_margin_right = 2
-content_margin_bottom = 2
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_tab_hover"]
-texture = ExtResource("5_tab_inactive")
-content_margin_left = 2
-content_margin_top = 2
-content_margin_right = 2
-content_margin_bottom = 2
-modulate_color = Color(1.2, 1.2, 1.2, 1)
-
-[node name="InventoryMenuUI" type="VBoxContainer"]
+[node name="InventoryMenuUI" type="PanelContainer" unique_id=1156513909]
+custom_minimum_size = Vector2(320, 160)
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -146.0
-offset_top = -90.0
-offset_right = 147.0
-offset_bottom = 90.0
+offset_left = -160.0
+offset_top = -80.0
+offset_right = 160.0
+offset_bottom = 80.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = -28
+theme_override_styles/panel = SubResource("StyleBoxFlat_wood")
 script = ExtResource("1_invmenu")
 
-[node name="TabsContainer" type="HBoxContainer" parent="."]
-z_index = 1
+[node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 2
-theme_override_constants/separation = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="EquipRoot" type="VBoxContainer" parent="MarginContainer/HBoxContainer" unique_id=485308418]
+unique_name_in_owner = true
+layout_mode = 2
 alignment = 1
 
-[node name="BtnInventory" type="Button" parent="TabsContainer"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(24, 16)
-layout_mode = 2
-theme_override_font_sizes/font_size = 8
-theme_override_styles/normal = SubResource("StyleBoxTexture_tab_active")
-theme_override_styles/hover = SubResource("StyleBoxTexture_tab_hover")
-theme_override_styles/pressed = SubResource("StyleBoxTexture_tab_active")
-theme_override_styles/focus = SubResource("StyleBoxTexture_tab_active")
-text = "🎒"
-
-[node name="BtnSkills" type="Button" parent="TabsContainer"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(24, 16)
-layout_mode = 2
-theme_override_font_sizes/font_size = 8
-theme_override_styles/normal = SubResource("StyleBoxTexture_tab_inactive")
-theme_override_styles/hover = SubResource("StyleBoxTexture_tab_hover")
-theme_override_styles/pressed = SubResource("StyleBoxTexture_tab_inactive")
-theme_override_styles/focus = SubResource("StyleBoxTexture_tab_inactive")
-text = "🔨"
-
-[node name="BtnRelationships" type="Button" parent="TabsContainer"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(24, 16)
-layout_mode = 2
-theme_override_font_sizes/font_size = 8
-theme_override_styles/normal = SubResource("StyleBoxTexture_tab_inactive")
-theme_override_styles/hover = SubResource("StyleBoxTexture_tab_hover")
-theme_override_styles/pressed = SubResource("StyleBoxTexture_tab_inactive")
-theme_override_styles/focus = SubResource("StyleBoxTexture_tab_inactive")
-text = "❤️"
-
-[node name="BtnMap" type="Button" parent="TabsContainer"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(24, 16)
-layout_mode = 2
-theme_override_font_sizes/font_size = 8
-theme_override_styles/normal = SubResource("StyleBoxTexture_tab_inactive")
-theme_override_styles/hover = SubResource("StyleBoxTexture_tab_hover")
-theme_override_styles/pressed = SubResource("StyleBoxTexture_tab_inactive")
-theme_override_styles/focus = SubResource("StyleBoxTexture_tab_inactive")
-text = "🗺️"
-
-[node name="BtnCrafting" type="Button" parent="TabsContainer"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(24, 16)
-layout_mode = 2
-theme_override_font_sizes/font_size = 8
-theme_override_styles/normal = SubResource("StyleBoxTexture_tab_inactive")
-theme_override_styles/hover = SubResource("StyleBoxTexture_tab_hover")
-theme_override_styles/pressed = SubResource("StyleBoxTexture_tab_inactive")
-theme_override_styles/focus = SubResource("StyleBoxTexture_tab_inactive")
-text = "⚙️"
-
-[node name="BtnCollections" type="Button" parent="TabsContainer"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(24, 16)
-layout_mode = 2
-theme_override_font_sizes/font_size = 8
-theme_override_styles/normal = SubResource("StyleBoxTexture_tab_inactive")
-theme_override_styles/hover = SubResource("StyleBoxTexture_tab_hover")
-theme_override_styles/pressed = SubResource("StyleBoxTexture_tab_inactive")
-theme_override_styles/focus = SubResource("StyleBoxTexture_tab_inactive")
-text = "⭐"
-
-[node name="ContentPanel" type="PanelContainer" parent="."]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_styles/panel = SubResource("StyleBoxTexture_menu_bg")
-
-[node name="MarginContainer" type="MarginContainer" parent="ContentPanel"]
-layout_mode = 2
-theme_override_constants/margin_left = 6
-theme_override_constants/margin_top = 4
-theme_override_constants/margin_right = 6
-theme_override_constants/margin_bottom = 4
-
-[node name="TabContents" type="Control" parent="ContentPanel/MarginContainer"]
-layout_mode = 2
-
-[node name="InventoryContent" type="VBoxContainer" parent="ContentPanel/MarginContainer/TabContents"]
-unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/separation = 2
-
-[node name="Header" type="HBoxContainer" parent="ContentPanel/MarginContainer/TabContents/InventoryContent"]
-layout_mode = 2
-
-[node name="TitleLabel" type="Label" parent="ContentPanel/MarginContainer/TabContents/InventoryContent/Header"]
+[node name="RightPanel" type="VBoxContainer" parent="MarginContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.28, 0.13, 0.05, 1)
-theme_override_font_sizes/font_size = 9
-text = "Inventory"
-vertical_alignment = 1
+theme_override_constants/separation = 4
 
-[node name="GridContainer" type="GridContainer" parent="ContentPanel/MarginContainer/TabContents/InventoryContent"]
+[node name="Header" type="HBoxContainer" parent="MarginContainer/HBoxContainer/RightPanel"]
+layout_mode = 2
+
+[node name="TabsRoot" type="HBoxContainer" parent="MarginContainer/HBoxContainer/RightPanel/Header" unique_id=480871561]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 0
-theme_override_constants/horizontal_separation = 3
-theme_override_constants/vertical_separation = 3
-columns = 9
+size_flags_horizontal = 3
+theme_override_constants/separation = 2
 
-[node name="FallbackContent" type="CenterContainer" parent="ContentPanel/MarginContainer/TabContents"]
+[node name="ButtonsRoot" type="HBoxContainer" parent="MarginContainer/HBoxContainer/RightPanel/Header" unique_id=1534252678]
+unique_name_in_owner = true
+layout_mode = 2
+alignment = 2
+theme_override_constants/separation = 4
+
+[node name="ContentPanel" type="PanelContainer" parent="MarginContainer/HBoxContainer/RightPanel"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_paper")
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer/RightPanel/ContentPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 6
+
+[node name="SlotsRoot" type="GridContainer" parent="MarginContainer/HBoxContainer/RightPanel/ContentPanel/MarginContainer" unique_id=1165785089]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/h_separation = 2
+theme_override_constants/v_separation = 2
+columns = 12
+
+[node name="FallbackContent" type="CenterContainer" parent="MarginContainer/HBoxContainer/RightPanel/ContentPanel/MarginContainer" unique_id=1107656627]
 unique_name_in_owner = true
 visible = false
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+layout_mode = 2
 
-[node name="FallbackLabel" type="Label" parent="ContentPanel/MarginContainer/TabContents/FallbackContent"]
+[node name="FallbackLabel" type="Label" parent="MarginContainer/HBoxContainer/RightPanel/ContentPanel/MarginContainer/FallbackContent" unique_id=1910273355]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_color = Color(0.28, 0.13, 0.05, 0.8)
-theme_override_font_sizes/font_size = 9
+theme_override_colors/font_color = Color(0.2, 0.2, 0.2, 1)
+theme_override_font_sizes/font_size = 8
 text = "Development Screen"
 horizontal_alignment = 1
 vertical_alignment = 1

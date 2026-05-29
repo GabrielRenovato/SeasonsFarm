@@ -1,34 +1,44 @@
 [gd_scene load_steps=3 format=3 uid="uid://chotbarui123"]
 
-[ext_resource type="Script" uid="uid://cxof2okwrd20v" path="res://systems/inventory/ui/hotbar_ui.gd" id="1_hotbar"]
+[ext_resource type="Script" uid="uid://dmj7x31t7tqwf" path="res://systems/inventory/ui/hotbar_ui.gd" id="1_hotbar"]
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_m8k0e"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hotbar"]
+bg_color = Color(0.76, 0.52, 0.25, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.48, 0.24, 0.08, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
 
-[node name="HotbarUI" type="PanelContainer"]
+[node name="HotbarUI" type="PanelContainer" unique_id=1611557422]
 anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -82.0
-offset_top = -32.0
-offset_right = 83.0
-offset_bottom = -3.0
+offset_left = -103.0
+offset_top = -40.0
+offset_right = 103.0
+offset_bottom = -2.0
 grow_horizontal = 2
 grow_vertical = 0
-size_flags_horizontal = 4
-size_flags_vertical = 8
-theme_override_styles/panel = SubResource("StyleBoxEmpty_m8k0e")
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_hotbar")
 script = ExtResource("1_hotbar")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 2
-theme_override_constants/margin_left = 0
-theme_override_constants/margin_top = 0
-theme_override_constants/margin_right = 0
-theme_override_constants/margin_bottom = 0
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
+[node name="SlotsRoot" type="HBoxContainer" parent="MarginContainer" unique_id=1461229366]
 layout_mode = 2
+mouse_filter = 2
 theme_override_constants/separation = 2
 alignment = 1
