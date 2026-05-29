@@ -2,6 +2,7 @@ extends CanvasLayer
 class_name HUD
 
 @onready var time_label: Label = %TimeLabel
+@onready var gold_label: Label = %GoldLabel
 @onready var hotbar_ui: HotbarUI = $Control/HotbarUI
 @onready var inventory_menu_ui: InventoryMenuUI = $Control/InventoryMenuUI
 
@@ -9,7 +10,7 @@ var inventory_data: InventoryData
 
 func setup(p_inventory_data: InventoryData) -> void:
 	inventory_data = p_inventory_data
-	
+
 	# Configura a Hotbar e o Menu de Inventário
 	hotbar_ui.setup(inventory_data)
 	inventory_menu_ui.setup(inventory_data)
@@ -20,6 +21,9 @@ func _ready() -> void:
 		TimeManager.connect("time_changed", _on_time_changed)
 		# Set initial time
 		_update_time_display(TimeManager.day, TimeManager.hour, TimeManager.minute)
+	if EconomyManager:
+		EconomyManager.gold_changed.connect(_on_gold_changed)
+		_on_gold_changed(EconomyManager.gold)
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventKey and event.keycode == KEY_T:
@@ -36,6 +40,10 @@ func toggle_inventory() -> void:
 
 func _on_time_changed(day: int, hour: int, minute: int) -> void:
 	_update_time_display(day, hour, minute)
+
+func _on_gold_changed(new_amount: int) -> void:
+	if gold_label:
+		gold_label.text = str(new_amount) + "g"
 
 # Atualiza a interface de tempo para Inglês
 func _update_time_display(day: int, hour: int, minute: int) -> void:

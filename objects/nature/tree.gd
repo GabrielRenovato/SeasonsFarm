@@ -25,10 +25,16 @@ enum GrowthStage { SEED, SPROUT, SAPLING, SMALL, FULL }
 var is_stardew_tree: bool = false
 var is_dying: bool = false
 
+var _active_shake_tween: Tween
+var _active_pos_tween: Tween
+var base_frame: int = 0
+
 func _ready() -> void:
 	if full_sprite.texture != null and "Animation" in full_sprite.texture.resource_path:
 		is_stardew_tree = true
 		full_sprite.frame = 4
+		
+	base_frame = full_sprite.frame
 	
 	_update_appearance()
 
@@ -108,18 +114,10 @@ func take_damage(amount: int, hitter_position: Vector2 = Vector2.ZERO, tool_name
 			
 	if health > 0:
 		if current_stage == GrowthStage.FULL:
-			if is_stardew_tree:
-				_play_stardew_shake()
-			else:
-				animation_player.play("tree_shake")
+			_play_stardew_shake()
 		else:
 			if is_instance_valid(growth_sprite):
-				if current_stage == GrowthStage.SMALL:
-					_play_small_shake()
-				var tween = create_tween()
-				tween.tween_property(growth_sprite, "position:x", 2.0, 0.05)
-				tween.tween_property(growth_sprite, "position:x", -2.0, 0.1)
-				tween.tween_property(growth_sprite, "position:x", 0.0, 0.05)
+				_play_small_shake()
 	else:
 		_die()
 
@@ -127,6 +125,20 @@ func _die() -> void:
 	if is_dying:
 		return
 	is_dying = true
+	
+	# Cancela as animações de hit para não atrapalhar a animação de queda
+	animation_player.stop()
+	if _active_shake_tween and _active_shake_tween.is_valid():
+		_active_shake_tween.kill()
+	if _active_pos_tween and _active_pos_tween.is_valid():
+		_active_pos_tween.kill()
+		
+	# Reseta o frame e rotação para o estado normal caso o tween/anim tenha parado no meio
+	if current_stage == GrowthStage.FULL:
+		full_sprite.frame = base_frame
+		$SpriteOffset.rotation_degrees = 0.0
+	elif is_instance_valid(growth_sprite):
+		growth_sprite.position.x = 0.0
 	
 	$CollisionShape2D.set_deferred("disabled", true)
 	$Area2D/CollisionShape2D.set_deferred("disabled", true)
@@ -149,13 +161,14 @@ func _die() -> void:
 		
 		_spawn_wood()
 	else:
-		if current_stage > GrowthStage.SEED:
-			await _play_fall_tween()
-		else:
-			if is_instance_valid(growth_sprite):
-				var fade_tween = create_tween()
-				fade_tween.tween_property(growth_sprite, "modulate:a", 0.0, 0.2)
-				await fade_tween.finished
+		if is_instance_valid(growth_sprite):
+			if current_stage == GrowthStage.SMALL:
+				_play_small_shake()
+				await get_tree().create_timer(0.15).timeout
+			var fade_tween = create_tween()
+			fade_tween.tween_property(growth_sprite, "modulate:a", 0.0, 0.2)
+			fade_tween.tween_property(growth_sprite, "scale", Vector2(1.2, 1.2), 0.2)
+			await fade_tween.finished
 			
 		if current_stage == GrowthStage.SMALL:
 			_spawn_wood(2)
@@ -189,27 +202,24 @@ func _spawn_wood(amount_override: int = -1) -> void:
 		y_tween.tween_property(wood_instance, "global_position:y", target_position.y, duration / 2.0).set_trans(Tween.TRANS_BOUNCE).set_ease(Tween.EASE_OUT)
 
 func _play_stardew_shake() -> void:
-	var tween = create_tween()
-	tween.tween_property(full_sprite, "frame", 5, 0.05)
-	tween.tween_interval(0.05)
-	tween.tween_property(full_sprite, "frame", 4, 0.05)
-	tween.tween_interval(0.05)
-	tween.tween_property(full_sprite, "frame", 6, 0.05)
-	tween.tween_interval(0.05)
-	tween.tween_property(full_sprite, "frame", 4, 0.05)
+	if _active_shake_tween and _active_shake_tween.is_valid():
+		_active_shake_tween.kill()
+	_active_shake_tween = create_tween()
+	# Usa rotação física no Node ao invés de trocar frames para evitar glitches com spritesheets diferentes
+	_active_shake_tween.tween_property($SpriteOffset, "rotation_degrees", 3.0, 0.05)
+	_active_shake_tween.tween_property($SpriteOffset, "rotation_degrees", -3.0, 0.1)
+	_active_shake_tween.tween_property($SpriteOffset, "rotation_degrees", 0.0, 0.05)
 
 func _play_small_shake() -> void:
 	if not is_instance_valid(growth_sprite):
 		return
-	# Usa tween_method pois Rect2 não é interpolável diretamente
-	var frame_tween = create_tween()
-	frame_tween.tween_callback(func(): growth_sprite.region_rect = Rect2(128, 0, 32, 48))
-	frame_tween.tween_interval(0.08)
-	frame_tween.tween_callback(func(): growth_sprite.region_rect = Rect2(96, 0, 32, 48))
-	frame_tween.tween_interval(0.08)
-	frame_tween.tween_callback(func(): growth_sprite.region_rect = Rect2(160, 0, 32, 48))
-	frame_tween.tween_interval(0.08)
-	frame_tween.tween_callback(func(): growth_sprite.region_rect = Rect2(96, 0, 32, 48))
+	if _active_pos_tween and _active_pos_tween.is_valid():
+		_active_pos_tween.kill()
+	_active_pos_tween = create_tween()
+	# Usa movimentação física ao invés de trocar region_rect para evitar exibir sprites vazios ou tocos
+	_active_pos_tween.tween_property(growth_sprite, "position:x", 2.0, 0.05)
+	_active_pos_tween.tween_property(growth_sprite, "position:x", -2.0, 0.1)
+	_active_pos_tween.tween_property(growth_sprite, "position:x", 0.0, 0.05)
 
 func _play_fall_tween() -> void:
 	# Brief shake first

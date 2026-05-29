@@ -353,20 +353,30 @@ func _harvest_crop_at(target_position: Vector2i) -> void:
 			
 		inventory_data.add_item(new_item, 1)
 
-func _get_crop_harvest_icon(crop_id: String) -> Texture2D:
+func _roll_rarity() -> String:
+	var r = randf()
+	if r < 0.05: return "gold"
+	elif r < 0.30: return "silver"
+	else: return "common"
+
+func _get_crop_harvest_icon(crop_id: String, rarity: String = "common") -> Texture2D:
 	if not FarmManager:
 		return null
 	var config = FarmManager.CROP_CONFIGS.get(crop_id, {})
 	if config.is_empty():
 		return null
-	var texture = load(config.get("texture_path", "")) as Texture2D
-	if texture == null:
+	var all_crops = load("res://assets/sprites/crops/All Crops.png") as Texture2D
+	if all_crops == null:
 		return null
-	var fs = config.get("frame_size", 16)
-	var stages = config.get("stages", 8)
+	# All Crops.png layout por linha de crop:
+	# col +0 = seed bag pequena, +1 = seed bag colorida
+	# col +2 = common, +3 = silver (estrela branca), +4 = gold (estrela dourada)
+	var seed_x: int = config.get("seed_x", 0)
+	var seed_y: int = config.get("seed_y", 0)
+	var rarity_col = {"common": 2, "silver": 3, "gold": 4}.get(rarity, 2)
 	var atlas = AtlasTexture.new()
-	atlas.atlas = texture
-	atlas.region = Rect2((stages - 1) * fs, 0, fs, fs)
+	atlas.atlas = all_crops
+	atlas.region = Rect2(seed_x + rarity_col * 16, seed_y, 16, 16)
 	return atlas
 
 func _do_harvest(target_position: Vector2i) -> void:
@@ -376,10 +386,12 @@ func _do_harvest(target_position: Vector2i) -> void:
 	var crop_id = FarmManager.harvest_crop(target_position)
 	if crop_id != "":
 		var config = FarmManager.CROP_CONFIGS.get(crop_id, {})
+		var rarity = _roll_rarity()
 		var new_item = ItemData.new()
 		new_item.id = crop_id
+		new_item.rarity = rarity
 		new_item.name = config.get("name", crop_id)
 		new_item.icon_color = Color.WHITE
-		new_item.icon_texture = _get_crop_harvest_icon(crop_id)
+		new_item.icon_texture = _get_crop_harvest_icon(crop_id, rarity)
 
 		inventory_data.add_item(new_item, 1)

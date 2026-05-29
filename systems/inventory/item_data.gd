@@ -13,3 +13,6 @@ class_name ItemData
 # Tier do item (só para ferramentas): "Wood", "Cooper", "Iron", "Gold",
 # "Platinum", "Crimson", "Frost", "Shadow", "Fairy", "Obsidian"
 @export var tier: String = "Wood"
+
+# Raridade (só para colheitas): "common", "silver", "gold"
+@export var rarity: String = "common"

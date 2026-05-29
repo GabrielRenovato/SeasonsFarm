@@ -91,6 +91,92 @@ func update_ui() -> void:
 			quantity_label.visible = true
 			quantity_label.text = str(slot_data.quantity)
 
+
+func _make_custom_tooltip(for_text: String) -> Object:
+	if slot_data == null or slot_data.item == null:
+		return null
+
+	var item = slot_data.item
+
+	var panel := PanelContainer.new()
+
+	# Remove o fundo do PopupPanel e reposiciona acima do slot
+	panel.tree_entered.connect(func():
+		var popup = panel.get_parent()
+		if not popup:
+			return
+		popup.add_theme_stylebox_override("panel", StyleBoxEmpty.new())
+		(func():
+			var slot_rect = get_global_rect()
+			var tip_size = popup.size
+			var vp_size = get_viewport().get_visible_rect().size
+			var px = int(slot_rect.position.x + slot_rect.size.x * 0.5 - tip_size.x * 0.5)
+			var py = int(slot_rect.position.y - tip_size.y - 6)
+			px = clampi(px, 0, int(vp_size.x - tip_size.x))
+			py = clampi(py, 0, int(vp_size.y - tip_size.y))
+			popup.position = Vector2i(px, py)
+		).call_deferred()
+	)
+
+	var style := StyleBoxFlat.new()
+	style.bg_color = Color(0.10, 0.07, 0.04, 0.95)
+	style.border_width_left = 1
+	style.border_width_top = 1
+	style.border_width_right = 1
+	style.border_width_bottom = 1
+	style.border_color = Color(0.55, 0.38, 0.12, 0.9)
+	style.corner_radius_top_left = 4
+	style.corner_radius_top_right = 4
+	style.corner_radius_bottom_right = 4
+	style.corner_radius_bottom_left = 4
+	style.content_margin_left = 7
+	style.content_margin_right = 7
+	style.content_margin_top = 4
+	style.content_margin_bottom = 4
+	panel.add_theme_stylebox_override("panel", style)
+
+	var vbox := VBoxContainer.new()
+	vbox.add_theme_constant_override("separation", 1)
+	panel.add_child(vbox)
+
+	var name_label := Label.new()
+	name_label.text = item.name
+	name_label.add_theme_font_size_override("font_size", 10)
+	name_label.add_theme_color_override("font_color", Color(0.97, 0.93, 0.80, 1.0))
+	name_label.add_theme_color_override("font_shadow_color", Color(0.0, 0.0, 0.0, 0.5))
+	name_label.add_theme_constant_override("shadow_offset_x", 1)
+	name_label.add_theme_constant_override("shadow_offset_y", 1)
+	vbox.add_child(name_label)
+
+	var subtitle := ""
+	var sub_color := Color(0.60, 0.60, 0.60, 1.0)
+	if item.is_tool:
+		subtitle = item.tier + " " + item.tool_type
+		sub_color = Color(0.80, 0.65, 0.25, 1.0)
+	elif item.is_seed:
+		subtitle = "Semente"
+		sub_color = Color(0.40, 0.80, 0.40, 1.0)
+	else:
+		match item.rarity:
+			"silver":
+				subtitle = "Prata ✦"
+				sub_color = Color(0.70, 0.82, 0.88, 1.0)
+			"gold":
+				subtitle = "Ouro ★"
+				sub_color = Color(1.0, 0.82, 0.22, 1.0)
+			_:
+				subtitle = "Colheita"
+				sub_color = Color(0.60, 0.60, 0.60, 1.0)
+
+	var sub_label := Label.new()
+	sub_label.text = subtitle
+	sub_label.add_theme_font_size_override("font_size", 8)
+	sub_label.add_theme_color_override("font_color", sub_color)
+	vbox.add_child(sub_label)
+
+	return panel
+
+
 # Define se este slot é o slot ativo/selecionado na hotbar
 func set_active(is_active: bool) -> void:
 	highlight_rect.visible = is_active

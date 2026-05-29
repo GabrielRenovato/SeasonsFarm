@@ -11,7 +11,13 @@ func _ready() -> void:
 	if inventory_data == null:
 		inventory_data = InventoryData.new()
 		inventory_data.setup_default_inventory()
-		
+
+	# Register inventory in SaveManager and load if a save exists
+	if SaveManager:
+		SaveManager.setup(inventory_data)
+		if SaveManager.has_save():
+			SaveManager.load_game()
+
 	# Pass inventory to ToolComponent
 	if tool_component:
 		tool_component.setup(inventory_data)
@@ -115,6 +121,12 @@ func _update_lantern_energy(_delta: float) -> void:
 	lantern.energy = lerp(lantern.energy, target_energy, 0.1)
 
 func _unhandled_input(event: InputEvent) -> void:
+	# F5 para salvar o jogo
+	if event is InputEventKey and event.pressed and event.keycode == KEY_F5:
+		if SaveManager:
+			SaveManager.save_game()
+		get_viewport().set_input_as_handled()
+
 	# Pressione 'C' para abrir o menu de personalização
 	if event is InputEventKey and event.pressed and event.keycode == KEY_C:
 		var cust_scene = load("res://ui/customization_menu/character_customization.tscn")

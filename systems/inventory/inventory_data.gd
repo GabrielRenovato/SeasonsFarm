@@ -276,7 +276,7 @@ func add_item(item: ItemData, quantity: int = 1) -> bool:
 	# 1. Tenta empilhar em um slot existente com o mesmo item.id (se não for ferramenta)
 	if not item.is_tool:
 		for slot in slots:
-			if slot.item and slot.item.id == item.id:
+			if slot.item and slot.item.id == item.id and slot.item.rarity == item.rarity:
 				slot.quantity += quantity
 				inventory_updated.emit()
 				return true

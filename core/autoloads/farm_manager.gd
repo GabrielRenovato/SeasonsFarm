@@ -35,54 +35,54 @@ const CROP_CONFIGS = {
 		"name": "Cenoura",
 		"texture_path": "res://assets/sprites/novosCrops/Spring/Carrot.png",
 		"season": "spring", "stages": 6, "frame_size": 15,
-		# frames 0=seed, 1=also-seed (skip), 2=sprout, 3-5=growth, 6=empty(skip), 7=harvest
+		# frames 0=seed, 1=also-seed (skip), 2=sprout, 3-5=growth, 6=empty(skip), 7=harvest, 8=silver, 9=gold
 		"frame_map": [0, 2, 3, 4, 5, 7],
-		"harvest_item": "carrot",
+		"harvest_item": "carrot", "base_price": 15,
 		"seed_x": 0, "seed_y": 96     # All Crops.png Spring row 6
 	},
 	"strawberry": {
 		"name": "Morango",
 		"texture_path": "res://assets/sprites/novosCrops/Spring/Strawberry.png",
 		"season": "spring", "stages": 7, "frame_size": 16,
-		# frame 0=seed, 1=sprout, ..., 6=empty(skip), 7=harvest
+		# frame 0=seed, 1=sprout, ..., 6=empty(skip), 7=harvest, 8=silver, 9=gold
 		"frame_map": [0, 1, 2, 3, 4, 5, 7],
-		"harvest_item": "strawberry",
+		"harvest_item": "strawberry", "base_price": 25,
 		"seed_x": 0, "seed_y": 32     # All Crops.png Spring row 2
 	},
 	"tomato": {
 		"name": "Tomate",
 		"texture_path": "res://assets/sprites/novosCrops/Summer/Tomato.png",
 		"season": "summer", "stages": 8, "frame_size": 16,
-		# frames 7,8=empty(skip), 9=harvest
+		# frames 7,8=empty(skip), 9=harvest, 10=silver, 11=gold
 		"frame_map": [0, 1, 2, 3, 4, 5, 6, 9],
-		"harvest_item": "tomato",
+		"harvest_item": "tomato", "base_price": 20,
 		"seed_x": 144, "seed_y": 64   # All Crops.png Summer row 4
 	},
 	"melon": {
 		"name": "Melão",
 		"texture_path": "res://assets/sprites/novosCrops/Summer/Melon.png",
 		"season": "summer", "stages": 7, "frame_size": 14,
-		# frames 6,7,8=empty(skip), 9=harvest
+		# frames 6,7,8=empty(skip), 9=harvest, 10=silver, 11=gold
 		"frame_map": [0, 1, 2, 3, 4, 5, 9],
-		"harvest_item": "melon",
+		"harvest_item": "melon", "base_price": 40,
 		"seed_x": 144, "seed_y": 144  # All Crops.png Summer row 9
 	},
 	"pumpkin": {
 		"name": "Abóbora",
 		"texture_path": "res://assets/sprites/novosCrops/Fall/Pumpkin.png",
 		"season": "fall", "stages": 6, "frame_size": 16,
-		# frame 1=empty(skip), frames 0,2-5,7 valid
+		# frame 1=empty(skip), frames 0,2-5,7 valid; 7=harvest, 8=silver, 9=gold
 		"frame_map": [0, 2, 3, 4, 5, 7],
-		"harvest_item": "pumpkin",
+		"harvest_item": "pumpkin", "base_price": 35,
 		"seed_x": 288, "seed_y": 32   # All Crops.png Fall row 2
 	},
 	"beetroot": {
 		"name": "Beterraba",
 		"texture_path": "res://assets/sprites/novosCrops/Fall/Beetroot.png",
 		"season": "fall", "stages": 6, "frame_size": 16,
-		# frames 0,1=seeds (skip 1), 2=sprout, ..., 6=empty(skip), 7=harvest
+		# frames 0,1=seeds (skip 1), 2=sprout, ..., 6=empty(skip), 7=harvest, 8=silver, 9=gold
 		"frame_map": [0, 2, 3, 4, 5, 7],
-		"harvest_item": "beetroot",
+		"harvest_item": "beetroot", "base_price": 20,
 		"seed_x": 288, "seed_y": 16   # All Crops.png Fall row 1
 	}
 }
