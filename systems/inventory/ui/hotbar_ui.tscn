@@ -1,19 +1,8 @@
 [gd_scene load_steps=3 format=3 uid="uid://chotbarui123"]
 
-[ext_resource type="Script" path="res://systems/inventory/ui/hotbar_ui.gd" id="1_hotbar"]
-[ext_resource type="Texture2D" uid="uid://cj3dpirwna2xp" path="res://assets/sprites/ui/Inventory/Slots.png" id="2_slots"]
+[ext_resource type="Script" uid="uid://cxof2okwrd20v" path="res://systems/inventory/ui/hotbar_ui.gd" id="1_hotbar"]
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_hotbar_base"]
-atlas = ExtResource("2_slots")
-region = Rect2(6, 249, 165, 29)
-filter_clip = true
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_hotbar_bg"]
-texture = SubResource("AtlasTexture_hotbar_base")
-content_margin_left = 3
-content_margin_top = 6
-content_margin_right = 2
-content_margin_bottom = 2
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_m8k0e"]
 
 [node name="HotbarUI" type="PanelContainer"]
 anchors_preset = 7
@@ -29,7 +18,7 @@ grow_horizontal = 2
 grow_vertical = 0
 size_flags_horizontal = 4
 size_flags_vertical = 8
-theme_override_styles/panel = SubResource("StyleBoxTexture_hotbar_bg")
+theme_override_styles/panel = SubResource("StyleBoxEmpty_m8k0e")
 script = ExtResource("1_hotbar")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
@@ -41,5 +30,5 @@ theme_override_constants/margin_bottom = 0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
 layout_mode = 2
-theme_override_constants/separation = 0
+theme_override_constants/separation = 2
 alignment = 1

@@ -1,27 +1,18 @@
 [gd_scene format=3 uid="uid://cslotui123"]
 
 [ext_resource type="Script" uid="uid://dfas4lhuceinq" path="res://systems/inventory/ui/slot_ui.gd" id="1_slotui"]
-[ext_resource type="Texture2D" uid="uid://cj3dpirwna2xp" path="res://assets/sprites/ui/Inventory/Slots.png" id="3_slots"]
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_slot"]
-atlas = ExtResource("3_slots")
-region = Rect2(8, 59, 22, 22)
-filter_clip = true
+[ext_resource type="Texture2D" uid="uid://cleanslotuid" path="res://assets/sprites/ui/new_inventory/slot_clean.png" id="2_slot"]
+[ext_resource type="Texture2D" uid="uid://cleanslothluid" path="res://assets/sprites/ui/new_inventory/slot_highlight.png" id="3_slot_hl"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_slot_bg"]
-texture = SubResource("AtlasTexture_slot")
-content_margin_left = 1
-content_margin_top = 1
-content_margin_right = 1
-content_margin_bottom = 1
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_highlight"]
-atlas = ExtResource("3_slots")
-region = Rect2(39, 3, 22, 22)
-filter_clip = true
+texture = ExtResource("2_slot")
+content_margin_left = 2
+content_margin_top = 2
+content_margin_right = 2
+content_margin_bottom = 2
 
 [node name="SlotUI" type="PanelContainer"]
-custom_minimum_size = Vector2(16, 16)
+custom_minimum_size = Vector2(18, 18)
 size_flags_horizontal = 4
 size_flags_vertical = 4
 theme_override_styles/panel = SubResource("StyleBoxTexture_slot_bg")
@@ -30,7 +21,7 @@ script = ExtResource("1_slotui")
 [node name="HighlightRect" type="TextureRect" parent="."]
 visible = false
 layout_mode = 2
-texture = SubResource("AtlasTexture_highlight")
+texture = ExtResource("3_slot_hl")
 expand_mode = 1
 
 [node name="MarginContainer" type="MarginContainer" parent="."]

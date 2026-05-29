@@ -1,61 +1,49 @@
-[gd_scene load_steps=13 format=3 uid="uid://cinventorymenuui123"]
+[gd_scene load_steps=12 format=3 uid="uid://cinventorymenuui123"]
 
-[ext_resource type="Script" path="res://systems/inventory/ui/inventory_menu_ui.gd" id="1_invmenu"]
-[ext_resource type="Texture2D" uid="uid://bb8cmbks50l8d" path="res://assets/sprites/ui/Inventory/Book.png" id="2_book"]
-[ext_resource type="Texture2D" uid="uid://rg1p4qoy5m88" path="res://assets/sprites/ui/Inventory/Extras.png" id="3_extras"]
-[ext_resource type="Texture2D" uid="uid://h07k8o7f5vex" path="res://assets/sprites/ui/Inventory/Decor.png" id="4_decor"]
+[ext_resource type="Script" uid="uid://cfpsmptf7188l" path="res://systems/inventory/ui/inventory_menu_ui.gd" id="1_invmenu"]
+[ext_resource type="Texture2D" uid="uid://cleanbgbookuid" path="res://assets/sprites/ui/new_inventory/book_bg_clean.png" id="2_book_bg"]
+[ext_resource type="Texture2D" uid="uid://cleantabbaruid" path="res://assets/sprites/ui/new_inventory/tabs_bar.png" id="3_tabs"]
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_book"]
-atlas = ExtResource("2_book")
-region = Rect2(0, 0, 256, 220)
-filter_clip = true
+[ext_resource type="Texture2D" uid="uid://cleantabactiveuid" path="res://assets/sprites/ui/new_inventory/tab_active_clean.png" id="4_tab_active"]
+[ext_resource type="Texture2D" uid="uid://cleantabinactiveuid" path="res://assets/sprites/ui/new_inventory/tab_inactive_clean.png" id="5_tab_inactive"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_menu_bg"]
-texture = SubResource("AtlasTexture_book")
-margin_left = 14
-margin_top = 14
-margin_right = 14
-margin_bottom = 14
-content_margin_left = 8
-content_margin_top = 8
-content_margin_right = 8
-content_margin_bottom = 8
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_tab_active"]
-atlas = ExtResource("3_extras")
-region = Rect2(3, 3, 27, 27)
-filter_clip = true
+texture = ExtResource("2_book_bg")
+texture_margin_left = 100.0
+texture_margin_top = 10.0
+texture_margin_right = 10.0
+texture_margin_bottom = 12.0
+content_margin_left = 102.0
+content_margin_top = 12.0
+content_margin_right = 12.0
+content_margin_bottom = 14.0
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_tab_active"]
-texture = SubResource("AtlasTexture_tab_active")
+texture = ExtResource("4_tab_active")
 content_margin_left = 2
 content_margin_top = 2
 content_margin_right = 2
 content_margin_bottom = 2
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_tab_inactive"]
-atlas = ExtResource("3_extras")
-region = Rect2(67, 3, 27, 27)
-filter_clip = true
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_tab_inactive"]
-texture = SubResource("AtlasTexture_tab_inactive")
+texture = ExtResource("5_tab_inactive")
 content_margin_left = 2
 content_margin_top = 2
 content_margin_right = 2
 content_margin_bottom = 2
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_tab_hover"]
-atlas = ExtResource("3_extras")
-region = Rect2(35, 3, 27, 27)
-filter_clip = true
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_tab_hover"]
-texture = SubResource("AtlasTexture_tab_hover")
+texture = ExtResource("5_tab_inactive")
 content_margin_left = 2
 content_margin_top = 2
 content_margin_right = 2
 content_margin_bottom = 2
+modulate_color = Color(1.2, 1.2, 1.2, 1)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_separator"]
+atlas = ExtResource("3_tabs")
+region = Rect2(10, 41, 180, 2)
+filter_clip = true
 
 [node name="InventoryMenuUI" type="VBoxContainer"]
 anchors_preset = 8
@@ -63,10 +51,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -160.0
-offset_top = -110.0
-offset_right = 160.0
-offset_bottom = 110.0
+offset_left = -146.0
+offset_top = -90.0
+offset_right = 147.0
+offset_bottom = 90.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 0
@@ -183,7 +171,7 @@ vertical_alignment = 1
 [node name="Separator" type="TextureRect" parent="ContentPanel/MarginContainer/TabContents/InventoryContent"]
 layout_mode = 2
 custom_minimum_size = Vector2(0, 4)
-texture = ExtResource("4_decor")
+texture = SubResource("AtlasTexture_separator")
 expand_mode = 1
 stretch_mode = 1
 
@@ -192,8 +180,8 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 0
-theme_override_constants/horizontal_separation = 2
-theme_override_constants/vertical_separation = 2
+theme_override_constants/horizontal_separation = 3
+theme_override_constants/vertical_separation = 3
 columns = 12
 
 [node name="FallbackContent" type="CenterContainer" parent="ContentPanel/MarginContainer/TabContents"]
