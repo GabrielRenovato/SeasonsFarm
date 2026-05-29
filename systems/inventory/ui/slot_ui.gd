@@ -30,6 +30,11 @@ func _ready() -> void:
 		sb.corner_radius_bottom_right = 2
 		sb.corner_radius_bottom_left = 2
 		add_theme_stylebox_override("panel", sb)
+		# Força todos os estados a usarem o mesmo estilo, evitando o risco branco do tema padrão da Godot
+		add_theme_stylebox_override("hover", sb)
+		add_theme_stylebox_override("pressed", sb)
+		add_theme_stylebox_override("focus", sb)
+		add_theme_stylebox_override("disabled", sb)
 		custom_minimum_size = Vector2(20, 20)
 		var mc = $MarginContainer
 		mc.add_theme_constant_override("margin_left", 2)
@@ -38,6 +43,14 @@ func _ready() -> void:
 		mc.add_theme_constant_override("margin_bottom", 2)
 	
 	highlight_rect.visible = false
+
+	# Garante que o estilo atual (qualquer que seja) vai cobrir todos os estados
+	# evitando o risco/borda branca que o tema padrão da Godot aplica
+	var current_style = get_theme_stylebox("panel")
+	add_theme_stylebox_override("hover", current_style)
+	add_theme_stylebox_override("pressed", current_style)
+	add_theme_stylebox_override("focus", current_style)
+	add_theme_stylebox_override("disabled", current_style)
 
 # Configura o slot com os dados do inventário e seu índice
 func setup(p_inventory_data: InventoryData, p_slot_index: int) -> void:
