@@ -7,7 +7,7 @@ signal active_slot_changed(index: int)
 @export var slots: Array[SlotData] = []
 var active_slot_index: int = 0:
 	set(value):
-		active_slot_index = clamp(value, 0, 9) # Apenas 10 slots na hotbar
+		active_slot_index = clamp(value, 0, 11) # 12 slots na hotbar
 		active_slot_changed.emit(active_slot_index)
 
 func get_active_item() -> ItemData:
@@ -189,6 +189,8 @@ func _get_seed_bag_icon(seed_x: int, seed_y: int) -> AtlasTexture:
 	var tex = AtlasTexture.new()
 	tex.atlas = texture
 	tex.region = Rect2(seed_x, seed_y, 16, 16)
+	# Margem de 1px para cortar pixels brancos/claros da borda do sprite sheet
+	tex.margin = Rect2(1, 1, -2, -2)
 	return tex
 
 func swap_slots(index_a: int, index_b: int) -> void:
