@@ -23,16 +23,16 @@ border_width_bottom = 2
 border_color = Color(0.76, 0.52, 0.25, 1)
 
 [node name="InventoryMenuUI" type="PanelContainer" unique_id=1156513909]
-custom_minimum_size = Vector2(320, 160)
+custom_minimum_size = Vector2(240, 120)
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -160.0
-offset_top = -80.0
-offset_right = 160.0
-offset_bottom = 80.0
+offset_left = -120.0
+offset_top = -60.0
+offset_right = 120.0
+offset_bottom = 60.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_wood")
@@ -40,14 +40,14 @@ script = ExtResource("1_invmenu")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 2
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 8
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
 layout_mode = 2
-theme_override_constants/separation = 8
+theme_override_constants/separation = 4
 
 [node name="EquipRoot" type="VBoxContainer" parent="MarginContainer/HBoxContainer" unique_id=485308418]
 unique_name_in_owner = true

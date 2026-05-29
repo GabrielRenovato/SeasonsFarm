@@ -30,12 +30,12 @@ func _ready() -> void:
 		sb.corner_radius_bottom_right = 2
 		sb.corner_radius_bottom_left = 2
 		add_theme_stylebox_override("panel", sb)
-		custom_minimum_size = Vector2(28, 28)
+		custom_minimum_size = Vector2(20, 20)
 		var mc = $MarginContainer
-		mc.add_theme_constant_override("margin_left", 3)
-		mc.add_theme_constant_override("margin_right", 3)
-		mc.add_theme_constant_override("margin_top", 3)
-		mc.add_theme_constant_override("margin_bottom", 3)
+		mc.add_theme_constant_override("margin_left", 2)
+		mc.add_theme_constant_override("margin_right", 2)
+		mc.add_theme_constant_override("margin_top", 2)
+		mc.add_theme_constant_override("margin_bottom", 2)
 	
 	highlight_rect.visible = false
 
