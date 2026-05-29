@@ -189,8 +189,6 @@ func _get_seed_bag_icon(seed_x: int, seed_y: int) -> AtlasTexture:
 	var tex = AtlasTexture.new()
 	tex.atlas = texture
 	tex.region = Rect2(seed_x, seed_y, 16, 16)
-	# Margem de 1px para cortar pixels brancos/claros da borda do sprite sheet
-	tex.margin = Rect2(1, 1, -2, -2)
 	return tex
 
 func swap_slots(index_a: int, index_b: int) -> void:
