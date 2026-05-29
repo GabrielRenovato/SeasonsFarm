@@ -23,13 +23,8 @@ func setup_default_inventory() -> void:
 		sd.quantity = 0
 		slots.append(sd)
 	
-	# Load tool sprite sheets (each is 160x128 = 10 cols x 8 rows of 16x16 frames, but 5x4 for 32x32)
-	# Using wood tier tools as defaults
-	var axe_sheet = load("res://assets/sprites/player/separate/axe/tool/axe_wood.png")
-	var hoe_sheet = load("res://assets/sprites/player/separate/hoe/tool/hoe_wood.png")
-	var pick_sheet = load("res://assets/sprites/player/separate/pickaxe/tool/pickaxe_wood.png")
-	var water_sheet = load("res://assets/sprites/player/separate/water/tool/wateringcan_red.png")
-	var seeds_sheet = load("res://assets/sprites/seeds/seeds.png")
+	# Usando items.png como placeholder para as ferramentas enquanto os sprites reais estão ausentes
+	var items_sheet = load("res://assets/sprites/ui/items.png")
 	
 	# Add default tools (nomes em ingles para global launch)
 	var hoe = ItemData.new()
@@ -37,32 +32,28 @@ func setup_default_inventory() -> void:
 	hoe.name = "Hoe"
 	hoe.is_tool = true
 	hoe.tool_type = "Hoe"
-	hoe.icon_color = Color(0.8, 0.4, 0.1)
-	hoe.icon_texture = _get_tool_frame(hoe_sheet, 15)
+	hoe.icon_texture = _get_item_frame(items_sheet, 27) # Espada (como placeholder de enxada)
 	
 	var axe = ItemData.new()
 	axe.id = "axe"
 	axe.name = "Axe"
 	axe.is_tool = true
 	axe.tool_type = "Axe"
-	axe.icon_color = Color(0.8, 0.1, 0.1)
-	axe.icon_texture = _get_tool_frame(axe_sheet, 15)
+	axe.icon_texture = _get_item_frame(items_sheet, 28) # Espada de madeira (placeholder)
 	
 	var mining = ItemData.new()
 	mining.id = "pickaxe"
 	mining.name = "Pickaxe"
 	mining.is_tool = true
 	mining.tool_type = "Pickaxe"
-	mining.icon_color = Color(0.1, 0.6, 0.8)
-	mining.icon_texture = _get_tool_frame(pick_sheet, 15)
+	mining.icon_texture = _get_item_frame(items_sheet, 41) # Pedra (placeholder)
 	
 	var water = ItemData.new()
 	water.id = "watering_can"
 	water.name = "Watering Can"
 	water.is_tool = true
 	water.tool_type = "Water"
-	water.icon_color = Color(0.1, 0.4, 0.9)
-	water.icon_texture = _get_tool_frame(water_sheet, 15)
+	water.icon_texture = _get_item_frame(items_sheet, 20) # Garrafa (placeholder)
 	
 	var carrot_seeds = ItemData.new()
 	carrot_seeds.id = "carrot_seeds"

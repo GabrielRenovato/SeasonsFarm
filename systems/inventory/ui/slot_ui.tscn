@@ -15,12 +15,23 @@ content_margin_top = 1
 content_margin_right = 1
 content_margin_bottom = 1
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_highlight"]
+atlas = ExtResource("3_slots")
+region = Rect2(39, 3, 22, 22)
+filter_clip = true
+
 [node name="SlotUI" type="PanelContainer"]
 custom_minimum_size = Vector2(16, 16)
 size_flags_horizontal = 4
 size_flags_vertical = 4
 theme_override_styles/panel = SubResource("StyleBoxTexture_slot_bg")
 script = ExtResource("1_slotui")
+
+[node name="HighlightRect" type="TextureRect" parent="."]
+visible = false
+layout_mode = 2
+texture = SubResource("AtlasTexture_highlight")
+expand_mode = 1
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 2

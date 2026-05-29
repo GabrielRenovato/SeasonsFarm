@@ -31,6 +31,7 @@ func setup(p_inventory_data: InventoryData) -> void:
 	# Cria 10 slots para a hotbar (ajustado para caber na imagem de fundo de 165px)
 	for i in range(10):
 		var slot_ui = SLOT_UI_SCENE.instantiate()
+		slot_ui.show_background = false
 		slots_container.add_child(slot_ui)
 		slot_ui.setup(inventory_data, i)
 		

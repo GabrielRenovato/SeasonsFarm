@@ -1,14 +1,12 @@
 extends PanelContainer
 class_name SlotUI
 
+@export var show_background: bool = true
+
 # Referências para os elementos visuais do slot
 @onready var item_icon: TextureRect = $MarginContainer/ItemIcon
 @onready var quantity_label: Label = $MarginContainer/QuantityLabel
-
-# Cor que o slot fica quando está selecionado na hotbar (dourado quente)
-@export var active_color: Color = Color(1.4, 1.2, 0.7, 1.0)
-# Cor normal do slot (sem seleção)
-@export var normal_color: Color = Color(1.0, 1.0, 1.0, 1.0)
+@onready var highlight_rect: TextureRect = $HighlightRect
 
 # Índice desse slot no array do inventário
 var slot_index: int = -1
@@ -16,6 +14,11 @@ var slot_index: int = -1
 var inventory_data: InventoryData
 # Dados específicos deste slot (item + quantidade)
 var slot_data: SlotData
+
+func _ready() -> void:
+	if not show_background:
+		add_theme_stylebox_override("panel", StyleBoxEmpty.new())
+	highlight_rect.visible = false
 
 # Configura o slot com os dados do inventário e seu índice
 func setup(p_inventory_data: InventoryData, p_slot_index: int) -> void:
@@ -56,9 +59,9 @@ func update_ui() -> void:
 			quantity_label.visible = true
 			quantity_label.text = str(slot_data.quantity)
 
-# Muda a cor do slot pra indicar se está selecionado na hotbar
+# Define se este slot é o slot ativo/selecionado na hotbar
 func set_active(is_active: bool) -> void:
-	self_modulate = active_color if is_active else normal_color
+	highlight_rect.visible = is_active
 
 # === DRAG & DROP ===
 # Permite arrastar itens entre slots

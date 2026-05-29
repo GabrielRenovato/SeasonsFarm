@@ -38,10 +38,10 @@ func setup(p_inventory_data: InventoryData) -> void:
 	for child in grid_container.get_children():
 		child.queue_free()
 		
-	# Instancia 30 slots no GridContainer (5 colunas x 6 linhas)
-	# O índice de inventário aqui soma +10 pois a hotbar pega os primeiros 10
-	for i in range(30):
-		var slot_index = i + 10 # Slots 10 a 39
+	# Instancia 40 slots no GridContainer (8 linhas x 5 colunas)
+	# Assim todos os itens, incluindo os da hotbar (0-9), aparecem no menu de inventário
+	for i in range(40):
+		var slot_index = i # Slots 0 a 39
 		var slot_ui = SLOT_UI_SCENE.instantiate()
 		grid_container.add_child(slot_ui)
 		slot_ui.setup(inventory_data, slot_index)
