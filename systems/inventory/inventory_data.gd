@@ -23,37 +23,41 @@ func setup_default_inventory() -> void:
 		sd.quantity = 0
 		slots.append(sd)
 	
-	# Usando items.png como placeholder para as ferramentas enquanto os sprites reais estão ausentes
-	var items_sheet = load("res://assets/sprites/ui/items.png")
+	# Mapa de tiers para suas pastas na estrutura de icones
+	# Cada tier mapeia para o nome exato da pasta em res://assets/sprites/icons/Weapons and Armor/
 	
-	# Add default tools (nomes em ingles para global launch)
+	# Add default tools (names in english for global launch)
 	var hoe = ItemData.new()
 	hoe.id = "hoe"
 	hoe.name = "Hoe"
 	hoe.is_tool = true
 	hoe.tool_type = "Hoe"
-	hoe.icon_texture = _get_item_frame(items_sheet, 27) # Espada (como placeholder de enxada)
+	hoe.tier = "Wood"
+	hoe.icon_texture = _get_tool_icon("Hoe", "Wood")
 	
 	var axe = ItemData.new()
 	axe.id = "axe"
 	axe.name = "Axe"
 	axe.is_tool = true
 	axe.tool_type = "Axe"
-	axe.icon_texture = _get_item_frame(items_sheet, 28) # Espada de madeira (placeholder)
+	axe.tier = "Wood"
+	axe.icon_texture = _get_tool_icon("Axe", "Wood")
 	
 	var mining = ItemData.new()
 	mining.id = "pickaxe"
 	mining.name = "Pickaxe"
 	mining.is_tool = true
 	mining.tool_type = "Pickaxe"
-	mining.icon_texture = _get_item_frame(items_sheet, 41) # Pedra (placeholder)
+	mining.tier = "Wood"
+	mining.icon_texture = _get_tool_icon("Pickaxe", "Wood")
 	
 	var water = ItemData.new()
 	water.id = "watering_can"
 	water.name = "Watering Can"
 	water.is_tool = true
 	water.tool_type = "Water"
-	water.icon_texture = _get_item_frame(items_sheet, 20) # Garrafa (placeholder)
+	water.tier = "Wood"
+	water.icon_texture = _get_tool_icon("Watering Can", "Wood")
 	
 	# Usa os seed_x/seed_y do FarmManager.CROP_CONFIGS para garantir que o icone
 	# sempre bate exatamente com a semente que sera plantada
@@ -154,6 +158,46 @@ func setup_default_inventory() -> void:
 	slots[9].quantity = 5
 	
 	inventory_updated.emit()
+
+## Retorna o icone correto de ferramenta baseado no tipo e tier.
+## Busca o arquivo em:
+##   res://assets/sprites/icons/Weapons and Armor/[N]. [Tier]/[ToolName].png
+## O tier "Wood" fica na pasta "1. Wood", "Cooper" em "2. Cooper", etc.
+func _get_tool_icon(tool_name: String, tier: String) -> Texture2D:
+	# Mapa de tier para o numero da pasta (ex: "Wood" -> "1. Wood")
+	var tier_folder_map: Dictionary = {
+		"Wood":     "1. Wood",
+		"Cooper":   "2. Cooper",
+		"Iron":     "3. Iron",
+		"Gold":     "4. Gold",
+		"Platinum": "5. Platinum",
+		"Crimson":  "6. Crimson",
+		"Frost":    "7. Frost",
+		"Shadow":   "8. Shadow",
+		"Fairy":    "9. Fairy",
+		"Obsidian": "9. Obsidian",
+	}
+	
+	var folder = tier_folder_map.get(tier, "1. Wood")
+	
+	# Monta o caminho base para o icone
+	var base_path = "res://assets/sprites/icons/Weapons and Armor/%s/%s.png" % [folder, tool_name]
+	
+	# Tenta carregar o icone direto
+	var texture = load(base_path) as Texture2D
+	if texture != null:
+		return texture
+	
+	# Fallback: tier Wood tem "Watering can" (c minusculo), outros tiers tem "Watering Can"
+	# Tenta variante com inicial minuscula da ultima palavra
+	if tool_name == "Watering Can":
+		var alt_path = "res://assets/sprites/icons/Weapons and Armor/%s/Watering can.png" % folder
+		texture = load(alt_path) as Texture2D
+		if texture != null:
+			return texture
+	
+	push_warning("[InventoryData] Tool icon not found: " + base_path)
+	return null
 
 ## Extracts a single 32x32 frame from a tool spritesheet (5 columns x 4 rows)
 func _get_tool_frame(sheet: Texture2D, frame_index: int) -> AtlasTexture:

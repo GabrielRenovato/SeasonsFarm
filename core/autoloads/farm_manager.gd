@@ -34,7 +34,7 @@ const CROP_CONFIGS = {
 	"carrot": {
 		"name": "Cenoura",
 		"texture_path": "res://assets/sprites/novosCrops/Spring/Carrot.png",
-		"season": "spring", "stages": 6, "frame_size": 16,
+		"season": "spring", "stages": 6, "frame_size": 15,
 		# frames 0=seed, 1=also-seed (skip), 2=sprout, 3-5=growth, 6=empty(skip), 7=harvest
 		"frame_map": [0, 2, 3, 4, 5, 7],
 		"harvest_item": "carrot",
@@ -56,16 +56,16 @@ const CROP_CONFIGS = {
 		# frames 7,8=empty(skip), 9=harvest
 		"frame_map": [0, 1, 2, 3, 4, 5, 6, 9],
 		"harvest_item": "tomato",
-		"seed_x": 146, "seed_y": 64   # All Crops.png Summer row 4
+		"seed_x": 144, "seed_y": 64   # All Crops.png Summer row 4
 	},
 	"melon": {
 		"name": "Melão",
 		"texture_path": "res://assets/sprites/novosCrops/Summer/Melon.png",
-		"season": "summer", "stages": 7, "frame_size": 16,
+		"season": "summer", "stages": 7, "frame_size": 14,
 		# frames 6,7,8=empty(skip), 9=harvest
 		"frame_map": [0, 1, 2, 3, 4, 5, 9],
 		"harvest_item": "melon",
-		"seed_x": 146, "seed_y": 144  # All Crops.png Summer row 9
+		"seed_x": 144, "seed_y": 144  # All Crops.png Summer row 9
 	},
 	"pumpkin": {
 		"name": "Abóbora",
@@ -74,7 +74,7 @@ const CROP_CONFIGS = {
 		# frame 1=empty(skip), frames 0,2-5,7 valid
 		"frame_map": [0, 2, 3, 4, 5, 7],
 		"harvest_item": "pumpkin",
-		"seed_x": 290, "seed_y": 32   # All Crops.png Fall row 2
+		"seed_x": 288, "seed_y": 32   # All Crops.png Fall row 2
 	},
 	"beetroot": {
 		"name": "Beterraba",
@@ -83,7 +83,7 @@ const CROP_CONFIGS = {
 		# frames 0,1=seeds (skip 1), 2=sprout, ..., 6=empty(skip), 7=harvest
 		"frame_map": [0, 2, 3, 4, 5, 7],
 		"harvest_item": "beetroot",
-		"seed_x": 290, "seed_y": 16   # All Crops.png Fall row 1
+		"seed_x": 288, "seed_y": 16   # All Crops.png Fall row 1
 	}
 }
 
