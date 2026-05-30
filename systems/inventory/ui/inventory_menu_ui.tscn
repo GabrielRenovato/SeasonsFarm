@@ -83,18 +83,18 @@ text = "Equipamento"
 horizontal_alignment = 1
 
 [node name="PlayerPreview" parent="LeftPage" instance=ExtResource("4_preview")]
-custom_minimum_size = Vector2(102, 64)
+custom_minimum_size = Vector2(102, 50)
 layout_mode = 0
-offset_top = 12.0
+offset_top = 10.0
 offset_right = 102.0
-offset_bottom = 76.0
+offset_bottom = 60.0
 
 [node name="ArmorRow" type="HBoxContainer" parent="LeftPage"]
 layout_mode = 0
 offset_left = 5.0
-offset_top = 80.0
+offset_top = 64.0
 offset_right = 97.0
-offset_bottom = 96.0
+offset_bottom = 80.0
 theme_override_constants/separation = 4
 alignment = 1
 
@@ -148,9 +148,9 @@ modulate = Color(1, 1, 1, 0.55)
 
 [node name="ToolLabel" type="Label" parent="LeftPage"]
 layout_mode = 0
-offset_top = 100.0
+offset_top = 82.0
 offset_right = 102.0
-offset_bottom = 110.0
+offset_bottom = 92.0
 theme_override_colors/font_color = Color(0.35, 0.18, 0.06, 1)
 theme_override_font_sizes/font_size = 6
 text = "Selecionado"
@@ -158,12 +158,12 @@ horizontal_alignment = 1
 
 [node name="SelectedToolSlot" type="PanelContainer" parent="LeftPage" unique_id=778899001]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(20, 20)
+custom_minimum_size = Vector2(18, 18)
 layout_mode = 0
-offset_left = 41.0
-offset_top = 110.0
-offset_right = 61.0
-offset_bottom = 128.0
+offset_left = 42.0
+offset_top = 94.0
+offset_right = 60.0
+offset_bottom = 112.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_tool")
 
 [node name="MarginContainer" type="MarginContainer" parent="LeftPage/SelectedToolSlot"]
@@ -221,6 +221,7 @@ visible = false
 layout_mode = 0
 
 [node name="CloseHint" type="Label" parent="."]
+visible = false
 layout_mode = 1
 anchor_left = 0.0
 anchor_top = 1.0

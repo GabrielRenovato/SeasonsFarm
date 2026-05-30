@@ -20,46 +20,47 @@ mouse_filter = 2
 
 [node name="Body" type="Sprite2D" parent="SpriteContainer"]
 unique_name_in_owner = true
-position = Vector2(51, 32)
+position = Vector2(51, 25)
 texture = ExtResource("idle_skin")
 hframes = 16
 frame = 0
-scale = Vector2(2, 2)
+scale = Vector2(1.25, 1.25)
 
 [node name="Hair" type="Sprite2D" parent="SpriteContainer"]
 unique_name_in_owner = true
-position = Vector2(51, 32)
+position = Vector2(51, 25)
 texture = ExtResource("idle_hair")
 hframes = 16
 frame = 0
-scale = Vector2(2, 2)
+scale = Vector2(1.25, 1.25)
 
 [node name="Clothes" type="Sprite2D" parent="SpriteContainer"]
 unique_name_in_owner = true
-position = Vector2(51, 32)
+position = Vector2(51, 25)
 texture = ExtResource("idle_cloth")
 hframes = 16
 frame = 0
-scale = Vector2(2, 2)
+scale = Vector2(1.25, 1.25)
 
 [node name="Eyes" type="Sprite2D" parent="SpriteContainer"]
 unique_name_in_owner = true
-position = Vector2(51, 32)
+position = Vector2(51, 25)
 texture = ExtResource("idle_eyes")
 hframes = 16
 frame = 0
-scale = Vector2(2, 2)
+scale = Vector2(1.25, 1.25)
 
 [node name="Tool" type="Sprite2D" parent="SpriteContainer"]
 unique_name_in_owner = true
-position = Vector2(51, 32)
+position = Vector2(51, 25)
 texture = null
 hframes = 16
 frame = 0
-scale = Vector2(2, 2)
+scale = Vector2(1.25, 1.25)
 
 [node name="EquipmentLabel" type="Label" parent="."]
 unique_name_in_owner = true
+visible = false
 layout_mode = 0
 offset_top = 65.0
 offset_right = 102.0
