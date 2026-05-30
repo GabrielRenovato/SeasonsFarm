@@ -118,7 +118,8 @@ func _find_dirt_layer() -> void:
 		seed_layer = TileMapLayer.new()
 		seed_layer.name = "SeedLayer"
 		seed_layer.tile_set = dirt_layer.tile_set
-		seed_layer.y_sort_enabled = true
+		seed_layer.y_sort_enabled = false
+		seed_layer.z_index = -1
 		# Adiciona como irmã da dirt_layer (logo acima dela na árvore para garantir o desenho sobreposto)
 		dirt_layer.get_parent().add_child.call_deferred(seed_layer)
 		print("FarmManager: SeedLayer dynamically created.")

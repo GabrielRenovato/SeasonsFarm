@@ -12886,41 +12886,39 @@ states/Water/position = Vector2(400, 100)
 transitions = ["Start", "Idle", SubResource("AnimationNodeStateMachineTransition_start")]
 
 [node name="PlayerTeste" type="CharacterBody2D" unique_id=1966965891]
-z_index = 1
-y_sort_enabled = true
 script = ExtResource("script_player")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=39782406]
-position = Vector2(0.5, -7)
+position = Vector2(0.5, -1)
 shape = SubResource("RectangleShape2D_player_col")
 
 [node name="Body" type="Sprite2D" parent="." unique_id=1701481614]
-position = Vector2(0, -16)
+position = Vector2(0, -10)
 texture = ExtResource("idle_skin")
 hframes = 16
 frame = 4
 
 [node name="Eyes" type="Sprite2D" parent="." unique_id=2088339720]
-position = Vector2(0, -16)
+position = Vector2(0, -10)
 texture = ExtResource("idle_eyes")
 hframes = 16
 frame = 4
 
 [node name="Hair" type="Sprite2D" parent="." unique_id=1843653315]
-position = Vector2(0, -16)
+position = Vector2(0, -10)
 texture = ExtResource("idle_hair")
 hframes = 16
 frame = 4
 
 [node name="Clothes" type="Sprite2D" parent="." unique_id=1599623524]
-position = Vector2(0, -16)
+position = Vector2(0, -10)
 texture = ExtResource("idle_cloth")
 hframes = 16
 frame = 4
 
 [node name="Tool" type="Sprite2D" parent="." unique_id=868933568]
 visible = false
-position = Vector2(0, -16)
+position = Vector2(0, -10)
 
 [node name="ToolArea" type="Area2D" parent="Tool" unique_id=1004361864]
 

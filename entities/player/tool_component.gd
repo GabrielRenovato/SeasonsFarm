@@ -232,45 +232,50 @@ func _get_target_map_position() -> Vector2i:
 	
 	return dirt_layer.local_to_map(dirt_layer.to_local(target_global_position))
 
-func _hit_objects_in_direction() -> void:
+func _hit_objects_in_direction(tool_name: String) -> void:
 	var space_state = actor.get_world_2d().direct_space_state
-	
+
 	var hit_origin: Vector2 = actor.global_position + _pending_hit_direction * axe_reach
-	
+
 	var shape_circle = CircleShape2D.new()
 	shape_circle.radius = axe_hit_radius
-	
+
 	var physics_query = PhysicsShapeQueryParameters2D.new()
 	physics_query.shape = shape_circle
 	physics_query.transform = Transform2D(0.0, hit_origin)
 	physics_query.collide_with_areas = true
 	physics_query.collide_with_bodies = false
 	physics_query.exclude = [actor.get_rid()]
-	
+
 	var query_results = space_state.intersect_shape(physics_query, 8)
-	
+
 	var hit_something := false
 	for collision_result in query_results:
 		var hit_object = collision_result.collider
+		# Ignora colliders de objetos que já estão sendo liberados (ex: árvore caindo)
+		if not is_instance_valid(hit_object):
+			continue
+
 		var target_node = hit_object
-		
 		if hit_object is Area2D:
 			target_node = hit_object.get_parent()
-		
+
+		if not is_instance_valid(target_node):
+			continue
 		if target_node == actor or target_node.is_ancestor_of(actor):
 			continue
-		
+
 		if target_node.has_method("take_damage"):
-			target_node.take_damage(1, actor.global_position, _active_tool_in_use)
+			target_node.take_damage(1, actor.global_position, tool_name)
 			hit_something = true
-			
-			if _active_tool_in_use == "Pickaxe":
+
+			if tool_name == "Pickaxe":
 				var effect_instance = HIT_EFFECT_SCENE.instantiate()
 				actor.get_parent().add_child(effect_instance)
 				effect_instance.global_position = hit_origin
-				
+
 			break
-	
+
 	_flash_debug_rect(Color.GREEN if hit_something else Color.RED)
 
 func _flash_debug_rect(flash_color: Color) -> void:
@@ -282,25 +287,32 @@ func _flash_debug_rect(flash_color: Color) -> void:
 	debug_rect.color = original_color
 
 func _on_animation_finished(_animation_name: StringName) -> void:
-	if is_using_tool:
-		if _active_tool_in_use == "Axe" or _active_tool_in_use == "Pickaxe":
-			_hit_objects_in_direction()
-		elif _active_tool_in_use == "Hoe":
-			if FarmManager:
-				FarmManager.till_soil(_pending_target_map_position)
-		elif _active_tool_in_use == "Water":
-			if FarmManager:
-				FarmManager.water_soil(_pending_target_map_position)
-		elif _active_tool_in_use == "Harvest":
-			_do_harvest(_pending_target_map_position)
+	if not is_using_tool:
+		return
 
-		is_using_tool = false
-		_active_tool_in_use = ""
-		if is_carrying:
-			_show_carry_sprite(_carry_item)
-			state_machine.travel("CarryIdle")
-		else:
-			state_machine.travel("Idle")
+	var tool_used := _active_tool_in_use
+
+	# Libera o estado ANTES de executar a ação: se a ação falhar/erro,
+	# o player não fica preso na pose da ferramenta.
+	is_using_tool = false
+	_active_tool_in_use = ""
+
+	if is_carrying:
+		_show_carry_sprite(_carry_item)
+		state_machine.travel("CarryIdle")
+	else:
+		state_machine.travel("Idle")
+
+	if tool_used == "Axe" or tool_used == "Pickaxe":
+		_hit_objects_in_direction(tool_used)
+	elif tool_used == "Hoe":
+		if FarmManager:
+			FarmManager.till_soil(_pending_target_map_position)
+	elif tool_used == "Water":
+		if FarmManager:
+			FarmManager.water_soil(_pending_target_map_position)
+	elif tool_used == "Harvest":
+		_do_harvest(_pending_target_map_position)
 
 func _attempt_planting() -> void:
 	if not inventory_data:

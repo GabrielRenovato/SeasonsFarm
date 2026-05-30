@@ -152,9 +152,9 @@ func generate_environment_procedurally() -> void:
 					else:
 						new_tree.current_stage = 4 # FULL
 						
-					new_tree.global_position = world_position
+					new_tree.global_position = world_position + Vector2(0, 8)
 					add_child(new_tree)
-					
+
 					spawned_positions.append(world_position)
 					spawned_trees_count += 1
 					continue # Skip stump check if tree is spawned
@@ -267,7 +267,7 @@ func _spawn_random_wild_seed() -> void:
 			var random_tree_scene = tree_variations.pick_random()
 			var new_tree = random_tree_scene.instantiate()
 			new_tree.current_stage = 0 # GrowthStage.SEED
-			new_tree.global_position = world_position
+			new_tree.global_position = world_position + Vector2(0, 8)
 			add_child(new_tree)
 			print("MapManager: Spawned new wild seed of type ", random_tree_scene.resource_path, " at ", world_position)
 			break

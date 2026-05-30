@@ -133,32 +133,23 @@ func _die() -> void:
 	if _active_pos_tween and _active_pos_tween.is_valid():
 		_active_pos_tween.kill()
 		
-	# Reseta o frame e rotação para o estado normal caso o tween/anim tenha parado no meio
+	# Reseta o frame, rotação e opacidade para o estado normal caso o tween/anim tenha parado no meio
 	if current_stage == GrowthStage.FULL:
 		full_sprite.frame = base_frame
+		full_sprite.modulate.a = 1.0
 		$SpriteOffset.rotation_degrees = 0.0
 	elif is_instance_valid(growth_sprite):
 		growth_sprite.position.x = 0.0
-	
+		growth_sprite.modulate.a = 1.0
+
 	$CollisionShape2D.set_deferred("disabled", true)
 	$Area2D/CollisionShape2D.set_deferred("disabled", true)
-	
+
 	if current_stage == GrowthStage.FULL:
-		var stump_instance = stump_scene.instantiate()
-		get_parent().add_child(stump_instance)
-		stump_instance.global_position = global_position
-		
-		stump_instance.get_node("CollisionShape2D").set_deferred("disabled", true)
-		if stump_instance.has_node("Area2D/CollisionShape2D"):
-			stump_instance.get_node("Area2D/CollisionShape2D").set_deferred("disabled", true)
-		
+		# A queda toca PRIMEIRO; toco e madeira só nascem depois, pra nada
+		# poder abortar a animação de queda no meio.
 		await _play_fall_tween()
-		
-		if is_instance_valid(stump_instance):
-			stump_instance.get_node("CollisionShape2D").set_deferred("disabled", false)
-			if stump_instance.has_node("Area2D/CollisionShape2D"):
-				stump_instance.get_node("Area2D/CollisionShape2D").set_deferred("disabled", false)
-		
+		_spawn_stump()
 		_spawn_wood()
 	else:
 		if is_instance_valid(growth_sprite):
@@ -176,6 +167,13 @@ func _die() -> void:
 			_spawn_wood(1)
 	
 	queue_free()
+
+func _spawn_stump() -> void:
+	if stump_scene == null:
+		return
+	var stump_instance = stump_scene.instantiate()
+	get_parent().add_child(stump_instance)
+	stump_instance.global_position = global_position
 
 func _spawn_wood(amount_override: int = -1) -> void:
 	if wood_scene == null:
