@@ -5,7 +5,7 @@ class_name SlotUI
 
 # Referências para os elementos visuais do slot
 @onready var item_icon: TextureRect = $MarginContainer/ItemIcon
-@onready var quantity_label: Label = $MarginContainer/QuantityLabel
+@onready var quantity_label: QuantityDisplay = $QuantityLabel
 @onready var highlight_rect: ReferenceRect = $HighlightRect
 
 # Índice desse slot no array do inventário
@@ -89,7 +89,7 @@ func update_ui() -> void:
 			quantity_label.visible = false
 		else:
 			quantity_label.visible = true
-			quantity_label.text = str(slot_data.quantity)
+			quantity_label.set_value(slot_data.quantity)
 
 
 func _make_custom_tooltip(for_text: String) -> Object:
@@ -141,7 +141,7 @@ func _make_custom_tooltip(for_text: String) -> Object:
 
 	var name_label := Label.new()
 	name_label.text = item.name
-	name_label.add_theme_font_size_override("font_size", 10)
+	name_label.add_theme_font_size_override("font_size", 8)
 	name_label.add_theme_color_override("font_color", Color(0.97, 0.93, 0.80, 1.0))
 	name_label.add_theme_color_override("font_shadow_color", Color(0.0, 0.0, 0.0, 0.5))
 	name_label.add_theme_constant_override("shadow_offset_x", 1)

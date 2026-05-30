@@ -5,14 +5,15 @@ class_name HUD
 @onready var day_label: Label = %DayLabel       # Mostra o dia atual (ex: Day 1)
 @onready var time_label: Label = %TimeLabel     # Mostra o horário atual (ex: 06:00 am)
 @onready var gold_digits_container: HBoxContainer = %GoldDigitsContainer # Container dos quadrados do ouro
-@onready var dial_icon: Label = %DialIcon       # Mostra o ícone de sol ou lua dependendo da hora
+@onready var clock_round: TextureRect = %ClockRound # Relógio redondo cenográfico (muda com hora/estação)
 @onready var hotbar_ui: HotbarUI = $Control/HotbarUI
 @onready var inventory_menu_ui: InventoryMenuUI = $Control/InventoryMenuUI
 @onready var energy_bar: ProgressBar = %EnergyBar
 
 var inventory_data: InventoryData
 var digit_labels: Array[Label] = []
-var max_digits: int = 8 # Total de quadradinhos de decimais
+# 7 quadradinhos de dígitos — corresponde às 7 células do sprite do Farm RPG asset pack
+var max_digits: int = 7
 
 # Função chamada para inicializar a HUD com os dados do inventário do jogador
 func setup(p_inventory_data: InventoryData) -> void:
@@ -43,32 +44,21 @@ func _ready() -> void:
 		PlayerStatsManager.energy_changed.connect(_on_energy_changed)
 		_on_energy_changed(PlayerStatsManager.energy, PlayerStatsManager.max_energy)
 
-# Cria os quadradinhos de cada casa decimal do ouro (estilo Stardew)
+# Cria os labels para cada casa decimal do ouro — as células visuais já vêm do sprite do panel
 func _setup_gold_digits() -> void:
-	var gold_inner_style = StyleBoxFlat.new()
-	gold_inner_style.bg_color = Color("#eedbb6")
-	gold_inner_style.border_color = Color("#c7834a")
-	gold_inner_style.set_border_width_all(1)
-	
+	var pixel_font := load("res://assets/fonts/Silkscreen-Regular.ttf") as Font
 	for i in range(max_digits):
-		var panel = PanelContainer.new()
-		panel.add_theme_stylebox_override("panel", gold_inner_style)
-		
-		var margin = MarginContainer.new()
-		margin.add_theme_constant_override("margin_left", 1)
-		margin.add_theme_constant_override("margin_right", 1)
-		panel.add_child(margin)
-		
 		var label = Label.new()
-		label.text = "" # Começa vazio
+		label.text = ""
 		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-		label.add_theme_font_size_override("font_size", 6)
+		if pixel_font:
+			label.add_theme_font_override("font", pixel_font)
+		# Silkscreen renderiza nítida em múltiplos de 8 — manter 8 e deixar o glyph encostar nas bordas
+		label.add_theme_font_size_override("font_size", 8)
 		label.add_theme_color_override("font_color", Color("#8f1b1b"))
-		label.custom_minimum_size = Vector2(5, 8)
-		
-		margin.add_child(label)
-		gold_digits_container.add_child(panel)
+		label.custom_minimum_size = Vector2(5, 7)
+		gold_digits_container.add_child(label)
 		digit_labels.append(label)
 
 # Monitora as teclas que o jogador aperta
@@ -122,14 +112,6 @@ func _update_time_display(day: int, hour: int, minute: int) -> void:
 	if day_label:
 		day_label.text = "Day " + str(day)
 		
-	# Muda o ícone entre Sol (de dia) ou Lua (de noite)
-	if dial_icon:
-		var icon = "☀️" if hour >= 6 and hour < 18 else "🌙"
-		# Se o jogador estiver apertando "T" para passar o tempo mais rápido, mostra um ícone de "Avançar"
-		if Input.is_key_pressed(KEY_T):
-			icon = "⏩"
-		dial_icon.text = icon
-		
 	# Formata e atualiza a hora em inglês (AM = manhã, PM = tarde/noite)
 	if time_label:
 		var am_pm = "am"
@@ -143,5 +125,39 @@ func _update_time_display(day: int, hour: int, minute: int) -> void:
 		if display_hour == 0:
 			display_hour = 12 # Meia-noite (0h) vira 12h am
 			
-		# Exibe a hora no formato "06:00 am" (o %02d faz com que os números fiquem sempre com 2 casas ex: "05" ao invés de "5")
-		time_label.text = "%02d:%02d %s" % [display_hour, minute, am_pm]
+		# Formato compacto "6:00a" / "12:30p" — cabe nos 31px do sprite
+		time_label.text = "%d:%02d%s" % [display_hour, minute, am_pm.substr(0, 1)]
+
+	# Atualiza o sprite do relógio redondo com base na hora e estação
+	_update_clock_sprite(hour)
+
+# Atlas Clock/Others/clock.png: 6 colunas × 3 linhas de 32x32 = 192x96
+# Colunas representam o momento do dia, linhas representam a "vibe" da estação:
+#   Linha 0: primavera/verão (verde)
+#   Linha 1: outono (vermelho)
+#   Linha 2: inverno (neve)
+# Colunas: 0=manhã, 1=meio-dia, 2=tarde, 3=pôr-do-sol, 4=início da noite, 5=madrugada
+func _update_clock_sprite(hour: int) -> void:
+	if not clock_round:
+		return
+	var col := 0
+	if hour >= 6 and hour < 9: col = 0       # 6h–9h manhã
+	elif hour >= 9 and hour < 13: col = 1    # 9h–13h meio-dia
+	elif hour >= 13 and hour < 17: col = 2   # 13h–17h tarde
+	elif hour >= 17 and hour < 19: col = 3   # 17h–19h pôr-do-sol
+	elif hour >= 19 and hour < 22: col = 4   # 19h–22h início da noite
+	else: col = 5                            # 22h–6h madrugada
+
+	var row := 0
+	if TimeManager:
+		match TimeManager.current_season:
+			TimeManager.Season.SPRING, TimeManager.Season.SUMMER:
+				row = 0
+			TimeManager.Season.FALL:
+				row = 1
+			TimeManager.Season.WINTER:
+				row = 2
+
+	var atlas := clock_round.texture as AtlasTexture
+	if atlas:
+		atlas.region = Rect2(col * 32, row * 32, 32, 32)

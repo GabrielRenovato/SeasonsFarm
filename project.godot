@@ -43,6 +43,10 @@ enabled=PackedStringArray("res://addons/claude_3.5_sonnet_chat_api/plugin.cfg")
 ground_layer=""
 dirt_layer=""
 
+[gui]
+
+theme/custom="res://assets/themes/main_theme.tres"
+
 [input]
 
 up={

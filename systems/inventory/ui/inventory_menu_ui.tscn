@@ -78,7 +78,7 @@ layout_mode = 0
 offset_right = 102.0
 offset_bottom = 10.0
 theme_override_colors/font_color = Color(0.35, 0.18, 0.06, 1)
-theme_override_font_sizes/font_size = 6
+theme_override_font_sizes/font_size = 8
 text = "Equipamento"
 horizontal_alignment = 1
 
@@ -152,7 +152,7 @@ offset_top = 82.0
 offset_right = 102.0
 offset_bottom = 92.0
 theme_override_colors/font_color = Color(0.35, 0.18, 0.06, 1)
-theme_override_font_sizes/font_size = 6
+theme_override_font_sizes/font_size = 8
 text = "Selecionado"
 horizontal_alignment = 1
 
@@ -195,7 +195,7 @@ layout_mode = 0
 offset_right = 104.0
 offset_bottom = 10.0
 theme_override_colors/font_color = Color(0.35, 0.18, 0.06, 1)
-theme_override_font_sizes/font_size = 6
+theme_override_font_sizes/font_size = 8
 text = "Inventário"
 horizontal_alignment = 1
 
@@ -230,6 +230,6 @@ anchor_bottom = 1.0
 offset_top = -10.0
 offset_bottom = 0.0
 theme_override_colors/font_color = Color(0.35, 0.18, 0.06, 0.7)
-theme_override_font_sizes/font_size = 5
+theme_override_font_sizes/font_size = 8
 text = "TAB para fechar"
 horizontal_alignment = 1

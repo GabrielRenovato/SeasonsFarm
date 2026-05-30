@@ -1,61 +1,19 @@
-[gd_scene load_steps=10 format=3 uid="uid://dsu8fy0n23kjp"]
+[gd_scene load_steps=7 format=3 uid="uid://dsu8fy0n23kjp"]
 
 [ext_resource type="Script" path="res://ui/hud/hud.gd" id="1_hud"]
 [ext_resource type="PackedScene" uid="uid://chotbarui123" path="res://systems/inventory/ui/hotbar_ui.tscn" id="2_hotbar"]
 [ext_resource type="PackedScene" uid="uid://cinventorymenuui123" path="res://systems/inventory/ui/inventory_menu_ui.tscn" id="3_invmenu"]
-[ext_resource type="Texture2D" path="res://assets/sprites/ui/Money.png" id="4_money"]
+[ext_resource type="Texture2D" path="res://Farm RPG - Tiny Asset Pack - (All in One)/UI/Clock/Extras.png" id="4_clock_extras"]
+[ext_resource type="Texture2D" path="res://Farm RPG - Tiny Asset Pack - (All in One)/UI/Clock/Others/clock.png" id="5_clock_atlas"]
+[ext_resource type="FontFile" path="res://assets/fonts/Silkscreen-Regular.ttf" id="6_silkscreen"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_clock_bg"]
-bg_color = Color(0.9, 0.65, 0.35, 1)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.4, 0.2, 0.05, 1)
-corner_radius_top_left = 2
-corner_radius_top_right = 2
-corner_radius_bottom_right = 2
-corner_radius_bottom_left = 2
-anti_aliasing = false
+[sub_resource type="AtlasTexture" id="AtlasTexture_combined_panel"]
+atlas = ExtResource("4_clock_extras")
+region = Rect2(140, 6, 60, 46)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_clock_inner"]
-bg_color = Color(0.98, 0.85, 0.6, 1)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.6, 0.35, 0.15, 1)
-corner_radius_top_left = 1
-corner_radius_top_right = 1
-corner_radius_bottom_right = 1
-corner_radius_bottom_left = 1
-anti_aliasing = false
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gold_outer"]
-bg_color = Color(0.91, 0.62, 0.28, 1)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.62, 0.29, 0.09, 1)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
-anti_aliasing = false
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gold_inner"]
-bg_color = Color(0.94, 0.84, 0.71, 1)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.72, 0.47, 0.26, 1)
-anti_aliasing = false
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_money"]
-atlas = ExtResource("4_money")
-region = Rect2(0, 0, 16, 16)
+[sub_resource type="AtlasTexture" id="AtlasTexture_clock_round"]
+atlas = ExtResource("5_clock_atlas")
+region = Rect2(0, 0, 32, 32)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_energy_bg"]
 bg_color = Color(0.2, 0.1, 0.05, 1)
@@ -90,109 +48,76 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="TopRightContainer" type="VBoxContainer" parent="Control"]
+[node name="ClockPanel" type="Control" parent="Control"]
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -70.0
+offset_left = -64.0
 offset_top = 4.0
 offset_right = -4.0
-offset_bottom = 60.0
+offset_bottom = 50.0
 grow_horizontal = 0
-theme_override_constants/separation = 2
+mouse_filter = 2
 
-[node name="ClockPanel" type="PanelContainer" parent="Control/TopRightContainer"]
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_clock_bg")
+[node name="PanelSprite" type="TextureRect" parent="Control/ClockPanel"]
+layout_mode = 0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 60.0
+offset_bottom = 46.0
+texture = SubResource("AtlasTexture_combined_panel")
+mouse_filter = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="Control/TopRightContainer/ClockPanel"]
-layout_mode = 2
-theme_override_constants/margin_left = 2
-theme_override_constants/margin_top = 2
-theme_override_constants/margin_right = 2
-theme_override_constants/margin_bottom = 2
-
-[node name="HBoxContainer" type="HBoxContainer" parent="Control/TopRightContainer/ClockPanel/MarginContainer"]
-layout_mode = 2
-theme_override_constants/separation = 2
-
-[node name="DialPlaceholder" type="ColorRect" parent="Control/TopRightContainer/ClockPanel/MarginContainer/HBoxContainer"]
-custom_minimum_size = Vector2(14, 14)
-layout_mode = 2
-color = Color(0.2, 0.6, 0.8, 1)
-
-[node name="DialIcon" type="Label" parent="Control/TopRightContainer/ClockPanel/MarginContainer/HBoxContainer/DialPlaceholder"]
+[node name="ClockRound" type="TextureRect" parent="Control/ClockPanel"]
 unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.3)
-theme_override_constants/shadow_offset_x = 1
-theme_override_constants/shadow_offset_y = 1
+layout_mode = 0
+offset_left = -12.0
+offset_top = -2.0
+offset_right = 20.0
+offset_bottom = 30.0
+texture = SubResource("AtlasTexture_clock_round")
+mouse_filter = 2
+
+[node name="DayLabel" type="Label" parent="Control/ClockPanel"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 27.0
+offset_top = 4.0
+offset_right = 53.0
+offset_bottom = 13.0
+theme_override_colors/font_color = Color(0.55, 0.25, 0.1, 1)
+theme_override_fonts/font = ExtResource("6_silkscreen")
 theme_override_font_sizes/font_size = 8
-text = "☀️"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="TimeVBox" type="VBoxContainer" parent="Control/TopRightContainer/ClockPanel/MarginContainer/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/separation = 1
-
-[node name="DayPanel" type="PanelContainer" parent="Control/TopRightContainer/ClockPanel/MarginContainer/HBoxContainer/TimeVBox"]
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_clock_inner")
-
-[node name="DayLabel" type="Label" parent="Control/TopRightContainer/ClockPanel/MarginContainer/HBoxContainer/TimeVBox/DayPanel"]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_colors/font_color = Color(0.2, 0.1, 0.05, 1)
-theme_override_font_sizes/font_size = 5
 text = "Day 1"
 horizontal_alignment = 1
+vertical_alignment = 1
+clip_text = true
 
-[node name="TimePanel" type="PanelContainer" parent="Control/TopRightContainer/ClockPanel/MarginContainer/HBoxContainer/TimeVBox"]
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_clock_inner")
-
-[node name="TimeLabel" type="Label" parent="Control/TopRightContainer/ClockPanel/MarginContainer/HBoxContainer/TimeVBox/TimePanel"]
+[node name="TimeLabel" type="Label" parent="Control/ClockPanel"]
 unique_name_in_owner = true
-layout_mode = 2
-theme_override_colors/font_color = Color(0.2, 0.1, 0.05, 1)
-theme_override_font_sizes/font_size = 5
-text = "06:00 am"
+layout_mode = 0
+offset_left = 27.0
+offset_top = 15.0
+offset_right = 53.0
+offset_bottom = 24.0
+theme_override_colors/font_color = Color(0.55, 0.25, 0.1, 1)
+theme_override_fonts/font = ExtResource("6_silkscreen")
+theme_override_font_sizes/font_size = 8
+text = "6:00a"
 horizontal_alignment = 1
+vertical_alignment = 1
+clip_text = true
 
-[node name="GoldPanel" type="PanelContainer" parent="Control/TopRightContainer"]
-layout_mode = 2
-size_flags_horizontal = 8
-theme_override_styles/panel = SubResource("StyleBoxFlat_gold_outer")
-
-[node name="MarginContainer" type="MarginContainer" parent="Control/TopRightContainer/GoldPanel"]
-layout_mode = 2
-theme_override_constants/margin_left = 2
-theme_override_constants/margin_top = 1
-theme_override_constants/margin_right = 2
-theme_override_constants/margin_bottom = 1
-
-[node name="HBoxContainer" type="HBoxContainer" parent="Control/TopRightContainer/GoldPanel/MarginContainer"]
-layout_mode = 2
-theme_override_constants/separation = 2
-
-[node name="MoneyIcon" type="TextureRect" parent="Control/TopRightContainer/GoldPanel/MarginContainer/HBoxContainer"]
-layout_mode = 2
-texture = SubResource("AtlasTexture_money")
-stretch_mode = 5
-custom_minimum_size = Vector2(8, 8)
-
-[node name="GoldDigitsContainer" type="HBoxContainer" parent="Control/TopRightContainer/GoldPanel/MarginContainer/HBoxContainer"]
+[node name="GoldDigitsContainer" type="HBoxContainer" parent="Control/ClockPanel"]
 unique_name_in_owner = true
-layout_mode = 2
-theme_override_constants/separation = 0
+layout_mode = 0
+offset_left = 16.0
+offset_top = 32.0
+offset_right = 57.0
+offset_bottom = 41.0
+theme_override_constants/separation = 1
+mouse_filter = 2
 
 [node name="HotbarUI" parent="Control" instance=ExtResource("2_hotbar")]
 layout_mode = 1
