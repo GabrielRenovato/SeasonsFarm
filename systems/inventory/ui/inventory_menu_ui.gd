@@ -15,6 +15,7 @@ const MAIN_INV_COUNT := 24  # 6 colunas × 4 linhas
 @onready var equip_root: Control = %EquipRoot
 @onready var fallback_content: CenterContainer = %FallbackContent
 @onready var fallback_label: Label = %FallbackLabel
+@onready var player_preview: PlayerPreviewUI = $LeftPage/VBoxContainer/PlayerPreview
 
 # Mantidos para compatibilidade mas não usados ativamente
 @onready var tabs_root: Control = %TabsRoot
@@ -31,6 +32,9 @@ func setup(p_inventory_data: InventoryData) -> void:
 	if inventory_data.inventory_updated.is_connected(update_slots):
 		inventory_data.inventory_updated.disconnect(update_slots)
 	inventory_data.inventory_updated.connect(update_slots)
+
+	# Setup preview do personagem
+	player_preview.setup(inventory_data)
 
 	# Página esquerda: hotbar/ferramentas (slots 0-11)
 	for child in equip_root.get_children():

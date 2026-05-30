@@ -1,0 +1,65 @@
+[gd_scene format=3 uid="uid://cqyb0cygxhkd"]
+
+[ext_resource type="Texture2D" uid="uid://cfkn16gm8dp7i" path="res://assets/sprites/Character/PNG/1. Idle/Skins/1.png" id="idle_skin"]
+[ext_resource type="Texture2D" uid="uid://dhpemmjynawwr" path="res://assets/sprites/Character/PNG/1. Idle/Eyes/Male/Black.png" id="idle_eyes"]
+[ext_resource type="Texture2D" uid="uid://2ag76moho361" path="res://assets/sprites/Character/PNG/1. Idle/Hair's/Standard/Brown.png" id="idle_hair"]
+[ext_resource type="Texture2D" uid="uid://nmv8t50spdw1" path="res://assets/sprites/Character/PNG/1. Idle/Clothers/Farm/Blue.png" id="idle_cloth"]
+[ext_resource type="Script" uid="uid://dv34bfsddlfj" path="res://systems/inventory/ui/player_preview_ui.gd" id="script_preview"]
+
+[node name="PlayerPreviewUI" type="Control"]
+custom_minimum_size = Vector2(102, 75)
+script = ExtResource("script_preview")
+
+[node name="SpriteContainer" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_bottom = -10.0
+
+[node name="Body" type="Sprite2D" parent="SpriteContainer"]
+unique_name_in_owner = true
+texture = ExtResource("idle_skin")
+hframes = 16
+frame = 0
+scale = Vector2(2, 2)
+
+[node name="Hair" type="Sprite2D" parent="SpriteContainer"]
+unique_name_in_owner = true
+texture = ExtResource("idle_hair")
+hframes = 16
+frame = 0
+scale = Vector2(2, 2)
+
+[node name="Clothes" type="Sprite2D" parent="SpriteContainer"]
+unique_name_in_owner = true
+texture = ExtResource("idle_cloth")
+hframes = 16
+frame = 0
+scale = Vector2(2, 2)
+
+[node name="Eyes" type="Sprite2D" parent="SpriteContainer"]
+unique_name_in_owner = true
+texture = ExtResource("idle_eyes")
+hframes = 16
+frame = 0
+scale = Vector2(2, 2)
+
+[node name="Tool" type="Sprite2D" parent="SpriteContainer"]
+unique_name_in_owner = true
+texture = null
+hframes = 16
+frame = 0
+scale = Vector2(2, 2)
+
+[node name="EquipmentLabel" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 0
+offset_top = 65.0
+offset_right = 102.0
+offset_bottom = 75.0
+theme_override_colors/font_color = Color(0.35, 0.18, 0.06, 1)
+theme_override_font_sizes/font_size = 5
+text = "Nenhum equipamento"
+horizontal_alignment = 1
+clip_text = true
