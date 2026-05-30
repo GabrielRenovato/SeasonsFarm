@@ -146,10 +146,10 @@ func _die() -> void:
 	$Area2D/CollisionShape2D.set_deferred("disabled", true)
 
 	if current_stage == GrowthStage.FULL:
-		# A queda toca PRIMEIRO; toco e madeira só nascem depois, pra nada
-		# poder abortar a animação de queda no meio.
+		# Aguarda a animação da árvore (tremida e queda) terminar
 		await _play_fall_tween()
-		_spawn_stump()
+		
+		# Só após a árvore cair completamente que a madeira deve spawnar
 		_spawn_wood()
 	else:
 		if is_instance_valid(growth_sprite):
@@ -230,7 +230,11 @@ func _play_fall_tween() -> void:
 	shake_tween.tween_property($SpriteOffset, "position:x", 0.0, 0.05)
 	await shake_tween.finished
 	
-	# Then fall smoothly
+	# Cria o toco no momento exato em que a árvore começa a inclinar e cair (momento da queda)
+	if current_stage == GrowthStage.FULL:
+		_spawn_stump()
+	
+	# Then fall smoothly (Inicia a inclinação e queda suave)
 	var tween = create_tween().set_parallel(true)
 	var target_rotation = 1.5708 * spawn_direction
 	var target_position = Vector2(15.0 * spawn_direction, 6.0)
