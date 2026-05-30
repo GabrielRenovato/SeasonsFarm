@@ -1,65 +1,79 @@
 extends CanvasLayer
 
-@onready var body_preview: Sprite2D = $CenterContainer/PanelContainer/MarginContainer/HBoxContainer/LeftVBox/PreviewArea/BodyPreview
-@onready var legs_preview: Sprite2D = $CenterContainer/PanelContainer/MarginContainer/HBoxContainer/LeftVBox/PreviewArea/BodyPreview/LagsPreview
-@onready var eyes_preview: Sprite2D = $CenterContainer/PanelContainer/MarginContainer/HBoxContainer/LeftVBox/PreviewArea/BodyPreview/EyesPreview
-@onready var clothes_preview: Sprite2D = $CenterContainer/PanelContainer/MarginContainer/HBoxContainer/LeftVBox/PreviewArea/BodyPreview/ClothePreview
-@onready var hair_preview: Sprite2D = $CenterContainer/PanelContainer/MarginContainer/HBoxContainer/LeftVBox/PreviewArea/BodyPreview/HairPreview
+const ROOT := "CenterContainer/Root"
+const LEFT := ROOT + "/LeftPage"
+const RIGHT := ROOT + "/RightPage"
+const CATS := RIGHT + "/CategoryContainer"
 
-@onready var body_label: Label = $CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer/BodyHBox/BodyLabel
-@onready var eyes_label: Label = $CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer/EyesHBox/EyesLabel
-@onready var hair_label: Label = $CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer/HairHBox/HairLabel
-@onready var clothes_label: Label = $CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer/ClothesHBox/ClothesLabel
-@onready var pants_label: Label = $CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer/PantsHBox/PantsLabel
+@onready var body_preview: Sprite2D = get_node(LEFT + "/PreviewArea/BodyPreview")
+@onready var legs_preview: Sprite2D = get_node(LEFT + "/PreviewArea/BodyPreview/LagsPreview")
+@onready var eyes_preview: Sprite2D = get_node(LEFT + "/PreviewArea/BodyPreview/EyesPreview")
+@onready var clothes_preview: Sprite2D = get_node(LEFT + "/PreviewArea/BodyPreview/ClothePreview")
+@onready var hair_preview: Sprite2D = get_node(LEFT + "/PreviewArea/BodyPreview/HairPreview")
 
-@onready var color_grid: GridContainer = $CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/ColorGrid
+@onready var body_label: Label = get_node(CATS + "/BodyHBox/BodyLabel")
+@onready var eyes_label: Label = get_node(CATS + "/EyesHBox/EyesLabel")
+@onready var hair_label: Label = get_node(CATS + "/HairHBox/HairLabel")
+@onready var clothes_label: Label = get_node(CATS + "/ClothesHBox/ClothesLabel")
 
-var preview_frame: int = 0
-var animation_timer: Timer
+@onready var color_grid: GridContainer = get_node(RIGHT + "/ColorGrid")
+@onready var clouds_layer: Control = $CloudsLayer
 
-# 10 premium curated colors for Stardew Valley-like hair customization
+const CLOUD_SPEEDS := {
+	"CloudShadow1": 6.0,
+	"CloudShadow2": 8.0,
+	"Cloud1": 12.0,
+	"Cloud2": 16.0,
+	"Cloud3": 10.0,
+	"Cloud4": 14.0,
+}
+
+# Paleta de cabelo no estilo Stardew Valley
 var preset_colors = [
-	Color("#e6b800"), # Blonde
-	Color("#5c3a21"), # Brown
-	Color("#1c1c1c"), # Black
-	Color("#c0392b"), # Red
-	Color("#e67e22"), # Orange
-	Color("#e91e63"), # Pink
-	Color("#2980b9"), # Blue
-	Color("#27ae60"), # Green
-	Color("#8e44ad"), # Purple
-	Color("#ecf0f1")  # White/Silver
+	Color("#e6b800"),
+	Color("#5c3a21"),
+	Color("#1c1c1c"),
+	Color("#c0392b"),
+	Color("#e67e22"),
+	Color("#e91e63"),
+	Color("#2980b9"),
+	Color("#27ae60"),
+	Color("#8e44ad"),
+	Color("#ecf0f1")
 ]
 
 func _ready() -> void:
 	if CustomizationManager:
 		CustomizationManager.customization_changed.connect(_update_ui)
 
-	# Connect category buttons
-	# Body/Skin
-	$CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer/BodyHBox/PrevBody.pressed.connect(func(): CustomizationManager.prev_body())
-	$CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer/BodyHBox/NextBody.pressed.connect(func(): CustomizationManager.next_body())
-	# Eyes
-	$CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer/EyesHBox/PrevEyes.pressed.connect(func(): CustomizationManager.prev_eyes())
-	$CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer/EyesHBox/NextEyes.pressed.connect(func(): CustomizationManager.next_eyes())
-	# Hair
-	$CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer/HairHBox/PrevHair.pressed.connect(func(): CustomizationManager.prev_hair())
-	$CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer/HairHBox/NextHair.pressed.connect(func(): CustomizationManager.next_hair())
-	# Clothes
-	$CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer/ClothesHBox/PrevClothes.pressed.connect(func(): CustomizationManager.prev_clothes())
-	$CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer/ClothesHBox/NextClothes.pressed.connect(func(): CustomizationManager.next_clothes())
-	# Pants
-	$CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer/PantsHBox/PrevPants.pressed.connect(func(): CustomizationManager.prev_pants())
-	$CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer/PantsHBox/NextPants.pressed.connect(func(): CustomizationManager.next_pants())
-	
-	# Close button
-	$CenterContainer/PanelContainer/MarginContainer/HBoxContainer/LeftVBox/CloseButton.pressed.connect(_on_close)
+	get_node(CATS + "/BodyHBox/PrevBody").pressed.connect(func(): CustomizationManager.prev_body())
+	get_node(CATS + "/BodyHBox/NextBody").pressed.connect(func(): CustomizationManager.next_body())
+	get_node(CATS + "/EyesHBox/PrevEyes").pressed.connect(func(): CustomizationManager.prev_eyes())
+	get_node(CATS + "/EyesHBox/NextEyes").pressed.connect(func(): CustomizationManager.next_eyes())
+	get_node(CATS + "/HairHBox/PrevHair").pressed.connect(func(): CustomizationManager.prev_hair())
+	get_node(CATS + "/HairHBox/NextHair").pressed.connect(func(): CustomizationManager.next_hair())
+	get_node(CATS + "/ClothesHBox/PrevClothes").pressed.connect(func(): CustomizationManager.prev_clothes())
+	get_node(CATS + "/ClothesHBox/NextClothes").pressed.connect(func(): CustomizationManager.next_clothes())
 
-	# Build premium color swatches dynamically
+	get_node(LEFT + "/CloseButton").pressed.connect(_on_close)
+
 	_build_color_swatches()
-
-	# Initial UI state load
 	_update_ui()
+
+func _process(delta: float) -> void:
+	if clouds_layer == null:
+		return
+	var viewport_w := get_viewport().get_visible_rect().size.x
+	for child in clouds_layer.get_children():
+		var tr := child as TextureRect
+		if tr == null:
+			continue
+		var speed: float = CLOUD_SPEEDS.get(tr.name, 10.0)
+		var pos := tr.position
+		pos.x += speed * delta
+		if pos.x > viewport_w:
+			pos.x = -tr.size.x
+		tr.position = pos
 
 func _update_preview_frames() -> void:
 	body_preview.frame = 0
@@ -69,32 +83,29 @@ func _update_preview_frames() -> void:
 	if eyes_preview.texture != null: eyes_preview.frame = 0
 
 func _build_color_swatches() -> void:
-	# Clear any previous children (safety precaution)
 	for child in color_grid.get_children():
 		child.queue_free()
 
 	for col in preset_colors:
 		var btn = Button.new()
-		btn.custom_minimum_size = Vector2(18, 18)
+		btn.custom_minimum_size = Vector2(10, 10)
 		btn.focus_mode = Control.FOCUS_NONE
 
-		# Setup styleboxes to draw circular buttons
 		var sb = StyleBoxFlat.new()
 		sb.bg_color = col
-		sb.corner_radius_top_left = 9
-		sb.corner_radius_top_right = 9
-		sb.corner_radius_bottom_left = 9
-		sb.corner_radius_bottom_right = 9
+		sb.corner_radius_top_left = 5
+		sb.corner_radius_top_right = 5
+		sb.corner_radius_bottom_left = 5
+		sb.corner_radius_bottom_right = 5
 		sb.border_width_left = 1
 		sb.border_width_top = 1
 		sb.border_width_right = 1
 		sb.border_width_bottom = 1
 
-		# White border if selected, otherwise dark gray border
 		if CustomizationManager.hair_color.is_equal_approx(col):
 			sb.border_color = Color("#ffffff")
 		else:
-			sb.border_color = Color("#222222")
+			sb.border_color = Color("#2a1408")
 
 		btn.add_theme_stylebox_override("normal", sb)
 		btn.add_theme_stylebox_override("hover", sb)
@@ -108,30 +119,22 @@ func _build_color_swatches() -> void:
 func _update_ui() -> void:
 	if not CustomizationManager: return
 
-	# 1. Update text labels in customization list
 	var body_idx = CustomizationManager.available_bodies.find(CustomizationManager.current_body)
-	body_label.text = " Pele: Pele " + str(body_idx + 1) + " "
-	
-	eyes_label.text = " Olhos: " + CustomizationManager.current_eyes.capitalize() + " "
-	hair_label.text = " Cabelo: " + CustomizationManager.current_hair.capitalize() + " "
-	clothes_label.text = " Roupa: " + CustomizationManager.current_clothes.capitalize() + " "
-	
-	var pants_type = "Normal" if CustomizationManager.current_pants == "pants" else "Terno"
-	pants_label.text = " Calça: " + pants_type + " "
+	body_label.text = "Pele " + str(body_idx + 1)
 
-	# 2. Re-render dynamic color swatches to reflect border highlights
+	eyes_label.text = CustomizationManager.current_eyes.capitalize()
+	hair_label.text = CustomizationManager.current_hair.capitalize()
+	clothes_label.text = CustomizationManager.current_clothes.capitalize()
+
 	_build_color_swatches()
 
-	# 3. Dynamic Textures & Frames for bug-free previews
-	# Body/Skin Preview
 	var body_path = "res://assets/sprites/Character/PNG/1. Idle/Skins/" + CustomizationManager.current_body + ".png"
 	if ResourceLoader.exists(body_path):
 		var tex = load(body_path)
 		body_preview.texture = tex
 		body_preview.hframes = int(max(1, tex.get_width() / 32.0))
 		body_preview.vframes = int(max(1, tex.get_height() / 32.0))
-		
-	# Eyes Preview
+
 	var eyes_path = "res://assets/sprites/Character/PNG/1. Idle/Eyes/Male/" + CustomizationManager.current_eyes + ".png"
 	if ResourceLoader.exists(eyes_path):
 		var tex = load(eyes_path)
@@ -139,10 +142,8 @@ func _update_ui() -> void:
 		eyes_preview.hframes = int(max(1, tex.get_width() / 32.0))
 		eyes_preview.vframes = int(max(1, tex.get_height() / 32.0))
 
-	# Legs/Pants Preview - HIDDEN for now as new assets don't separate pants
 	legs_preview.texture = null
 
-	# Clothes Preview
 	var clothes_path = "res://assets/sprites/Character/PNG/1. Idle/Clothers/Farm/" + CustomizationManager.current_clothes + ".png"
 	if ResourceLoader.exists(clothes_path):
 		var tex = load(clothes_path)
@@ -150,18 +151,15 @@ func _update_ui() -> void:
 		clothes_preview.hframes = int(max(1, tex.get_width() / 32.0))
 		clothes_preview.vframes = int(max(1, tex.get_height() / 32.0))
 
-	# Hair Preview
 	var hair_path = "res://assets/sprites/Character/PNG/1. Idle/Hair's/" + CustomizationManager.current_hair + "/Brown.png"
 	if ResourceLoader.exists(hair_path):
 		var tex = load(hair_path)
 		hair_preview.texture = tex
 		hair_preview.hframes = int(max(1, tex.get_width() / 32.0))
 		hair_preview.vframes = int(max(1, tex.get_height() / 32.0))
-		
-	# Apply Hair Modulate Color in Preview
+
 	hair_preview.modulate = CustomizationManager.hair_color
 
-	# Ensure frames are drawn correctly after texture updates
 	_update_preview_frames()
 
 func _on_close() -> void:

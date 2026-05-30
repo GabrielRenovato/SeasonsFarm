@@ -1,6 +1,64 @@
-[gd_scene load_steps=2 format=3 uid="uid://char_cust_menu123"]
+[gd_scene load_steps=12 format=3 uid="uid://char_cust_menu123"]
 
 [ext_resource type="Script" path="res://ui/customization_menu/character_customization.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://Farm RPG - Tiny Asset Pack - (All in One)/UI/Inventory/Book.png" id="2_book"]
+[ext_resource type="Texture2D" path="res://Farm RPG - Tiny Asset Pack - (All in One)/Objects/Props/clouds.png" id="3_clouds"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cloud1"]
+atlas = ExtResource("3_clouds")
+region = Rect2(0, 0, 48, 40)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cloud2"]
+atlas = ExtResource("3_clouds")
+region = Rect2(48, 8, 48, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cloud3"]
+atlas = ExtResource("3_clouds")
+region = Rect2(96, 8, 48, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cloud_s1"]
+atlas = ExtResource("3_clouds")
+region = Rect2(0, 56, 48, 40)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cloud_s2"]
+atlas = ExtResource("3_clouds")
+region = Rect2(48, 64, 48, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_book"]
+atlas = ExtResource("2_book")
+region = Rect2(0, 0, 238, 144)
+
+[sub_resource type="StyleBoxFlat" id="SB_arrow"]
+bg_color = Color(0.62, 0.32, 0.14, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.25, 0.1, 0.03, 1)
+
+[sub_resource type="StyleBoxFlat" id="SB_arrow_hover"]
+bg_color = Color(0.78, 0.42, 0.18, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.25, 0.1, 0.03, 1)
+
+[sub_resource type="StyleBoxFlat" id="SB_close"]
+bg_color = Color(0.42, 0.22, 0.08, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.2, 0.08, 0.02, 1)
+
+[sub_resource type="StyleBoxFlat" id="SB_close_hover"]
+bg_color = Color(0.62, 0.32, 0.14, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.2, 0.08, 0.02, 1)
 
 [node name="CharacterCustomization" type="CanvasLayer"]
 process_mode = 3
@@ -10,201 +68,321 @@ script = ExtResource("1_script")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-color = Color(0.08, 0.08, 0.1, 0.85)
+color = Color(0.55, 0.78, 0.93, 1)
+
+[node name="CloudsLayer" type="Control" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+clip_contents = true
+
+[node name="CloudShadow1" type="TextureRect" parent="CloudsLayer"]
+texture_filter = 1
+offset_left = 40.0
+offset_top = 180.0
+offset_right = 88.0
+offset_bottom = 220.0
+texture = SubResource("AtlasTexture_cloud_s1")
+modulate = Color(1, 1, 1, 0.5)
+
+[node name="CloudShadow2" type="TextureRect" parent="CloudsLayer"]
+texture_filter = 1
+offset_left = 300.0
+offset_top = 30.0
+offset_right = 348.0
+offset_bottom = 54.0
+texture = SubResource("AtlasTexture_cloud_s2")
+modulate = Color(1, 1, 1, 0.5)
+
+[node name="Cloud1" type="TextureRect" parent="CloudsLayer"]
+texture_filter = 1
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 68.0
+offset_bottom = 60.0
+texture = SubResource("AtlasTexture_cloud1")
+
+[node name="Cloud2" type="TextureRect" parent="CloudsLayer"]
+texture_filter = 1
+offset_left = 380.0
+offset_top = 90.0
+offset_right = 428.0
+offset_bottom = 114.0
+texture = SubResource("AtlasTexture_cloud2")
+
+[node name="Cloud3" type="TextureRect" parent="CloudsLayer"]
+texture_filter = 1
+offset_left = 180.0
+offset_top = 170.0
+offset_right = 228.0
+offset_bottom = 202.0
+texture = SubResource("AtlasTexture_cloud3")
+
+[node name="Cloud4" type="TextureRect" parent="CloudsLayer"]
+texture_filter = 1
+offset_left = 100.0
+offset_top = 200.0
+offset_right = 148.0
+offset_bottom = 224.0
+texture = SubResource("AtlasTexture_cloud2")
 
 [node name="CenterContainer" type="CenterContainer" parent="."]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 
-[node name="PanelContainer" type="PanelContainer" parent="CenterContainer"]
-custom_minimum_size = Vector2(430, 200)
+[node name="Root" type="Control" parent="CenterContainer"]
+custom_minimum_size = Vector2(238, 144)
 layout_mode = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="CenterContainer/PanelContainer"]
-layout_mode = 2
-theme_override_constants/margin_left = 12
-theme_override_constants/margin_top = 12
-theme_override_constants/margin_right = 12
-theme_override_constants/margin_bottom = 12
+[node name="BookBg" type="TextureRect" parent="CenterContainer/Root"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+texture = SubResource("AtlasTexture_book")
+stretch_mode = 0
 
-[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer"]
-layout_mode = 2
-theme_override_constants/separation = 20
-alignment = 1
+[node name="LeftPage" type="Control" parent="CenterContainer/Root"]
+layout_mode = 1
+offset_left = 12.0
+offset_top = 8.0
+offset_right = 114.0
+offset_bottom = 136.0
 
-[node name="LeftVBox" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/HBoxContainer"]
-custom_minimum_size = Vector2(120, 0)
-layout_mode = 2
-theme_override_constants/separation = 6
-alignment = 1
-
-[node name="Title" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/HBoxContainer/LeftVBox"]
-layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.85, 0.4, 1)
-theme_override_font_sizes/font_size = 12
+[node name="Title" type="Label" parent="CenterContainer/Root/LeftPage"]
+layout_mode = 0
+offset_right = 102.0
+offset_bottom = 10.0
+theme_override_colors/font_color = Color(0.35, 0.18, 0.06, 1)
+theme_override_font_sizes/font_size = 8
 text = "Personagem"
 horizontal_alignment = 1
 
-[node name="PreviewArea" type="Control" parent="CenterContainer/PanelContainer/MarginContainer/HBoxContainer/LeftVBox"]
-custom_minimum_size = Vector2(64, 96)
-layout_mode = 2
-size_flags_horizontal = 4
+[node name="PreviewArea" type="Control" parent="CenterContainer/Root/LeftPage"]
+custom_minimum_size = Vector2(102, 96)
+layout_mode = 0
+offset_top = 12.0
+offset_right = 102.0
+offset_bottom = 108.0
 
-[node name="BodyPreview" type="Sprite2D" parent="CenterContainer/PanelContainer/MarginContainer/HBoxContainer/LeftVBox/PreviewArea"]
+[node name="BodyPreview" type="Sprite2D" parent="CenterContainer/Root/LeftPage/PreviewArea"]
 texture_filter = 1
-position = Vector2(32, 48)
-scale = Vector2(3, 3)
+position = Vector2(51, 48)
+scale = Vector2(2.5, 2.5)
 
-[node name="LagsPreview" type="Sprite2D" parent="CenterContainer/PanelContainer/MarginContainer/HBoxContainer/LeftVBox/PreviewArea/BodyPreview"]
+[node name="LagsPreview" type="Sprite2D" parent="CenterContainer/Root/LeftPage/PreviewArea/BodyPreview"]
 
-[node name="EyesPreview" type="Sprite2D" parent="CenterContainer/PanelContainer/MarginContainer/HBoxContainer/LeftVBox/PreviewArea/BodyPreview"]
+[node name="EyesPreview" type="Sprite2D" parent="CenterContainer/Root/LeftPage/PreviewArea/BodyPreview"]
 
-[node name="ClothePreview" type="Sprite2D" parent="CenterContainer/PanelContainer/MarginContainer/HBoxContainer/LeftVBox/PreviewArea/BodyPreview"]
+[node name="ClothePreview" type="Sprite2D" parent="CenterContainer/Root/LeftPage/PreviewArea/BodyPreview"]
 
-[node name="HairPreview" type="Sprite2D" parent="CenterContainer/PanelContainer/MarginContainer/HBoxContainer/LeftVBox/PreviewArea/BodyPreview"]
+[node name="HairPreview" type="Sprite2D" parent="CenterContainer/Root/LeftPage/PreviewArea/BodyPreview"]
 
-[node name="CloseButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/HBoxContainer/LeftVBox"]
-custom_minimum_size = Vector2(80, 24)
-layout_mode = 2
-size_flags_horizontal = 4
-theme_override_font_sizes/font_size = 10
+[node name="CloseButton" type="Button" parent="CenterContainer/Root/LeftPage"]
+custom_minimum_size = Vector2(60, 14)
+layout_mode = 0
+offset_left = 21.0
+offset_top = 96.0
+offset_right = 81.0
+offset_bottom = 110.0
+focus_mode = 0
+theme_override_colors/font_color = Color(1, 0.93, 0.78, 1)
+theme_override_colors/font_hover_color = Color(1, 0.97, 0.82, 1)
+theme_override_colors/font_pressed_color = Color(1, 0.93, 0.78, 1)
+theme_override_font_sizes/font_size = 8
+theme_override_styles/normal = SubResource("SB_close")
+theme_override_styles/hover = SubResource("SB_close_hover")
+theme_override_styles/pressed = SubResource("SB_close")
 text = "Pronto"
 
-[node name="RightVBox" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/HBoxContainer"]
-custom_minimum_size = Vector2(250, 0)
-layout_mode = 2
-theme_override_constants/separation = 6
-alignment = 1
+[node name="RightPage" type="Control" parent="CenterContainer/Root"]
+layout_mode = 1
+offset_left = 122.0
+offset_top = 8.0
+offset_right = 226.0
+offset_bottom = 136.0
 
-[node name="CategoryContainer" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox"]
-layout_mode = 2
-theme_override_constants/separation = 4
-
-[node name="BodyHBox" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer"]
-layout_mode = 2
-alignment = 1
-
-[node name="PrevBody" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer/BodyHBox"]
-custom_minimum_size = Vector2(22, 18)
-layout_mode = 2
+[node name="Title" type="Label" parent="CenterContainer/Root/RightPage"]
+layout_mode = 0
+offset_right = 104.0
+offset_bottom = 10.0
+theme_override_colors/font_color = Color(0.35, 0.18, 0.06, 1)
 theme_override_font_sizes/font_size = 8
-text = "<"
-
-[node name="BodyLabel" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer/BodyHBox"]
-custom_minimum_size = Vector2(130, 0)
-layout_mode = 2
-theme_override_font_sizes/font_size = 10
-text = " Pele: Pele 1 "
+text = "Aparência"
 horizontal_alignment = 1
 
-[node name="NextBody" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer/BodyHBox"]
-custom_minimum_size = Vector2(22, 18)
-layout_mode = 2
-theme_override_font_sizes/font_size = 8
-text = ">"
+[node name="CategoryContainer" type="VBoxContainer" parent="CenterContainer/Root/RightPage"]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 14.0
+offset_right = 102.0
+offset_bottom = 89.0
+theme_override_constants/separation = 3
 
-[node name="EyesHBox" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer"]
+[node name="BodyHBox" type="HBoxContainer" parent="CenterContainer/Root/RightPage/CategoryContainer"]
 layout_mode = 2
 alignment = 1
+theme_override_constants/separation = 2
 
-[node name="PrevEyes" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer/EyesHBox"]
-custom_minimum_size = Vector2(22, 18)
+[node name="PrevBody" type="Button" parent="CenterContainer/Root/RightPage/CategoryContainer/BodyHBox"]
+custom_minimum_size = Vector2(10, 12)
 layout_mode = 2
+focus_mode = 0
+theme_override_colors/font_color = Color(1, 0.93, 0.78, 1)
 theme_override_font_sizes/font_size = 8
+theme_override_styles/normal = SubResource("SB_arrow")
+theme_override_styles/hover = SubResource("SB_arrow_hover")
+theme_override_styles/pressed = SubResource("SB_arrow")
 text = "<"
 
-[node name="EyesLabel" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer/EyesHBox"]
-custom_minimum_size = Vector2(130, 0)
+[node name="BodyLabel" type="Label" parent="CenterContainer/Root/RightPage/CategoryContainer/BodyHBox"]
+custom_minimum_size = Vector2(74, 12)
 layout_mode = 2
-theme_override_font_sizes/font_size = 10
-text = " Olhos: Preto "
-horizontal_alignment = 1
-
-[node name="NextEyes" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer/EyesHBox"]
-custom_minimum_size = Vector2(22, 18)
-layout_mode = 2
+theme_override_colors/font_color = Color(0.35, 0.18, 0.06, 1)
 theme_override_font_sizes/font_size = 8
+text = "Pele 1"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="NextBody" type="Button" parent="CenterContainer/Root/RightPage/CategoryContainer/BodyHBox"]
+custom_minimum_size = Vector2(10, 12)
+layout_mode = 2
+focus_mode = 0
+theme_override_colors/font_color = Color(1, 0.93, 0.78, 1)
+theme_override_font_sizes/font_size = 8
+theme_override_styles/normal = SubResource("SB_arrow")
+theme_override_styles/hover = SubResource("SB_arrow_hover")
+theme_override_styles/pressed = SubResource("SB_arrow")
 text = ">"
 
-[node name="HairHBox" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer"]
+[node name="EyesHBox" type="HBoxContainer" parent="CenterContainer/Root/RightPage/CategoryContainer"]
 layout_mode = 2
 alignment = 1
+theme_override_constants/separation = 2
 
-[node name="PrevHair" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer/HairHBox"]
-custom_minimum_size = Vector2(22, 18)
+[node name="PrevEyes" type="Button" parent="CenterContainer/Root/RightPage/CategoryContainer/EyesHBox"]
+custom_minimum_size = Vector2(10, 12)
 layout_mode = 2
+focus_mode = 0
+theme_override_colors/font_color = Color(1, 0.93, 0.78, 1)
 theme_override_font_sizes/font_size = 8
+theme_override_styles/normal = SubResource("SB_arrow")
+theme_override_styles/hover = SubResource("SB_arrow_hover")
+theme_override_styles/pressed = SubResource("SB_arrow")
 text = "<"
 
-[node name="HairLabel" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer/HairHBox"]
-custom_minimum_size = Vector2(130, 0)
+[node name="EyesLabel" type="Label" parent="CenterContainer/Root/RightPage/CategoryContainer/EyesHBox"]
+custom_minimum_size = Vector2(74, 12)
 layout_mode = 2
-theme_override_font_sizes/font_size = 10
-text = " Cabelo: Bob "
-horizontal_alignment = 1
-
-[node name="NextHair" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer/HairHBox"]
-custom_minimum_size = Vector2(22, 18)
-layout_mode = 2
+theme_override_colors/font_color = Color(0.35, 0.18, 0.06, 1)
 theme_override_font_sizes/font_size = 8
+text = "Black"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="NextEyes" type="Button" parent="CenterContainer/Root/RightPage/CategoryContainer/EyesHBox"]
+custom_minimum_size = Vector2(10, 12)
+layout_mode = 2
+focus_mode = 0
+theme_override_colors/font_color = Color(1, 0.93, 0.78, 1)
+theme_override_font_sizes/font_size = 8
+theme_override_styles/normal = SubResource("SB_arrow")
+theme_override_styles/hover = SubResource("SB_arrow_hover")
+theme_override_styles/pressed = SubResource("SB_arrow")
 text = ">"
 
-[node name="ClothesHBox" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer"]
+[node name="HairHBox" type="HBoxContainer" parent="CenterContainer/Root/RightPage/CategoryContainer"]
 layout_mode = 2
 alignment = 1
+theme_override_constants/separation = 2
 
-[node name="PrevClothes" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer/ClothesHBox"]
-custom_minimum_size = Vector2(22, 18)
+[node name="PrevHair" type="Button" parent="CenterContainer/Root/RightPage/CategoryContainer/HairHBox"]
+custom_minimum_size = Vector2(10, 12)
 layout_mode = 2
+focus_mode = 0
+theme_override_colors/font_color = Color(1, 0.93, 0.78, 1)
 theme_override_font_sizes/font_size = 8
+theme_override_styles/normal = SubResource("SB_arrow")
+theme_override_styles/hover = SubResource("SB_arrow_hover")
+theme_override_styles/pressed = SubResource("SB_arrow")
 text = "<"
 
-[node name="ClothesLabel" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer/ClothesHBox"]
-custom_minimum_size = Vector2(130, 0)
+[node name="HairLabel" type="Label" parent="CenterContainer/Root/RightPage/CategoryContainer/HairHBox"]
+custom_minimum_size = Vector2(74, 12)
 layout_mode = 2
-theme_override_font_sizes/font_size = 10
-text = " Roupa: Básica "
-horizontal_alignment = 1
-
-[node name="NextClothes" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer/ClothesHBox"]
-custom_minimum_size = Vector2(22, 18)
-layout_mode = 2
+theme_override_colors/font_color = Color(0.35, 0.18, 0.06, 1)
 theme_override_font_sizes/font_size = 8
+text = "Standard"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="NextHair" type="Button" parent="CenterContainer/Root/RightPage/CategoryContainer/HairHBox"]
+custom_minimum_size = Vector2(10, 12)
+layout_mode = 2
+focus_mode = 0
+theme_override_colors/font_color = Color(1, 0.93, 0.78, 1)
+theme_override_font_sizes/font_size = 8
+theme_override_styles/normal = SubResource("SB_arrow")
+theme_override_styles/hover = SubResource("SB_arrow_hover")
+theme_override_styles/pressed = SubResource("SB_arrow")
 text = ">"
 
-[node name="PantsHBox" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer"]
+[node name="ClothesHBox" type="HBoxContainer" parent="CenterContainer/Root/RightPage/CategoryContainer"]
 layout_mode = 2
 alignment = 1
+theme_override_constants/separation = 2
 
-[node name="PrevPants" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer/PantsHBox"]
-custom_minimum_size = Vector2(22, 18)
+[node name="PrevClothes" type="Button" parent="CenterContainer/Root/RightPage/CategoryContainer/ClothesHBox"]
+custom_minimum_size = Vector2(10, 12)
 layout_mode = 2
+focus_mode = 0
+theme_override_colors/font_color = Color(1, 0.93, 0.78, 1)
 theme_override_font_sizes/font_size = 8
+theme_override_styles/normal = SubResource("SB_arrow")
+theme_override_styles/hover = SubResource("SB_arrow_hover")
+theme_override_styles/pressed = SubResource("SB_arrow")
 text = "<"
 
-[node name="PantsLabel" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer/PantsHBox"]
-custom_minimum_size = Vector2(130, 0)
+[node name="ClothesLabel" type="Label" parent="CenterContainer/Root/RightPage/CategoryContainer/ClothesHBox"]
+custom_minimum_size = Vector2(74, 12)
 layout_mode = 2
-theme_override_font_sizes/font_size = 10
-text = " Calça: Normal "
-horizontal_alignment = 1
-
-[node name="NextPants" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox/CategoryContainer/PantsHBox"]
-custom_minimum_size = Vector2(22, 18)
-layout_mode = 2
+theme_override_colors/font_color = Color(0.35, 0.18, 0.06, 1)
 theme_override_font_sizes/font_size = 8
+text = "Blue"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="NextClothes" type="Button" parent="CenterContainer/Root/RightPage/CategoryContainer/ClothesHBox"]
+custom_minimum_size = Vector2(10, 12)
+layout_mode = 2
+focus_mode = 0
+theme_override_colors/font_color = Color(1, 0.93, 0.78, 1)
+theme_override_font_sizes/font_size = 8
+theme_override_styles/normal = SubResource("SB_arrow")
+theme_override_styles/hover = SubResource("SB_arrow_hover")
+theme_override_styles/pressed = SubResource("SB_arrow")
 text = ">"
 
-[node name="ColorLabel" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 9
+[node name="ColorLabel" type="Label" parent="CenterContainer/Root/RightPage"]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 74.0
+offset_right = 102.0
+offset_bottom = 82.0
+theme_override_colors/font_color = Color(0.35, 0.18, 0.06, 1)
+theme_override_font_sizes/font_size = 8
 text = "Cor do Cabelo"
 horizontal_alignment = 1
 
-[node name="ColorGrid" type="GridContainer" parent="CenterContainer/PanelContainer/MarginContainer/HBoxContainer/RightVBox"]
-layout_mode = 2
-size_flags_horizontal = 4
-theme_override_constants/h_separation = 6
-theme_override_constants/v_separation = 6
+[node name="ColorGrid" type="GridContainer" parent="CenterContainer/Root/RightPage"]
+layout_mode = 0
+offset_left = 21.0
+offset_top = 86.0
+offset_right = 83.0
+offset_bottom = 110.0
+theme_override_constants/h_separation = 3
+theme_override_constants/v_separation = 3
 columns = 5
