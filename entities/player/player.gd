@@ -128,34 +128,50 @@ func _setup_camera_limits() -> void:
 	if not camera:
 		return
 
-	# Pega qualquer TileMapLayer do grupo ground_layer para medir o mapa
-	var layers = get_tree().get_nodes_in_group("ground_layer")
-	if layers.is_empty():
+	# Percorre todas as TileMapLayers da cena e calcula o bounding box total
+	var all_tilemaps: Array = []
+	_collect_tilemaps(get_tree().current_scene, all_tilemaps)
+
+	var min_x = INF; var min_y = INF
+	var max_x = -INF; var max_y = -INF
+
+	for tm in all_tilemaps:
+		var tilemap := tm as TileMapLayer
+		if not tilemap.tile_set:
+			continue
+		var used := tilemap.get_used_rect()
+		if used.size == Vector2i.ZERO:
+			continue
+		var ts := tilemap.tile_set.tile_size
+		var lx = used.position.x * ts.x
+		var ly = used.position.y * ts.y
+		var rx = (used.position.x + used.size.x) * ts.x
+		var ry = (used.position.y + used.size.y) * ts.y
+		if lx < min_x: min_x = lx
+		if ly < min_y: min_y = ly
+		if rx > max_x: max_x = rx
+		if ry > max_y: max_y = ry
+
+	if min_x == INF:
 		return
 
-	var tilemap = layers[0] as TileMapLayer
-	if not tilemap:
-		return
-
-	var used = tilemap.get_used_rect() # Retorna Rect2i em coordenadas de tile
-	var tile_size = tilemap.tile_set.tile_size # Tamanho de cada tile em pixels
-	var padding = 16 # Margem extra em pixels
-
-	var map_left   = used.position.x * tile_size.x - padding
-	var map_top    = used.position.y * tile_size.y - padding
-	var map_right  = (used.position.x + used.size.x) * tile_size.x + padding
-	var map_bottom = (used.position.y + used.size.y) * tile_size.y + padding
-
-	# Metade da viewport (480x240) para evitar mostrar fora do mapa
+	# Metade da viewport (480x240) para não mostrar fora do mapa
 	var half_w = 240
 	var half_h = 120
+	var padding = 16
 
-	camera.limit_left   = map_left   + half_w
-	camera.limit_top    = map_top    + half_h
-	camera.limit_right  = map_right  - half_w
-	camera.limit_bottom = map_bottom - half_h
+	camera.limit_left   = int(min_x) - padding + half_w
+	camera.limit_top    = int(min_y) - padding + half_h
+	camera.limit_right  = int(max_x) + padding - half_w
+	camera.limit_bottom = int(max_y) + padding - half_h
 
 	print("Camera limits set: L=%d T=%d R=%d B=%d" % [camera.limit_left, camera.limit_top, camera.limit_right, camera.limit_bottom])
+
+func _collect_tilemaps(node: Node, result: Array) -> void:
+	if node is TileMapLayer:
+		result.append(node)
+	for child in node.get_children():
+		_collect_tilemaps(child, result)
 
 func _unhandled_input(event: InputEvent) -> void:
 	# F5 para salvar o jogo
