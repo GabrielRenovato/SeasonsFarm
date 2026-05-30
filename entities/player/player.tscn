@@ -12933,7 +12933,7 @@ position_smoothing_enabled = false
 script = ExtResource("script_movement")
 actor = NodePath("..")
 animation_tree = NodePath("../AnimationTree")
-movement_speed = 90.0
+movement_speed = 70.0
 tool_component = NodePath("../ToolComponent")
 
 [node name="ToolComponent" type="Node2D" parent="." unique_id=426993156 node_paths=PackedStringArray("animation_tree", "actor", "grid_anchor", "debug_rect", "tool_area")]
