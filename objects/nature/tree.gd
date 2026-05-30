@@ -237,7 +237,7 @@ func _play_fall_tween() -> void:
 	# Then fall smoothly (Inicia a inclinação e queda suave)
 	var tween = create_tween().set_parallel(true)
 	var target_rotation = 1.5708 * spawn_direction
-	var target_position = Vector2(15.0 * spawn_direction, 6.0)
+	var target_position = Vector2(15.0 * spawn_direction, 16.0)
 	
 	tween.tween_property($SpriteOffset, "rotation", target_rotation, 0.8).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 	tween.tween_property($SpriteOffset, "position", target_position, 0.8).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
