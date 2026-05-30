@@ -1,108 +1,145 @@
 [gd_scene format=3 uid="uid://bbrh0lca33olm"]
 
 [ext_resource type="Script" uid="uid://cox8cnpy2wkpn" path="res://systems/inventory/ui/inventory_menu_ui.gd" id="1_invmenu"]
+[ext_resource type="Texture2D" path="res://Farm RPG - Tiny Asset Pack - (All in One)/UI/Inventory/Book.png" id="2_book"]
+[ext_resource type="Texture2D" path="res://Farm RPG - Tiny Asset Pack - (All in One)/UI/Inventory/Slot Armor.png" id="3_armor"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wood"]
-bg_color = Color(0.76, 0.52, 0.25, 1)
-border_width_left = 3
-border_width_top = 3
-border_width_right = 3
-border_width_bottom = 3
-border_color = Color(0.48, 0.24, 0.08, 1)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
+[sub_resource type="AtlasTexture" id="AtlasTexture_book"]
+atlas = ExtResource("2_book")
+region = Rect2(0, 0, 238, 144)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_paper"]
-bg_color = Color(0.96, 0.87, 0.7, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.76, 0.52, 0.25, 1)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_slot"]
+bg_color = Color(0.72, 0.55, 0.38, 0.5)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.42, 0.22, 0.08, 0.65)
 
-[node name="InventoryMenuUI" type="PanelContainer" unique_id=1156513909]
-custom_minimum_size = Vector2(240, 120)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_equip"]
+bg_color = Color(0.62, 0.45, 0.28, 0.6)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.42, 0.22, 0.08, 0.8)
+
+[node name="InventoryMenuUI" type="Control" unique_id=1156513909]
+custom_minimum_size = Vector2(238, 144)
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -120.0
-offset_top = -60.0
-offset_right = 120.0
-offset_bottom = 60.0
+offset_left = -119.0
+offset_top = -72.0
+offset_right = 119.0
+offset_bottom = 72.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_wood")
 script = ExtResource("1_invmenu")
 
-[node name="MarginContainer" type="MarginContainer" parent="."]
-layout_mode = 2
-theme_override_constants/margin_left = 4
-theme_override_constants/margin_top = 4
-theme_override_constants/margin_right = 4
-theme_override_constants/margin_bottom = 4
+[node name="Background" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+texture = SubResource("AtlasTexture_book")
+stretch_mode = 0
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
-layout_mode = 2
-theme_override_constants/separation = 4
+[node name="LeftPage" type="Control" parent="."]
+layout_mode = 1
+anchor_left = 0.0
+anchor_top = 0.0
+offset_left = 12.0
+offset_top = 8.0
+offset_right = 114.0
+offset_bottom = 136.0
 
-[node name="EquipRoot" type="VBoxContainer" parent="MarginContainer/HBoxContainer" unique_id=485308418]
+[node name="EquipLabel" type="Label" parent="LeftPage"]
+layout_mode = 0
+offset_right = 102.0
+offset_bottom = 10.0
+theme_override_colors/font_color = Color(0.35, 0.18, 0.06, 1)
+theme_override_font_sizes/font_size = 6
+text = "Ferramentas"
+horizontal_alignment = 1
+
+[node name="EquipRoot" type="GridContainer" parent="LeftPage" unique_id=485308418]
 unique_name_in_owner = true
-layout_mode = 2
-alignment = 1
+layout_mode = 0
+offset_left = 8.0
+offset_top = 13.0
+offset_right = 95.0
+offset_bottom = 82.0
+theme_override_constants/h_separation = 1
+theme_override_constants/v_separation = 1
+columns = 3
 
-[node name="RightPanel" type="VBoxContainer" parent="MarginContainer/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/separation = 4
+[node name="RightPage" type="Control" parent="."]
+layout_mode = 1
+anchor_left = 0.0
+anchor_top = 0.0
+offset_left = 122.0
+offset_top = 8.0
+offset_right = 226.0
+offset_bottom = 136.0
 
-[node name="Header" type="HBoxContainer" parent="MarginContainer/HBoxContainer/RightPanel"]
-layout_mode = 2
+[node name="InvLabel" type="Label" parent="RightPage"]
+layout_mode = 0
+offset_right = 104.0
+offset_bottom = 10.0
+theme_override_colors/font_color = Color(0.35, 0.18, 0.06, 1)
+theme_override_font_sizes/font_size = 6
+text = "Inventory"
+horizontal_alignment = 1
 
-[node name="TabsRoot" type="HBoxContainer" parent="MarginContainer/HBoxContainer/RightPanel/Header" unique_id=480871561]
+[node name="SlotsRoot" type="GridContainer" parent="RightPage" unique_id=1165785089]
 unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/separation = 2
+layout_mode = 0
+offset_left = 6.0
+offset_top = 13.0
+offset_right = 98.0
+offset_bottom = 75.0
+theme_override_constants/h_separation = 1
+theme_override_constants/v_separation = 1
+columns = 6
 
-[node name="ButtonsRoot" type="HBoxContainer" parent="MarginContainer/HBoxContainer/RightPanel/Header" unique_id=1534252678]
-unique_name_in_owner = true
-layout_mode = 2
-alignment = 2
-theme_override_constants/separation = 4
-
-[node name="ContentPanel" type="PanelContainer" parent="MarginContainer/HBoxContainer/RightPanel"]
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_styles/panel = SubResource("StyleBoxFlat_paper")
-
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer/RightPanel/ContentPanel"]
-layout_mode = 2
-theme_override_constants/margin_left = 6
-theme_override_constants/margin_top = 6
-theme_override_constants/margin_right = 6
-theme_override_constants/margin_bottom = 6
-
-[node name="SlotsRoot" type="GridContainer" parent="MarginContainer/HBoxContainer/RightPanel/ContentPanel/MarginContainer" unique_id=1165785089]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_constants/h_separation = 2
-theme_override_constants/v_separation = 2
-columns = 12
-
-[node name="FallbackContent" type="CenterContainer" parent="MarginContainer/HBoxContainer/RightPanel/ContentPanel/MarginContainer" unique_id=1107656627]
+[node name="FallbackContent" type="CenterContainer" parent="RightPage" unique_id=1107656627]
 unique_name_in_owner = true
 visible = false
-layout_mode = 2
+layout_mode = 0
+offset_right = 104.0
+offset_bottom = 128.0
 
-[node name="FallbackLabel" type="Label" parent="MarginContainer/HBoxContainer/RightPanel/ContentPanel/MarginContainer/FallbackContent" unique_id=1910273355]
+[node name="FallbackLabel" type="Label" parent="RightPage/FallbackContent" unique_id=1910273355]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_color = Color(0.2, 0.2, 0.2, 1)
-theme_override_font_sizes/font_size = 8
-text = "Development Screen"
+theme_override_colors/font_color = Color(0.35, 0.18, 0.06, 1)
+theme_override_font_sizes/font_size = 7
+text = "Em desenvolvimento"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="TabsRoot" type="HBoxContainer" parent="." unique_id=480871561]
+unique_name_in_owner = true
+visible = false
+layout_mode = 0
+
+[node name="ButtonsRoot" type="HBoxContainer" parent="." unique_id=1534252678]
+unique_name_in_owner = true
+visible = false
+layout_mode = 0
+
+[node name="CloseHint" type="Label" parent="."]
+layout_mode = 1
+anchor_left = 0.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -10.0
+offset_bottom = 0.0
+theme_override_colors/font_color = Color(0.35, 0.18, 0.06, 0.7)
+theme_override_font_sizes/font_size = 5
+text = "TAB para fechar"
+horizontal_alignment = 1
