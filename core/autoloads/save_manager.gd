@@ -18,6 +18,8 @@ func save_game() -> void:
 	var data: Dictionary = {
 		"gold": EconomyManager.gold,
 		"day": TimeManager.day,
+		"energy": PlayerStatsManager.energy if PlayerStatsManager else 100.0,
+		"max_energy": PlayerStatsManager.max_energy if PlayerStatsManager else 100.0,
 		"inventory": _serialize_inventory(),
 		"farm": _serialize_farm(),
 	}
@@ -61,6 +63,10 @@ func load_game() -> void:
 	EconomyManager.gold = int(data.get("gold", 0))
 	EconomyManager.gold_changed.emit(EconomyManager.gold)
 	TimeManager.day = int(data.get("day", 1))
+	if PlayerStatsManager:
+		PlayerStatsManager.max_energy = float(data.get("max_energy", 100.0))
+		PlayerStatsManager.energy = float(data.get("energy", PlayerStatsManager.max_energy))
+		PlayerStatsManager.energy_changed.emit(PlayerStatsManager.energy, PlayerStatsManager.max_energy)
 
 	_deserialize_inventory(data.get("inventory", []))
 	# Farm restore needs the scene tree ready — defer so FarmManager can find dirt_layer

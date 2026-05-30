@@ -34,6 +34,8 @@ func _advance_to_next_day() -> void:
 	hour = 6
 	minute = 0
 	time_accumulator = 0.0
+	if PlayerStatsManager:
+		PlayerStatsManager.restore_full_energy()
 	print("TimeManager: Press 'T' - Advancing immediately to next day: ", day)
 	emit_signal("day_changed", day)
 	emit_signal("time_changed", day, hour, minute)
@@ -51,6 +53,8 @@ func _add_minute() -> void:
 		hour = 6
 		minute = 0
 		time_accumulator = 0.0
+		if PlayerStatsManager:
+			PlayerStatsManager.restore_full_energy()
 		emit_signal("day_changed", day)
 		print("TimeManager: Natural day rollover at 2:00 AM. Day: ", day)
 	

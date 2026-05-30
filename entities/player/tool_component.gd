@@ -201,6 +201,10 @@ func handle_tool_use(direction: Vector2) -> void:
 			if tile_data.crop_id != "":
 				var crop_node = tile_data.crop_node
 				if is_instance_valid(crop_node) and crop_node.has_method("is_fully_grown") and crop_node.is_fully_grown():
+					if PlayerStatsManager and PlayerStatsManager.energy <= 0:
+						return
+					if PlayerStatsManager:
+						PlayerStatsManager.consume_energy(2.0)
 					is_using_tool = true
 					_active_tool_in_use = "Harvest"
 					_pending_target_map_position = target_map_position
@@ -211,6 +215,10 @@ func handle_tool_use(direction: Vector2) -> void:
 		var tool_name = get_current_tool()
 		
 		if tool_name != "":
+			if PlayerStatsManager and PlayerStatsManager.energy <= 0:
+				return
+			if PlayerStatsManager:
+				PlayerStatsManager.consume_energy(2.0)
 			is_using_tool = true
 			_active_tool_in_use = tool_name
 			_pending_hit_direction = strict_direction

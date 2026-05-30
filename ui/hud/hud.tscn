@@ -57,6 +57,27 @@ anti_aliasing = false
 atlas = ExtResource("4_money")
 region = Rect2(0, 0, 16, 16)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_energy_bg"]
+bg_color = Color(0.2, 0.1, 0.05, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.1, 0.05, 0.02, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_energy_empty"]
+bg_color = Color(0.15, 0.15, 0.15, 1)
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_energy_fill"]
+bg_color = Color(0.3, 0.8, 0.3, 1)
+anti_aliasing = false
+
 [node name="HUD" type="CanvasLayer"]
 script = ExtResource("1_hud")
 
@@ -186,3 +207,38 @@ anchor_bottom = 0.5
 grow_horizontal = 2
 grow_vertical = 2
 visible = false
+
+[node name="EnergyBarContainer" type="MarginContainer" parent="Control"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -26.0
+offset_top = -100.0
+offset_right = -10.0
+offset_bottom = -20.0
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="EnergyBarBackground" type="PanelContainer" parent="Control/EnergyBarContainer"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_energy_bg")
+
+[node name="MarginContainer" type="MarginContainer" parent="Control/EnergyBarContainer/EnergyBarBackground"]
+layout_mode = 2
+theme_override_constants/margin_left = 2
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 2
+theme_override_constants/margin_bottom = 2
+
+[node name="EnergyBar" type="ProgressBar" parent="Control/EnergyBarContainer/EnergyBarBackground/MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/background = SubResource("StyleBoxFlat_energy_empty")
+theme_override_styles/fill = SubResource("StyleBoxFlat_energy_fill")
+value = 100.0
+fill_mode = 3
+show_percentage = false

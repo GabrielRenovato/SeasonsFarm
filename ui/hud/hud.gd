@@ -8,6 +8,7 @@ class_name HUD
 @onready var dial_icon: Label = %DialIcon       # Mostra o ícone de sol ou lua dependendo da hora
 @onready var hotbar_ui: HotbarUI = $Control/HotbarUI
 @onready var inventory_menu_ui: InventoryMenuUI = $Control/InventoryMenuUI
+@onready var energy_bar: ProgressBar = %EnergyBar
 
 var inventory_data: InventoryData
 var digit_labels: Array[Label] = []
@@ -36,6 +37,11 @@ func _ready() -> void:
 	if EconomyManager:
 		EconomyManager.gold_changed.connect(_on_gold_changed)
 		_on_gold_changed(EconomyManager.gold) # Atualiza o ouro para o valor inicial
+		
+	# Conecta o sinal de energia para atualizar a barra verde de estamina
+	if PlayerStatsManager:
+		PlayerStatsManager.energy_changed.connect(_on_energy_changed)
+		_on_energy_changed(PlayerStatsManager.energy, PlayerStatsManager.max_energy)
 
 # Cria os quadradinhos de cada casa decimal do ouro (estilo Stardew)
 func _setup_gold_digits() -> void:
@@ -101,6 +107,14 @@ func _on_gold_changed(new_amount: int) -> void:
 				digit_labels[i].text = "" # Deixa vazio os quadrados da esquerda que não tem número
 			else:
 				digit_labels[i].text = amount_str[i - empty_slots] # Preenche com o dígito correto
+
+# Função chamada toda vez que a energia muda
+func _on_energy_changed(current_energy: float, max_energy: float) -> void:
+	if energy_bar:
+		energy_bar.max_value = max_energy
+		# Usa um Tween para a barra descer/subir suavemente
+		var tween = create_tween()
+		tween.tween_property(energy_bar, "value", current_energy, 0.2)
 
 # Atualiza os textos da interface de tempo para Inglês (lançamento global) com formato AM/PM
 func _update_time_display(day: int, hour: int, minute: int) -> void:
