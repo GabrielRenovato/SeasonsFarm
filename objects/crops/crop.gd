@@ -60,4 +60,14 @@ func update_visuals() -> void:
 	if frame_map.size() > 0 and current_stage < frame_map.size():
 		actual_frame = frame_map[current_stage]
 	sprite.frame = actual_frame
-	sprite.offset.y = -4 if current_stage > 0 else 0
+	
+	# Default offset for 16x16 crops
+	var base_offset = -4 if current_stage > 0 else 0
+	
+	# Se a textura for maior que 16px de altura (ex: 32px), precisamos deslocá-la
+	# para cima para que a base da planta continue alinhada com a terra
+	if sprite.texture and sprite.texture.get_height() > 16:
+		var height_diff = sprite.texture.get_height() - 16
+		base_offset -= height_diff / 2
+		
+	sprite.offset.y = base_offset

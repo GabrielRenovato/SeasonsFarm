@@ -31,60 +31,40 @@ const AUTO_TILE_MAP = {
 # All Crops.png layout: Spring panel x=0, Summer panel x=146, Fall panel x=290
 # Seed bag for crop N in a panel: Rect2(panel_x, N*16, 16, 16)  (alphabetical order)
 const CROP_CONFIGS = {
-	"carrot": {
-		"name": "Cenoura",
-		"texture_path": "res://assets/sprites/novosCrops/Spring/Carrot.png",
-		"season": "spring", "stages": 6, "frame_size": 15,
-		# frames 0=seed, 1=also-seed (skip), 2=sprout, 3-5=growth, 6=empty(skip), 7=harvest, 8=silver, 9=gold
-		"frame_map": [0, 2, 3, 4, 5, 7],
-		"harvest_item": "carrot", "base_price": 15,
-		"seed_x": 0, "seed_y": 96     # All Crops.png Spring row 6
-	},
-	"strawberry": {
-		"name": "Morango",
-		"texture_path": "res://assets/sprites/novosCrops/Spring/Strawberry.png",
-		"season": "spring", "stages": 7, "frame_size": 16,
-		# frame 0=seed, 1=sprout, ..., 6=empty(skip), 7=harvest, 8=silver, 9=gold
-		"frame_map": [0, 1, 2, 3, 4, 5, 7],
-		"harvest_item": "strawberry", "base_price": 25,
-		"seed_x": 0, "seed_y": 32     # All Crops.png Spring row 2
-	},
-	"tomato": {
-		"name": "Tomate",
-		"texture_path": "res://assets/sprites/novosCrops/Summer/Tomato.png",
-		"season": "summer", "stages": 8, "frame_size": 16,
-		# frames 7,8=empty(skip), 9=harvest, 10=silver, 11=gold
-		"frame_map": [0, 1, 2, 3, 4, 5, 6, 9],
-		"harvest_item": "tomato", "base_price": 20,
-		"seed_x": 144, "seed_y": 64   # All Crops.png Summer row 4
-	},
-	"melon": {
-		"name": "Melão",
-		"texture_path": "res://assets/sprites/novosCrops/Summer/Melon.png",
-		"season": "summer", "stages": 7, "frame_size": 14,
-		# frames 6,7,8=empty(skip), 9=harvest, 10=silver, 11=gold
-		"frame_map": [0, 1, 2, 3, 4, 5, 9],
-		"harvest_item": "melon", "base_price": 40,
-		"seed_x": 144, "seed_y": 144  # All Crops.png Summer row 9
-	},
-	"pumpkin": {
-		"name": "Abóbora",
-		"texture_path": "res://assets/sprites/novosCrops/Fall/Pumpkin.png",
-		"season": "fall", "stages": 6, "frame_size": 16,
-		# frame 1=empty(skip), frames 0,2-5,7 valid; 7=harvest, 8=silver, 9=gold
-		"frame_map": [0, 2, 3, 4, 5, 7],
-		"harvest_item": "pumpkin", "base_price": 35,
-		"seed_x": 288, "seed_y": 32   # All Crops.png Fall row 2
-	},
-	"beetroot": {
-		"name": "Beterraba",
-		"texture_path": "res://assets/sprites/novosCrops/Fall/Beetroot.png",
-		"season": "fall", "stages": 6, "frame_size": 16,
-		# frames 0,1=seeds (skip 1), 2=sprout, ..., 6=empty(skip), 7=harvest, 8=silver, 9=gold
-		"frame_map": [0, 2, 3, 4, 5, 7],
-		"harvest_item": "beetroot", "base_price": 20,
-		"seed_x": 288, "seed_y": 16   # All Crops.png Fall row 1
-	}
+	# SPRING CROPS
+	"strawberry": {"name": "Strawberry", "texture_path": "res://assets/sprites/novosCrops/Spring/Strawberry.png", "season": "spring", "stages": 7, "frame_size": 16, "frame_map": [0, 1, 2, 3, 4, 5, 7], "harvest_item": "strawberry", "base_price": 35, "seed_x": 0, "seed_y": 32},
+	"spring_onion": {"name": "Spring Onion", "texture_path": "res://assets/sprites/novosCrops/Spring/Spring Onion.png", "season": "spring", "stages": 7, "frame_size": 16, "frame_map": [0, 1, 2, 3, 4, 5, 7], "harvest_item": "spring_onion", "base_price": 20, "seed_x": 0, "seed_y": 48},
+	"potato": {"name": "Potato", "texture_path": "res://assets/sprites/novosCrops/Spring/Potato.png", "season": "spring", "stages": 7, "frame_size": 16, "frame_map": [0, 1, 2, 3, 4, 5, 7], "harvest_item": "potato", "base_price": 20, "seed_x": 0, "seed_y": 64},
+	"onion": {"name": "Onion", "texture_path": "res://assets/sprites/novosCrops/Spring/Onion.png", "season": "spring", "stages": 7, "frame_size": 16, "frame_map": [0, 1, 2, 3, 4, 5, 7], "harvest_item": "onion", "base_price": 20, "seed_x": 0, "seed_y": 80},
+	"carrot": {"name": "Carrot", "texture_path": "res://assets/sprites/novosCrops/Spring/Carrot.png", "season": "spring", "stages": 7, "frame_size": 16, "frame_map": [0, 1, 2, 3, 4, 5, 7], "harvest_item": "carrot", "base_price": 20, "seed_x": 0, "seed_y": 96},
+	"blueberry": {"name": "Blueberry", "texture_path": "res://assets/sprites/novosCrops/Spring/Blueberry.png", "season": "spring", "stages": 7, "frame_size": 16, "frame_map": [0, 1, 2, 3, 4, 5, 7], "harvest_item": "blueberry", "base_price": 20, "seed_x": 0, "seed_y": 112},
+	"parsnip": {"name": "Parsnip", "texture_path": "res://assets/sprites/novosCrops/Spring/Parsnip.png", "season": "spring", "stages": 6, "frame_size": 16, "frame_map": [0, 1, 2, 3, 4, 7], "harvest_item": "parsnip", "base_price": 20, "seed_x": 0, "seed_y": 128},
+	"cabbage": {"name": "Cabbage", "texture_path": "res://assets/sprites/novosCrops/Spring/Cabbage.png", "season": "spring", "stages": 8, "frame_size": 16, "frame_map": [0, 1, 2, 3, 4, 5, 6, 7], "harvest_item": "cabbage", "base_price": 20, "seed_x": 0, "seed_y": 144},
+	"cauliflower": {"name": "Cauliflower", "texture_path": "res://assets/sprites/novosCrops/Spring/Cauliflower.png", "season": "spring", "stages": 7, "frame_size": 16, "frame_map": [0, 1, 2, 3, 4, 5, 7], "harvest_item": "cauliflower", "base_price": 20, "seed_x": 0, "seed_y": 160},
+	"rice": {"name": "Rice", "texture_path": "res://assets/sprites/novosCrops/Spring/Rice.png", "season": "spring", "stages": 7, "frame_size": 16, "frame_map": [0, 1, 2, 3, 4, 5, 7], "harvest_item": "rice", "base_price": 20, "seed_x": 0, "seed_y": 176},
+	"broccoli": {"name": "Broccoli", "texture_path": "res://assets/sprites/novosCrops/Spring/Broccoli.png", "season": "spring", "stages": 6, "frame_size": 16, "frame_map": [0, 1, 2, 3, 4, 7], "harvest_item": "broccoli", "base_price": 20, "seed_x": 0, "seed_y": 192},
+	"asparagus": {"name": "Asparagus", "texture_path": "res://assets/sprites/novosCrops/Spring/Asparagus.png", "season": "spring", "stages": 6, "frame_size": 16, "frame_map": [0, 1, 2, 3, 4, 7], "harvest_item": "asparagus", "base_price": 20, "seed_x": 0, "seed_y": 208},
+
+	# SUMMER CROPS
+	"tomato": {"name": "Tomato", "texture_path": "res://assets/sprites/novosCrops/Summer/Tomato.png", "season": "summer", "stages": 8, "frame_size": 16, "frame_map": [0, 1, 2, 3, 4, 5, 6, 9], "harvest_item": "tomato", "base_price": 20, "seed_x": 144, "seed_y": 64},
+	"hot_pepper": {"name": "Hot Pepper", "texture_path": "res://assets/sprites/novosCrops/Summer/Hot Pepper.png", "season": "summer", "stages": 8, "frame_size": 16, "frame_map": [0, 1, 2, 3, 4, 5, 6, 9], "harvest_item": "hot_pepper", "base_price": 20, "seed_x": 144, "seed_y": 96},
+	"bell_pepper": {"name": "Bell Pepper", "texture_path": "res://assets/sprites/novosCrops/Summer/Bell Pepper.png", "season": "summer", "stages": 11, "frame_size": 16, "frame_map": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], "harvest_item": "bell_pepper", "base_price": 20, "seed_x": 144, "seed_y": 112},
+	"melon": {"name": "Melon", "texture_path": "res://assets/sprites/novosCrops/Summer/Melon.png", "season": "summer", "stages": 7, "frame_size": 16, "frame_map": [0, 1, 2, 3, 4, 5, 9], "harvest_item": "melon", "base_price": 35, "seed_x": 144, "seed_y": 160},
+	"watermelon": {"name": "Watermelon", "texture_path": "res://assets/sprites/novosCrops/Summer/Watermelon.png", "season": "summer", "stages": 9, "frame_size": 16, "frame_map": [0, 1, 2, 3, 4, 5, 6, 7, 9], "harvest_item": "watermelon", "base_price": 20, "seed_x": 144, "seed_y": 176},
+	"cucumber": {"name": "Cucumber", "texture_path": "res://assets/sprites/novosCrops/Summer/Cucumber.png", "season": "summer", "stages": 7, "frame_size": 16, "frame_map": [0, 1, 2, 3, 4, 5, 9], "harvest_item": "cucumber", "base_price": 20, "seed_x": 144, "seed_y": 192},
+	"green_beans": {"name": "Green Beans", "texture_path": "res://assets/sprites/novosCrops/Summer/Green Beans.png", "season": "summer", "stages": 8, "frame_size": 16, "frame_map": [0, 1, 2, 3, 4, 5, 6, 9], "harvest_item": "green_beans", "base_price": 20, "seed_x": 144, "seed_y": 208},
+	"pineapple": {"name": "Pineapple", "texture_path": "res://assets/sprites/novosCrops/Summer/Pineapple.png", "season": "summer", "stages": 7, "frame_size": 16, "frame_map": [0, 1, 2, 3, 4, 5, 8], "harvest_item": "pineapple", "base_price": 35, "seed_x": 144, "seed_y": 224},
+	"sunflower": {"name": "Sunflower", "texture_path": "res://assets/sprites/novosCrops/Summer/Sunflower.png", "season": "summer", "stages": 7, "frame_size": 16, "frame_map": [0, 1, 2, 3, 4, 5, 9], "harvest_item": "sunflower", "base_price": 20, "seed_x": 144, "seed_y": 240},
+	"blackberry": {"name": "Blackberry", "texture_path": "res://assets/sprites/novosCrops/Summer/Blackberry.png", "season": "summer", "stages": 8, "frame_size": 16, "frame_map": [0, 1, 2, 3, 4, 5, 6, 9], "harvest_item": "blackberry", "base_price": 20, "seed_x": 144, "seed_y": 256},
+	"wheat": {"name": "Wheat", "texture_path": "res://assets/sprites/novosCrops/Summer/Wheat.png", "season": "summer", "stages": 7, "frame_size": 16, "frame_map": [0, 1, 2, 3, 4, 5, 9], "harvest_item": "wheat", "base_price": 20, "seed_x": 144, "seed_y": 272},
+
+	# FALL CROPS
+	"beetroot": {"name": "Beetroot", "texture_path": "res://assets/sprites/novosCrops/Fall/Beetroot.png", "season": "fall", "stages": 7, "frame_size": 16, "frame_map": [0, 1, 2, 3, 4, 5, 7], "harvest_item": "beetroot", "base_price": 20, "seed_x": 288, "seed_y": 16},
+	"pumpkin": {"name": "Pumpkin", "texture_path": "res://assets/sprites/novosCrops/Fall/Pumpkin.png", "season": "fall", "stages": 6, "frame_size": 16, "frame_map": [0, 2, 3, 4, 5, 7], "harvest_item": "pumpkin", "base_price": 35, "seed_x": 288, "seed_y": 32},
+	"grapes": {"name": "Grapes", "texture_path": "res://assets/sprites/novosCrops/Fall/Grapes.png", "season": "fall", "stages": 6, "frame_size": 16, "frame_map": [0, 2, 3, 4, 5, 7], "harvest_item": "grapes", "base_price": 20, "seed_x": 288, "seed_y": 48},
+	"eggplant": {"name": "Eggplant", "texture_path": "res://assets/sprites/novosCrops/Fall/Eggplant.png", "season": "fall", "stages": 7, "frame_size": 16, "frame_map": [0, 1, 2, 3, 4, 5, 9], "harvest_item": "eggplant", "base_price": 20, "seed_x": 288, "seed_y": 80},
+	"aloe": {"name": "Aloe", "texture_path": "res://assets/sprites/novosCrops/Fall/Aloe.png", "season": "fall", "stages": 7, "frame_size": 16, "frame_map": [0, 1, 2, 3, 4, 5, 9], "harvest_item": "aloe", "base_price": 20, "seed_x": 288, "seed_y": 96},
+
 }
 
 # State: Dict of Vector2i -> Dict
@@ -258,6 +238,20 @@ func _on_day_changed(day: int) -> void:
 	for pos in keys:
 		var data = farm_data[pos]
 		if data.tilled:
+			# Check season death
+			if data.crop_id != "":
+				var config = CROP_CONFIGS.get(data.crop_id, {})
+				var season_str = config.get("season", "spring")
+				var season_map = { "spring": 0, "summer": 1, "fall": 2, "winter": 3 }
+				if TimeManager and season_map.get(season_str, 0) != TimeManager.current_season:
+					# Crop died
+					if is_instance_valid(data.crop_node):
+						data.crop_node.queue_free()
+					data.crop_id = ""
+					data.crop_node = null
+					data.days_grown = 0
+					print("FarmManager: Crop died out of season at ", pos)
+					
 			if data.watered:
 				# Solo regado! Cresce a planta e seca a terra para o dia seguinte
 				if data.crop_id != "":

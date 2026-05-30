@@ -21,5 +21,16 @@ func _update_time_display(day: int, hour: int, minute: int) -> void:
 		var icon = "☀️" if hour >= 6 and hour < 18 else "🌙"
 		if Input.is_key_pressed(KEY_T):
 			icon = "⏩"
-		time_label.text = "%s Dia %d | %02d:%02d" % [icon, day, hour, minute]
+			
+		var season_name = "Spring"
+		var year = 1
+		if TimeManager:
+			year = TimeManager.year
+			match TimeManager.current_season:
+				TimeManager.Season.SPRING: season_name = "Primavera"
+				TimeManager.Season.SUMMER: season_name = "Verão"
+				TimeManager.Season.FALL: season_name = "Outono"
+				TimeManager.Season.WINTER: season_name = "Inverno"
+				
+		time_label.text = "[%s Ano %d] %s Dia %d | %02d:%02d" % [season_name, year, icon, day, hour, minute]
 
