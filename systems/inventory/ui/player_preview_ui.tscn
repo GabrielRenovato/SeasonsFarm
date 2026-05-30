@@ -10,15 +10,17 @@
 custom_minimum_size = Vector2(102, 75)
 script = ExtResource("script_preview")
 
-[node name="SpriteContainer" type="CenterContainer" parent="."]
+[node name="SpriteContainer" type="Control" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_bottom = -10.0
+mouse_filter = 2
 
 [node name="Body" type="Sprite2D" parent="SpriteContainer"]
 unique_name_in_owner = true
+position = Vector2(51, 32)
 texture = ExtResource("idle_skin")
 hframes = 16
 frame = 0
@@ -26,6 +28,7 @@ scale = Vector2(2, 2)
 
 [node name="Hair" type="Sprite2D" parent="SpriteContainer"]
 unique_name_in_owner = true
+position = Vector2(51, 32)
 texture = ExtResource("idle_hair")
 hframes = 16
 frame = 0
@@ -33,6 +36,7 @@ scale = Vector2(2, 2)
 
 [node name="Clothes" type="Sprite2D" parent="SpriteContainer"]
 unique_name_in_owner = true
+position = Vector2(51, 32)
 texture = ExtResource("idle_cloth")
 hframes = 16
 frame = 0
@@ -40,6 +44,7 @@ scale = Vector2(2, 2)
 
 [node name="Eyes" type="Sprite2D" parent="SpriteContainer"]
 unique_name_in_owner = true
+position = Vector2(51, 32)
 texture = ExtResource("idle_eyes")
 hframes = 16
 frame = 0
@@ -47,6 +52,7 @@ scale = Vector2(2, 2)
 
 [node name="Tool" type="Sprite2D" parent="SpriteContainer"]
 unique_name_in_owner = true
+position = Vector2(51, 32)
 texture = null
 hframes = 16
 frame = 0

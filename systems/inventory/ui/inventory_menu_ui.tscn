@@ -9,21 +9,37 @@
 atlas = ExtResource("2_book")
 region = Rect2(0, 0, 238, 144)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_slot"]
-bg_color = Color(0.72, 0.55, 0.38, 0.5)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.42, 0.22, 0.08, 0.65)
+[sub_resource type="AtlasTexture" id="AtlasTexture_head"]
+atlas = ExtResource("3_armor")
+region = Rect2(0, 0, 32, 32)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_equip"]
-bg_color = Color(0.62, 0.45, 0.28, 0.6)
+[sub_resource type="AtlasTexture" id="AtlasTexture_chest"]
+atlas = ExtResource("3_armor")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pants"]
+atlas = ExtResource("3_armor")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_boots"]
+atlas = ExtResource("3_armor")
+region = Rect2(96, 0, 32, 32)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_armor"]
+bg_color = Color(0.72, 0.55, 0.38, 0.45)
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
-border_color = Color(0.42, 0.22, 0.08, 0.8)
+border_color = Color(0.42, 0.22, 0.08, 0.7)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tool"]
+bg_color = Color(0.62, 0.45, 0.28, 0.55)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.42, 0.22, 0.08, 0.85)
 
 [node name="InventoryMenuUI" type="Control" unique_id=1156513909]
 custom_minimum_size = Vector2(238, 144)
@@ -57,35 +73,113 @@ offset_top = 8.0
 offset_right = 114.0
 offset_bottom = 136.0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="LeftPage"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-theme_override_constants/separation = 4
-
-[node name="PlayerPreview" parent="LeftPage/VBoxContainer" instance=ExtResource("4_preview")]
-custom_minimum_size = Vector2(102, 60)
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 1
-
-[node name="EquipLabel" type="Label" parent="LeftPage/VBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
+[node name="EquipTitle" type="Label" parent="LeftPage"]
+layout_mode = 0
+offset_right = 102.0
+offset_bottom = 10.0
 theme_override_colors/font_color = Color(0.35, 0.18, 0.06, 1)
 theme_override_font_sizes/font_size = 6
-text = "Ferramentas"
+text = "Equipamento"
 horizontal_alignment = 1
 
-[node name="EquipRoot" type="GridContainer" parent="LeftPage/VBoxContainer" unique_id=485308418]
+[node name="PlayerPreview" parent="LeftPage" instance=ExtResource("4_preview")]
+custom_minimum_size = Vector2(102, 64)
+layout_mode = 0
+offset_top = 12.0
+offset_right = 102.0
+offset_bottom = 76.0
+
+[node name="ArmorRow" type="HBoxContainer" parent="LeftPage"]
+layout_mode = 0
+offset_left = 5.0
+offset_top = 80.0
+offset_right = 97.0
+offset_bottom = 96.0
+theme_override_constants/separation = 4
+alignment = 1
+
+[node name="HeadSlot" type="PanelContainer" parent="LeftPage/ArmorRow"]
+custom_minimum_size = Vector2(16, 16)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_armor")
+
+[node name="Icon" type="TextureRect" parent="LeftPage/ArmorRow/HeadSlot"]
+layout_mode = 2
+texture = SubResource("AtlasTexture_head")
+expand_mode = 1
+stretch_mode = 5
+modulate = Color(1, 1, 1, 0.55)
+
+[node name="ChestSlot" type="PanelContainer" parent="LeftPage/ArmorRow"]
+custom_minimum_size = Vector2(16, 16)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_armor")
+
+[node name="Icon" type="TextureRect" parent="LeftPage/ArmorRow/ChestSlot"]
+layout_mode = 2
+texture = SubResource("AtlasTexture_chest")
+expand_mode = 1
+stretch_mode = 5
+modulate = Color(1, 1, 1, 0.55)
+
+[node name="PantsSlot" type="PanelContainer" parent="LeftPage/ArmorRow"]
+custom_minimum_size = Vector2(16, 16)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_armor")
+
+[node name="Icon" type="TextureRect" parent="LeftPage/ArmorRow/PantsSlot"]
+layout_mode = 2
+texture = SubResource("AtlasTexture_pants")
+expand_mode = 1
+stretch_mode = 5
+modulate = Color(1, 1, 1, 0.55)
+
+[node name="BootsSlot" type="PanelContainer" parent="LeftPage/ArmorRow"]
+custom_minimum_size = Vector2(16, 16)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_armor")
+
+[node name="Icon" type="TextureRect" parent="LeftPage/ArmorRow/BootsSlot"]
+layout_mode = 2
+texture = SubResource("AtlasTexture_boots")
+expand_mode = 1
+stretch_mode = 5
+modulate = Color(1, 1, 1, 0.55)
+
+[node name="ToolLabel" type="Label" parent="LeftPage"]
+layout_mode = 0
+offset_top = 100.0
+offset_right = 102.0
+offset_bottom = 110.0
+theme_override_colors/font_color = Color(0.35, 0.18, 0.06, 1)
+theme_override_font_sizes/font_size = 6
+text = "Selecionado"
+horizontal_alignment = 1
+
+[node name="SelectedToolSlot" type="PanelContainer" parent="LeftPage" unique_id=778899001]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 0
+offset_left = 41.0
+offset_top = 110.0
+offset_right = 61.0
+offset_bottom = 128.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_tool")
+
+[node name="MarginContainer" type="MarginContainer" parent="LeftPage/SelectedToolSlot"]
+layout_mode = 2
+theme_override_constants/margin_left = 2
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 2
+theme_override_constants/margin_bottom = 2
+
+[node name="ToolIcon" type="TextureRect" parent="LeftPage/SelectedToolSlot/MarginContainer" unique_id=778899002]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_vertical = 1
-theme_override_constants/h_separation = 1
-theme_override_constants/v_separation = 1
-columns = 3
+size_flags_vertical = 3
+expand_mode = 3
+stretch_mode = 5
 
 [node name="RightPage" type="Control" parent="."]
 layout_mode = 1
@@ -102,35 +196,19 @@ offset_right = 104.0
 offset_bottom = 10.0
 theme_override_colors/font_color = Color(0.35, 0.18, 0.06, 1)
 theme_override_font_sizes/font_size = 6
-text = "Inventory"
+text = "Inventário"
 horizontal_alignment = 1
 
 [node name="SlotsRoot" type="GridContainer" parent="RightPage" unique_id=1165785089]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = 6.0
+offset_left = 4.0
 offset_top = 13.0
-offset_right = 98.0
-offset_bottom = 75.0
+offset_right = 100.0
+offset_bottom = 113.0
 theme_override_constants/h_separation = 1
 theme_override_constants/v_separation = 1
 columns = 6
-
-[node name="FallbackContent" type="CenterContainer" parent="RightPage" unique_id=1107656627]
-unique_name_in_owner = true
-visible = false
-layout_mode = 0
-offset_right = 104.0
-offset_bottom = 128.0
-
-[node name="FallbackLabel" type="Label" parent="RightPage/FallbackContent" unique_id=1910273355]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_colors/font_color = Color(0.35, 0.18, 0.06, 1)
-theme_override_font_sizes/font_size = 7
-text = "Em desenvolvimento"
-horizontal_alignment = 1
-vertical_alignment = 1
 
 [node name="TabsRoot" type="HBoxContainer" parent="." unique_id=480871561]
 unique_name_in_owner = true
