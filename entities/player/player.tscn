@@ -12926,13 +12926,7 @@ position = Vector2(0, -10)
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1638604518]
 position = Vector2(0, -16)
-process_callback = 1
-position_smoothing_enabled = true
-position_smoothing_speed = 8.0
-limit_left = -240
-limit_top = -120
-limit_right = 1680
-limit_bottom = 1080
+position_smoothing_enabled = false
 
 [node name="MovementComponent" type="Node2D" parent="." unique_id=947773692 node_paths=PackedStringArray("actor", "animation_tree", "tool_component")]
 script = ExtResource("script_movement")
