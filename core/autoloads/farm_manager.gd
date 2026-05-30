@@ -270,7 +270,7 @@ func _on_day_changed(day: int) -> void:
 			else:
 				# Solo seco! Se não houver planta, tem 50% de chance de reverter para terra comum
 				if data.crop_id == "":
-					if randf() < 0.5:
+					if randf() < 0.1:
 						# Reverte terra arada (limpa a célula na dirt_layer e na seed_layer)
 						farm_data.erase(pos)
 						_update_tile_and_neighbors(pos)
