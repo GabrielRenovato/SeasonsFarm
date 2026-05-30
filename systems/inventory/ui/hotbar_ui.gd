@@ -1,32 +1,31 @@
 extends Control
 class_name HotbarUI
 
-# Container onde os slots da hotbar serão posicionados (posição absoluta)
-@onready var slots_root: Control = $MarginContainer/SlotsRoot
-
-# Cena do slot individual
 const SLOT_UI_SCENE = preload("res://systems/inventory/ui/slot_ui.tscn")
 
-const SLOT_COUNT := 12
+const SLOT_COUNT := 9
+const SLOT_PITCH := 17
+const FIRST_X := 5
+const SLOT_Y := 6
+const SLOT_SIZE := 16
 
-# Dados do inventário
+@onready var slots_root: Control = $SlotsRoot
+@onready var active_overlay: Control = %ActiveOverlay
+
 var inventory_data: InventoryData
 
-# Configura a hotbar com os dados do inventário
+
 func setup(p_inventory_data: InventoryData) -> void:
 	inventory_data = p_inventory_data
 
-	# Desconecta sinais antigos para evitar duplicação caso setup seja chamado de novo
 	if inventory_data.inventory_updated.is_connected(update_slots):
 		inventory_data.inventory_updated.disconnect(update_slots)
 	if inventory_data.active_slot_changed.is_connected(update_selection):
 		inventory_data.active_slot_changed.disconnect(update_selection)
 
-	# Conecta os sinais para atualizar a hotbar quando o inventário mudar
 	inventory_data.inventory_updated.connect(update_slots)
 	inventory_data.active_slot_changed.connect(update_selection)
 
-	# Limpa slots antigos
 	for child in slots_root.get_children():
 		child.queue_free()
 
@@ -35,20 +34,33 @@ func setup(p_inventory_data: InventoryData) -> void:
 		slot_ui.show_background = false
 		slots_root.add_child(slot_ui)
 		slot_ui.setup(inventory_data, i)
+		# Posiciona sobre as células embutidas do sprite da barra
+		slot_ui.position = Vector2(FIRST_X + i * SLOT_PITCH, SLOT_Y)
+		slot_ui.custom_minimum_size = Vector2(SLOT_SIZE, SLOT_SIZE)
+		slot_ui.size = Vector2(SLOT_SIZE, SLOT_SIZE)
+		# Substitui o painel escuro padrão do modo show_background=false por um vazio
+		var empty := StyleBoxEmpty.new()
+		slot_ui.add_theme_stylebox_override("panel", empty)
+		slot_ui.add_theme_stylebox_override("hover", empty)
+		slot_ui.add_theme_stylebox_override("pressed", empty)
+		slot_ui.add_theme_stylebox_override("focus", empty)
+		slot_ui.add_theme_stylebox_override("disabled", empty)
+		# Esconde o highlight amarelo da SlotUI — usamos o overlay laranja do sprite
+		if slot_ui.has_node("HighlightRect"):
+			slot_ui.get_node("HighlightRect").visible = false
 
-	# Atualiza qual slot está selecionado atualmente
 	update_selection(inventory_data.active_slot_index)
 
-# Atualiza visualmente todos os slots da hotbar
+
 func update_slots() -> void:
 	for slot_ui in slots_root.get_children():
 		if is_instance_valid(slot_ui):
 			slot_ui.update_ui()
 
-# Atualiza o destaque visual do slot selecionado
+
 func update_selection(active_index: int) -> void:
-	var children = slots_root.get_children()
-	for i in range(children.size()):
-		var slot_ui = children[i] as SlotUI
-		if is_instance_valid(slot_ui):
-			slot_ui.set_active(i == active_index)
+	if active_index < 0 or active_index >= SLOT_COUNT:
+		active_overlay.visible = false
+		return
+	active_overlay.visible = true
+	active_overlay.position = Vector2(FIRST_X + active_index * SLOT_PITCH, SLOT_Y)

@@ -126,28 +126,25 @@ func _unhandled_input(event: InputEvent) -> void:
 		if event.button_index == MOUSE_BUTTON_WHEEL_UP:
 			var previous_slot = inventory_data.active_slot_index - 1
 			if previous_slot < 0:
-				previous_slot = 11
+				previous_slot = 8
 			inventory_data.active_slot_index = previous_slot
 			get_viewport().set_input_as_handled()
 		elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
-			var next_slot = (inventory_data.active_slot_index + 1) % 12
+			var next_slot = (inventory_data.active_slot_index + 1) % 9
 			inventory_data.active_slot_index = next_slot
 			get_viewport().set_input_as_handled()
 
 func handle_tool_switch() -> void:
 	if not inventory_data or is_using_tool:
 		return
-		
+
 	if Input.is_action_just_pressed("switch_tool"):
-		var next_slot = (inventory_data.active_slot_index + 1) % 12
+		var next_slot = (inventory_data.active_slot_index + 1) % 9
 		inventory_data.active_slot_index = next_slot
 		return
 
-	for iterator_index in range(12):
+	for iterator_index in range(9):
 		var key_code = KEY_1 + iterator_index
-		if iterator_index == 9: key_code = KEY_0
-		elif iterator_index == 10: key_code = KEY_MINUS
-		elif iterator_index == 11: key_code = KEY_EQUAL
 		
 		if Input.is_key_pressed(key_code):
 			inventory_data.active_slot_index = iterator_index

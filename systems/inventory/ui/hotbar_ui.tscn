@@ -1,44 +1,57 @@
-[gd_scene format=3 uid="uid://chotbarui123"]
+[gd_scene load_steps=4 format=3 uid="uid://chotbarui123"]
 
 [ext_resource type="Script" uid="uid://dmj7x31t7tqwf" path="res://systems/inventory/ui/hotbar_ui.gd" id="1_hotbar"]
+[ext_resource type="Texture2D" path="res://Farm RPG - Tiny Asset Pack - (All in One)/UI/Inventory/Slots.png" id="2_slots"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hotbar"]
-bg_color = Color(0.76, 0.52, 0.25, 1)
-border_width_left = 3
-border_width_top = 3
-border_width_right = 3
-border_width_bottom = 3
-border_color = Color(0.48, 0.24, 0.08, 1)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
+[sub_resource type="AtlasTexture" id="AtlasTexture_bar"]
+atlas = ExtResource("2_slots")
+region = Rect2(6, 201, 164, 28)
 
-[node name="HotbarUI" type="PanelContainer" unique_id=1611557422]
+[sub_resource type="AtlasTexture" id="AtlasTexture_active"]
+atlas = ExtResource("2_slots")
+region = Rect2(152, 7, 16, 16)
+
+[node name="HotbarUI" type="Control" unique_id=1611557422]
+custom_minimum_size = Vector2(164, 28)
 anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -80.0
-offset_top = -30.0
-offset_right = 80.0
+offset_left = -82.0
+offset_top = -32.0
+offset_right = 82.0
 offset_bottom = -4.0
 grow_horizontal = 2
 grow_vertical = 0
 mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_hotbar")
 script = ExtResource("1_hotbar")
 
-[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1934364967]
-layout_mode = 2
-theme_override_constants/margin_left = 4
-theme_override_constants/margin_top = 4
-theme_override_constants/margin_right = 4
-theme_override_constants/margin_bottom = 4
-
-[node name="SlotsRoot" type="HBoxContainer" parent="MarginContainer" unique_id=1461229366]
-layout_mode = 2
+[node name="Background" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+texture = SubResource("AtlasTexture_bar")
+stretch_mode = 0
 mouse_filter = 2
-theme_override_constants/separation = 2
-alignment = 1
+
+[node name="ActiveOverlay" type="ReferenceRect" parent="." unique_id=556677001]
+unique_name_in_owner = true
+visible = false
+layout_mode = 0
+offset_left = 5.0
+offset_top = 6.0
+offset_right = 21.0
+offset_bottom = 22.0
+border_color = Color(1, 0.95, 0.3, 1)
+border_width = 1.0
+editor_only = false
+mouse_filter = 2
+
+[node name="SlotsRoot" type="Control" parent="." unique_id=1461229366]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
