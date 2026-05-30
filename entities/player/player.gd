@@ -12,6 +12,9 @@ func _ready() -> void:
 		inventory_data = InventoryData.new()
 		inventory_data.setup_default_inventory()
 
+	# Configura os limites da câmera baseado no tamanho real do mapa
+	call_deferred("_setup_camera_limits")
+
 	# Register inventory in SaveManager and load if a save exists
 	if SaveManager:
 		SaveManager.setup(inventory_data)
@@ -119,6 +122,40 @@ func _update_lantern_energy(_delta: float) -> void:
 	
 	# Smoothly interpolate energy to feel organic
 	lantern.energy = lerp(lantern.energy, target_energy, 0.1)
+
+func _setup_camera_limits() -> void:
+	var camera = get_node_or_null("Camera2D") as Camera2D
+	if not camera:
+		return
+
+	# Pega qualquer TileMapLayer do grupo ground_layer para medir o mapa
+	var layers = get_tree().get_nodes_in_group("ground_layer")
+	if layers.is_empty():
+		return
+
+	var tilemap = layers[0] as TileMapLayer
+	if not tilemap:
+		return
+
+	var used = tilemap.get_used_rect() # Retorna Rect2i em coordenadas de tile
+	var tile_size = tilemap.tile_set.tile_size # Tamanho de cada tile em pixels
+	var padding = 16 # Margem extra em pixels
+
+	var map_left   = used.position.x * tile_size.x - padding
+	var map_top    = used.position.y * tile_size.y - padding
+	var map_right  = (used.position.x + used.size.x) * tile_size.x + padding
+	var map_bottom = (used.position.y + used.size.y) * tile_size.y + padding
+
+	# Metade da viewport (480x240) para evitar mostrar fora do mapa
+	var half_w = 240
+	var half_h = 120
+
+	camera.limit_left   = map_left   + half_w
+	camera.limit_top    = map_top    + half_h
+	camera.limit_right  = map_right  - half_w
+	camera.limit_bottom = map_bottom - half_h
+
+	print("Camera limits set: L=%d T=%d R=%d B=%d" % [camera.limit_left, camera.limit_top, camera.limit_right, camera.limit_bottom])
 
 func _unhandled_input(event: InputEvent) -> void:
 	# F5 para salvar o jogo
