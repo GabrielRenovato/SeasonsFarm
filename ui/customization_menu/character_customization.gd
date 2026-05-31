@@ -65,15 +65,15 @@ func _process(delta: float) -> void:
 		return
 	var viewport_w := get_viewport().get_visible_rect().size.x
 	for child in clouds_layer.get_children():
-		var tr := child as TextureRect
-		if tr == null:
+		var tex_rect := child as TextureRect
+		if tex_rect == null:
 			continue
-		var speed: float = CLOUD_SPEEDS.get(tr.name, 10.0)
-		var pos := tr.position
+		var speed: float = CLOUD_SPEEDS.get(tex_rect.name, 10.0)
+		var pos := tex_rect.position
 		pos.x += speed * delta
 		if pos.x > viewport_w:
-			pos.x = -tr.size.x
-		tr.position = pos
+			pos.x = -tex_rect.size.x
+		tex_rect.position = pos
 
 func _update_preview_frames() -> void:
 	body_preview.frame = 0

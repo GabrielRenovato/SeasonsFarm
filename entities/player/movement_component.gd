@@ -30,6 +30,10 @@ func stop_movement() -> void:
 	actor.move_and_slide()
 
 func handle_movement() -> void:
+	if FurnitureManager.is_edit_mode:
+		stop_movement()
+		return
+		
 	var input_direction: Vector2 = Input.get_vector("left", "right", "up", "down")
 	var carrying = tool_component != null and tool_component.is_carrying
 	

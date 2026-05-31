@@ -119,6 +119,7 @@ func update_target_preview(direction: Vector2) -> void:
 		debug_rect.global_position = dirt_layer.to_global(top_left_local)
 
 func _unhandled_input(event: InputEvent) -> void:
+	if FurnitureManager.is_edit_mode: return
 	if not inventory_data or is_using_tool:
 		return
 		
@@ -135,6 +136,7 @@ func _unhandled_input(event: InputEvent) -> void:
 			get_viewport().set_input_as_handled()
 
 func handle_tool_switch() -> void:
+	if FurnitureManager.is_edit_mode: return
 	if not inventory_data or is_using_tool:
 		return
 
@@ -188,6 +190,7 @@ func _hide_carry_sprite() -> void:
 	_carry_sprite.visible = false
 
 func handle_tool_use(direction: Vector2) -> void:
+	if FurnitureManager.is_edit_mode: return
 	_update_strict_direction(direction)
 	
 	if Input.is_action_just_pressed("use_tool") and not is_using_tool:

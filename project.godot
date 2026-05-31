@@ -23,6 +23,7 @@ FarmManager="*res://core/autoloads/farm_manager.gd"
 EconomyManager="*res://core/autoloads/economy_manager.gd"
 SaveManager="*res://core/autoloads/save_manager.gd"
 PlayerStatsManager="*res://core/autoloads/player_stats_manager.gd"
+FurnitureManager="*res://systems/furniture/furniture_manager.gd"
 
 [display]
 

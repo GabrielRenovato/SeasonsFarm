@@ -92,7 +92,7 @@ func update_ui() -> void:
 			quantity_label.set_value(slot_data.quantity)
 
 
-func _make_custom_tooltip(for_text: String) -> Object:
+func _make_custom_tooltip(_for_text: String) -> Object:
 	if slot_data == null or slot_data.item == null:
 		return null
 

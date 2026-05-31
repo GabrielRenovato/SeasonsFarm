@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://dhpemmjynawwr" path="res://assets/sprites/Character/PNG/1. Idle/Eyes/Male/Black.png" id="idle_eyes"]
 [ext_resource type="Texture2D" uid="uid://2ag76moho361" path="res://assets/sprites/Character/PNG/1. Idle/Hair's/Standard/Brown.png" id="idle_hair"]
 [ext_resource type="Texture2D" uid="uid://nmv8t50spdw1" path="res://assets/sprites/Character/PNG/1. Idle/Clothers/Farm/Blue.png" id="idle_cloth"]
-[ext_resource type="Script" uid="uid://dv34bfsddlfj" path="res://systems/inventory/ui/player_preview_ui.gd" id="script_preview"]
+[ext_resource type="Script" path="res://systems/inventory/ui/player_preview_ui.gd" id="script_preview"]
 
 [node name="PlayerPreviewUI" type="Control"]
 custom_minimum_size = Vector2(102, 75)
