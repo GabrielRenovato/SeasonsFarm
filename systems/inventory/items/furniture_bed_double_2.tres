@@ -20,4 +20,4 @@ icon_texture = SubResource("AtlasTexture_zzz")
 tier = "Wood"
 rarity = "common"
 is_furniture = true
-furniture_id = "bed_double_2"
+furniture_id = "bed_double_9"

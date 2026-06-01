@@ -29,6 +29,7 @@ func _ready() -> void:
 	# Create furniture container and UI
 	var furniture_container = Node2D.new()
 	furniture_container.name = "FurnitureContainer"
+	furniture_container.y_sort_enabled = true
 	add_child(furniture_container)
 	
 	var ui = FurnitureEditUIScene.instantiate()

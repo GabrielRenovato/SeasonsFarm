@@ -33,6 +33,7 @@ region = Rect2(144, 32, 16, 16)
 size = Vector2(32, 16)
 
 [node name="HouseInterior" type="Node2D" unique_id=697500310]
+y_sort_enabled = true
 position = Vector2(77, -4)
 script = ExtResource("1_ychun")
 

@@ -5,7 +5,7 @@
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_zzz"]
 atlas = ExtResource("2_yyy")
-region = Rect2(0, 64, 16, 32)
+region = Rect2(32, 192, 32, 32)
 
 [resource]
 script = ExtResource("1_xxx")
@@ -20,4 +20,4 @@ icon_texture = SubResource("AtlasTexture_zzz")
 tier = "Wood"
 rarity = "common"
 is_furniture = true
-furniture_id = "desk_3"
+furniture_id = "desk_98"

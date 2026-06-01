@@ -120,8 +120,8 @@ func _update_lantern_energy(_delta: float) -> void:
 	elif time >= 5.5 and time < 6.5:
 		target_energy = (1.0 - (time - 5.5)) * 0.95
 	
-	# Smoothly interpolate energy to feel organic
-	lantern.energy = lerp(lantern.energy, target_energy, 0.1)
+	# Interpolação suave independente de frame rate (speed = 5.0 ≈ 0.2s de fade)
+	lantern.energy = lerp(lantern.energy, target_energy, 1.0 - exp(-delta * 5.0))
 
 func _setup_camera_limits() -> void:
 	var camera = get_node_or_null("Camera2D") as Camera2D
