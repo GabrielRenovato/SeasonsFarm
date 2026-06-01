@@ -114,23 +114,28 @@ func update_target_preview(direction: Vector2) -> void:
 		
 	var target_map_position: Vector2i = _get_target_map_position()
 	
-	if debug_rect != null and dirt_layer != null and dirt_layer.tile_set != null:
-		var tile_size: Vector2i = dirt_layer.tile_set.tile_size
-		var local_center: Vector2 = dirt_layer.map_to_local(target_map_position)
-		var top_left_local: Vector2 = local_center - (Vector2(tile_size) / 2.0)
+	var active_layer: TileMapLayer = dirt_layer
+	if active_layer == null:
+		var scene = get_tree().current_scene
+		if scene:
+			var layers = scene.find_children("*", "TileMapLayer")
+			if layers.size() > 0:
+				active_layer = layers[0]
+				
+	var tile_size = Vector2(16, 16)
+	var global_snapped = Vector2(target_map_position.x * 16.0, target_map_position.y * 16.0)
+	
+	if active_layer != null and active_layer.tile_set != null:
+		tile_size = Vector2(active_layer.tile_set.tile_size)
+		var local_center = active_layer.map_to_local(target_map_position)
+		global_snapped = active_layer.to_global(local_center)
 		
-		debug_rect.size = Vector2(tile_size)
-		debug_rect.global_position = dirt_layer.to_global(top_left_local)
+	if debug_rect != null:
+		debug_rect.size = tile_size
+		debug_rect.global_position = global_snapped - (tile_size / 2.0)
 		
 	if current_furniture_ghost:
-		var parent = get_tree().current_scene
-		if parent.has_node("HouseInterior"):
-			var interior = parent.get_node("HouseInterior")
-			var local_pos = interior.map_to_local(target_map_position)
-			current_furniture_ghost.global_position = interior.to_global(local_pos)
-		else:
-			# Default behavior if not inside house (furniture shouldn't be placed outside usually, but for testing...)
-			current_furniture_ghost.global_position = debug_rect.global_position + (debug_rect.size / 2.0)
+		current_furniture_ghost.global_position = global_snapped
 
 func _unhandled_input(event: InputEvent) -> void:
 	if not inventory_data or is_using_tool:
@@ -174,7 +179,7 @@ func _on_slot_changed(_index: int) -> void:
 	if not inventory_data or is_using_tool:
 		return
 	var item = inventory_data.get_active_item()
-	var should_carry = item != null and not item.is_tool
+	var should_carry = item != null and not item.is_tool and not item.is_furniture
 	
 	_update_furniture_ghost(item)
 	
@@ -210,14 +215,14 @@ func _update_furniture_ghost(item: ItemData) -> void:
 			var item_data = FurnitureManager.catalog[item_id]
 			var tex = AtlasTexture.new()
 			tex.atlas = load(item_data["texture_path"])
-			current_furniture_ghost.set_texture(tex)
 			
 			var parent = get_tree().current_scene
 			if parent.has_node("FurnitureContainer"):
 				parent.get_node("FurnitureContainer").add_child(current_furniture_ghost)
 			else:
 				parent.add_child(current_furniture_ghost)
-			
+				
+			current_furniture_ghost.set_texture(tex)
 			current_furniture_ghost.update_visuals()
 
 func _show_carry_sprite(item: ItemData) -> void:
@@ -245,6 +250,8 @@ func handle_tool_use(direction: Vector2) -> void:
 		# If holding furniture, place it
 		if current_furniture_ghost and current_furniture_ghost.can_place:
 			current_furniture_ghost.place()
+			current_furniture_ghost = null
+			
 			var current_slot = inventory_data.slots[inventory_data.active_slot_index]
 			current_slot.quantity -= 1
 			if current_slot.quantity <= 0:
@@ -329,14 +336,26 @@ func _attempt_pickup_furniture() -> bool:
 	return false
 
 func _get_target_map_position() -> Vector2i:
-	if dirt_layer == null or dirt_layer.tile_set == null or grid_anchor == null:
+	if grid_anchor == null:
 		return Vector2i.ZERO
 		
-	var tile_size: Vector2i = dirt_layer.tile_set.tile_size
+	var active_layer: TileMapLayer = dirt_layer
+	if active_layer == null:
+		var scene = get_tree().current_scene
+		if scene:
+			var layers = scene.find_children("*", "TileMapLayer")
+			if layers.size() > 0:
+				active_layer = layers[0]
+				
+	if active_layer == null or active_layer.tile_set == null:
+		var global_pos = grid_anchor.global_position + strict_direction * 16.0
+		return Vector2i(round(global_pos.x / 16.0), round(global_pos.y / 16.0))
+		
+	var tile_size: Vector2i = active_layer.tile_set.tile_size
 	var offset_distance: Vector2 = Vector2(strict_direction.x * tile_size.x, strict_direction.y * tile_size.y)
 	var target_global_position: Vector2 = grid_anchor.global_position + offset_distance
 	
-	return dirt_layer.local_to_map(dirt_layer.to_local(target_global_position))
+	return active_layer.local_to_map(active_layer.to_local(target_global_position))
 
 func _hit_objects_in_direction(tool_name: String) -> void:
 	var space_state = actor.get_world_2d().direct_space_state

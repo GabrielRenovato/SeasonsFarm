@@ -93,28 +93,25 @@ func setup_default_inventory() -> void:
 		slots[slot_index].quantity = 99
 		slot_index += 1
 		
-	# Add test furniture
-	if slot_index < 36:
-		var chair = load("res://systems/inventory/items/furniture_chair_1.tres")
-		if chair:
-			slots[slot_index].item = chair
-			slots[slot_index].quantity = 1
-			slot_index += 1
-			
-	if slot_index < 36:
-		var bed = load("res://systems/inventory/items/furniture_bed_double_1.tres")
-		if bed:
-			slots[slot_index].item = bed
-			slots[slot_index].quantity = 1
-			slot_index += 1
-			
-	if slot_index < 36:
-		var desk = load("res://systems/inventory/items/furniture_desk_1.tres")
-		if desk:
-			slots[slot_index].item = desk
-			slots[slot_index].quantity = 1
-			slot_index += 1
+	# Add wooden test furniture
+	var wood_items = [
+		"res://systems/inventory/items/furniture_chair_2.tres",
+		"res://systems/inventory/items/furniture_chair_3.tres",
+		"res://systems/inventory/items/furniture_chair_4.tres",
+		"res://systems/inventory/items/furniture_bed_single_1.tres",
+		"res://systems/inventory/items/furniture_bed_double_2.tres",
+		"res://systems/inventory/items/furniture_desk_2.tres",
+		"res://systems/inventory/items/furniture_desk_3.tres"
+	]
 	
+	for path in wood_items:
+		if slot_index < 36:
+			var item = load(path)
+			if item:
+				slots[slot_index].item = item
+				slots[slot_index].quantity = 5 # 5 of each for testing
+				slot_index += 1
+				
 	inventory_updated.emit()
 
 ## Retorna o icone correto de ferramenta baseado no tipo e tier.

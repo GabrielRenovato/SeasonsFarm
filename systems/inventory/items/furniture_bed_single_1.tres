@@ -1,16 +1,16 @@
 [gd_resource type="Resource" script_class="ItemData" load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://systems/inventory/item_data.gd" id="1_xxx"]
-[ext_resource type="Texture2D" path="res://Farm RPG - Tiny Asset Pack - (All in One)/Objects/Interior/Chairs.png" id="2_yyy"]
+[ext_resource type="Texture2D" path="res://Farm RPG - Tiny Asset Pack - (All in One)/Objects/Interior/Beds.png" id="2_yyy"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_zzz"]
 atlas = ExtResource("2_yyy")
-region = Rect2(0, 0, 16, 32)
+region = Rect2(0, 0, 32, 48)
 
 [resource]
 script = ExtResource("1_xxx")
-id = "furniture_chair_1"
-name = "Red Chair"
+id = "furniture_bed_single_1"
+name = "Wooden Bed"
 is_tool = false
 tool_type = ""
 is_seed = false
@@ -20,4 +20,4 @@ icon_texture = SubResource("AtlasTexture_zzz")
 tier = "Wood"
 rarity = "common"
 is_furniture = true
-furniture_id = "chair_1"
+furniture_id = "bed_single_1"
