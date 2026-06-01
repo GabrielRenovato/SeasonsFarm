@@ -24,6 +24,9 @@ EconomyManager="*res://core/autoloads/economy_manager.gd"
 SaveManager="*res://core/autoloads/save_manager.gd"
 PlayerStatsManager="*res://core/autoloads/player_stats_manager.gd"
 FurnitureManager="*res://systems/furniture/furniture_manager.gd"
+MCPScreenshot="*res://addons/godot_mcp/mcp_screenshot_service.gd"
+MCPInputService="*res://addons/godot_mcp/mcp_input_service.gd"
+MCPGameInspector="*res://addons/godot_mcp/mcp_game_inspector_service.gd"
 
 [display]
 
@@ -37,7 +40,7 @@ window/stretch/scale_mode="integer"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/claude_3.5_sonnet_chat_api/plugin.cfg")
+enabled=PackedStringArray("res://addons/claude_3.5_sonnet_chat_api/plugin.cfg", "res://addons/godot_mcp/plugin.cfg")
 
 [global_group]
 

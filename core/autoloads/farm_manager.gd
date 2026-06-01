@@ -1,7 +1,13 @@
 extends Node
 
-# Global Signals
-signal soil_changed(pos: Vector2i, data: Dictionary)
+class FarmTileData:
+	var tilled: bool = false
+	var watered: bool = false
+	var crop_id: String = ""
+	var days_grown: int = 0
+	var crop_node: Node2D = null
+
+signal soil_changed(pos: Vector2i, data: FarmTileData)
 signal crop_planted(pos: Vector2i, crop_id: String)
 signal crop_harvested(pos: Vector2i, crop_id: String)
 
@@ -67,14 +73,14 @@ const CROP_CONFIGS = {
 
 }
 
-# State: Dict of Vector2i -> Dict
-# Dict keys:
-# - "tilled": bool
-# - "watered": bool
-# - "crop_id": String ("" if empty)
-# - "days_grown": int
-# - "crop_node": Node2D
-var farm_data: Dictionary = {}
+## Chance de um tile arado vazio secar e reverter para terra comum a cada dia
+@export_range(0.0, 1.0, 0.01) var dry_revert_chance: float = 0.1
+
+var farm_data: Dictionary = {}  # Vector2i → FarmTileData
+
+# Objetos do ambiente (árvores, pedras, tocos) — persiste entre recargas de cena na mesma sessão
+var env_objects: Array[Dictionary] = []
+var _next_env_id: int = 0
 
 var dirt_layer: TileMapLayer
 var seed_layer: TileMapLayer
@@ -88,19 +94,19 @@ func _ready() -> void:
 		push_error("FarmManager: TimeManager autoload not found!")
 
 func _find_dirt_layer() -> void:
-	dirt_layer = get_tree().get_first_node_in_group("dirt_layer") as TileMapLayer
-	if dirt_layer == null:
-		push_warning("FarmManager: dirt_layer not found in group!")
-		return
-		
-	if seed_layer == null:
-		# Cria a SeedLayer dinamicamente para desenhar as covas de semente (8,9) por cima do solo arado
+	# Só re-busca na scene tree se a referência atual for inválida (cena trocada)
+	if not is_instance_valid(dirt_layer):
+		dirt_layer = get_tree().get_first_node_in_group("dirt_layer") as TileMapLayer
+		if dirt_layer == null:
+			push_warning("FarmManager: dirt_layer not found in group!")
+			return
+
+	if not is_instance_valid(seed_layer):
 		seed_layer = TileMapLayer.new()
 		seed_layer.name = "SeedLayer"
 		seed_layer.tile_set = dirt_layer.tile_set
 		seed_layer.y_sort_enabled = false
 		seed_layer.z_index = -1
-		# Adiciona como irmã da dirt_layer (logo acima dela na árvore para garantir o desenho sobreposto)
 		dirt_layer.get_parent().add_child.call_deferred(seed_layer)
 		print("FarmManager: SeedLayer dynamically created.")
 
@@ -111,15 +117,11 @@ func till_soil(pos: Vector2i) -> bool:
 		
 	# Can only till if not already tilled
 	if not farm_data.has(pos):
-		farm_data[pos] = {
-			"tilled": true,
-			"watered": false,
-			"crop_id": "",
-			"days_grown": 0,
-			"crop_node": null
-		}
+		var tile := FarmTileData.new()
+		tile.tilled = true
+		farm_data[pos] = tile
 		_update_tile_and_neighbors(pos)
-		emit_signal("soil_changed", pos, farm_data[pos])
+		soil_changed.emit(pos, farm_data[pos])
 		print("FarmManager: Tilled soil at ", pos)
 		return true
 	return false
@@ -128,11 +130,11 @@ func water_soil(pos: Vector2i) -> bool:
 	_find_dirt_layer()
 	if dirt_layer == null:
 		return false
-		
+
 	if farm_data.has(pos) and farm_data[pos].tilled:
 		farm_data[pos].watered = true
 		_update_tile_and_neighbors(pos)
-		emit_signal("soil_changed", pos, farm_data[pos])
+		soil_changed.emit(pos, farm_data[pos])
 		print("FarmManager: Watered soil at ", pos)
 		return true
 	print("FarmManager: Failed to water soil at ", pos, ". Tilled = ", farm_data.has(pos))
@@ -152,8 +154,8 @@ func plant_seed(pos: Vector2i, crop_id: String, crop_node: Node2D) -> bool:
 			var config = CROP_CONFIGS.get(crop_id, {"texture_path": "", "stages": 7, "frame_size": 16, "frame_map": []})
 			crop_node.setup_crop(crop_id, config.texture_path, config.frame_size, config.stages, config.get("frame_map", []), 0, pos)
 			
-		emit_signal("crop_planted", pos, crop_id)
-		emit_signal("soil_changed", pos, farm_data[pos])
+		crop_planted.emit(pos, crop_id)
+		soil_changed.emit(pos, farm_data[pos])
 		print("FarmManager: Planted seed ", crop_id, " at ", pos)
 		return true
 	print("FarmManager: Failed to plant seed ", crop_id, " at ", pos)
@@ -176,8 +178,8 @@ func harvest_crop(pos: Vector2i) -> String:
 			
 			_update_tile_and_neighbors(pos)
 			
-			emit_signal("crop_harvested", pos, crop_id)
-			emit_signal("soil_changed", pos, farm_data[pos])
+			crop_harvested.emit(pos, crop_id)
+			soil_changed.emit(pos, farm_data[pos])
 			print("FarmManager: Harvested ", crop_id, " from ", pos)
 			return crop_id
 	return ""
@@ -270,7 +272,7 @@ func _on_day_changed(day: int) -> void:
 			else:
 				# Solo seco! Se não houver planta, tem 50% de chance de reverter para terra comum
 				if data.crop_id == "":
-					if randf() < 0.1:
+					if randf() < dry_revert_chance:
 						# Reverte terra arada (limpa a célula na dirt_layer e na seed_layer)
 						farm_data.erase(pos)
 						_update_tile_and_neighbors(pos)
@@ -278,5 +280,25 @@ func _on_day_changed(day: int) -> void:
 						continue
 				else:
 					print("FarmManager: Crop ", data.crop_id, " at ", pos, " did not grow because soil is dry.")
-			
-			emit_signal("soil_changed", pos, farm_data[pos])
+
+			soil_changed.emit(pos, farm_data[pos])
+
+# ---- Gestão do ambiente (árvores, pedras, tocos) ----
+
+func register_env_object(scene_path: String, pos: Vector2, stage: int) -> int:
+	var id := _next_env_id
+	_next_env_id += 1
+	env_objects.append({"scene_path": scene_path, "pos": pos, "stage": stage, "id": id})
+	return id
+
+func remove_env_object(id: int) -> void:
+	for i in env_objects.size():
+		if env_objects[i]["id"] == id:
+			env_objects.remove_at(i)
+			return
+
+func update_env_stage(id: int, stage: int) -> void:
+	for entry in env_objects:
+		if entry["id"] == id:
+			entry["stage"] = stage
+			return

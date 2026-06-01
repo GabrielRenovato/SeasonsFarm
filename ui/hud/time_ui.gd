@@ -4,7 +4,7 @@ extends CanvasLayer
 
 func _ready() -> void:
 	if TimeManager:
-		TimeManager.connect("time_changed", _on_time_changed)
+		TimeManager.time_changed.connect(_on_time_changed)
 		# Set initial time
 		_update_time_display(TimeManager.day, TimeManager.hour, TimeManager.minute)
 

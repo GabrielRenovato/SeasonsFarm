@@ -17,15 +17,19 @@ signal furniture_picked_up(item: Node2D)
 # In a real game, this could be loaded from a Resource or JSON
 var catalog: Dictionary = {}
 
+# Liga/desliga TODO o sistema de móveis: itens no inventário, colocar, sentar e
+# carregar móveis na casa. Desligado temporariamente.
+# Para reativar a mobília mais tarde, basta voltar para `true`.
+var enabled: bool = false
+
 var is_edit_mode: bool = false:
 	set(value):
 		is_edit_mode = value
 		edit_mode_changed.emit(is_edit_mode)
 
 func _ready() -> void:
-	var catalog_script = preload("res://systems/furniture/furniture_catalog_data.gd").new()
+	var catalog_script := preload("res://systems/furniture/furniture_catalog_data.gd").new()
 	catalog = catalog_script.data
-	catalog_script.free()
 	
 	load_furniture_data()
 

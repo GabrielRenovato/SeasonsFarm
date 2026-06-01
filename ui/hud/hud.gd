@@ -30,7 +30,7 @@ func _ready() -> void:
 	
 	# Se o sistema de tempo (TimeManager) existir, conecta seus sinais
 	if TimeManager:
-		TimeManager.connect("time_changed", _on_time_changed)
+		TimeManager.time_changed.connect(_on_time_changed)
 		# Define o horário inicial logo que o jogo começa
 		_update_time_display(TimeManager.day, TimeManager.hour, TimeManager.minute)
 	
@@ -46,7 +46,7 @@ func _ready() -> void:
 
 # Cria os labels para cada casa decimal do ouro — as células visuais já vêm do sprite do panel
 func _setup_gold_digits() -> void:
-	var pixel_font := load("res://assets/fonts/Silkscreen-Regular.ttf") as Font
+	var pixel_font := preload("res://assets/fonts/Silkscreen-Regular.ttf") as Font
 	for i in range(max_digits):
 		var label = Label.new()
 		label.text = ""

@@ -3,6 +3,7 @@ extends Node
 const SAVE_PATH = "user://savegame.json"
 
 var _inventory_data: InventoryData = null
+var _session_loaded: bool = false
 
 signal save_completed
 signal load_completed(success: bool)
@@ -18,8 +19,8 @@ func save_game() -> void:
 	var data: Dictionary = {
 		"gold": EconomyManager.gold,
 		"day": TimeManager.day,
-		"energy": PlayerStatsManager.energy if PlayerStatsManager else 100.0,
-		"max_energy": PlayerStatsManager.max_energy if PlayerStatsManager else 100.0,
+		"energy": PlayerStatsManager.energy if PlayerStatsManager else 270.0,
+		"max_energy": PlayerStatsManager.max_energy if PlayerStatsManager else 270.0,
 		"inventory": _serialize_inventory(),
 		"farm": _serialize_farm(),
 	}
@@ -37,6 +38,10 @@ func has_save() -> bool:
 	return FileAccess.file_exists(SAVE_PATH)
 
 func load_game() -> void:
+	# Evita recarregar quando o Player é reinstanciado em outras cenas (ex: interior da casa)
+	if _session_loaded:
+		load_completed.emit(true)
+		return
 	if not has_save():
 		load_completed.emit(false)
 		return
@@ -64,12 +69,13 @@ func load_game() -> void:
 	EconomyManager.gold_changed.emit(EconomyManager.gold)
 	TimeManager.day = int(data.get("day", 1))
 	if PlayerStatsManager:
-		PlayerStatsManager.max_energy = float(data.get("max_energy", 100.0))
+		PlayerStatsManager.max_energy = float(data.get("max_energy", 270.0))
 		PlayerStatsManager.energy = float(data.get("energy", PlayerStatsManager.max_energy))
 		PlayerStatsManager.energy_changed.emit(PlayerStatsManager.energy, PlayerStatsManager.max_energy)
 
 	_deserialize_inventory(data.get("inventory", []))
 	# Farm restore needs the scene tree ready — defer so FarmManager can find dirt_layer
+	_session_loaded = true
 	call_deferred("_deserialize_farm", data.get("farm", []))
 
 	print("SaveManager: game loaded.")
@@ -92,6 +98,8 @@ func _serialize_inventory() -> Array:
 			"tool_type": slot.item.tool_type,
 			"is_seed": slot.item.is_seed,
 			"crop_type": slot.item.crop_type,
+			"is_furniture": slot.item.is_furniture,
+			"furniture_id": slot.item.furniture_id,
 			"tier": slot.item.tier,
 			"name": slot.item.name,
 		})
@@ -100,16 +108,16 @@ func _serialize_inventory() -> Array:
 func _serialize_farm() -> Array:
 	var result: Array = []
 	for pos in FarmManager.farm_data.keys():
-		var d: Dictionary = FarmManager.farm_data[pos]
-		if not d.get("tilled", false) and d.get("crop_id", "") == "":
+		var d = FarmManager.farm_data[pos]
+		if not d.tilled and d.crop_id == "":
 			continue
 		result.append({
 			"x": pos.x,
 			"y": pos.y,
-			"tilled": d.get("tilled", false),
-			"watered": d.get("watered", false),
-			"crop_id": d.get("crop_id", ""),
-			"days_grown": d.get("days_grown", 0),
+			"tilled": d.tilled,
+			"watered": d.watered,
+			"crop_id": d.crop_id,
+			"days_grown": d.days_grown,
 		})
 	return result
 
@@ -136,15 +144,34 @@ func _deserialize_inventory(slots_data: Array) -> void:
 		item.tool_type = entry.get("tool_type", "")
 		item.is_seed = entry.get("is_seed", false)
 		item.crop_type = entry.get("crop_type", "")
+		item.is_furniture = entry.get("is_furniture", false)
+		item.furniture_id = entry.get("furniture_id", "")
 		item.tier = entry.get("tier", "Wood")
+		
+		# Fallback for old saves that didn't save furniture_id
+		if not item.is_furniture and item.id.begins_with("furniture_"):
+			item.is_furniture = true
+			item.furniture_id = item.id.replace("furniture_", "")
+
+		# Sistema de móveis desativado: ignora itens de mobília ao carregar
+		if item.is_furniture and not FurnitureManager.enabled:
+			continue
 
 		# Restore icon
 		if item.is_tool:
-			item.icon_texture = inv_ui_helper._get_tool_icon(item.tool_type, item.tier)
+			var tool_name = item.name if item.name != "" else item.id.capitalize()
+			item.icon_texture = inv_ui_helper._get_tool_icon(tool_name, item.tier)
 		elif item.is_seed:
 			var cfg = FarmManager.CROP_CONFIGS.get(item.crop_type, {})
 			if not cfg.is_empty():
 				item.icon_texture = inv_ui_helper._get_seed_bag_icon(cfg.get("seed_x", 0), cfg.get("seed_y", 0))
+		elif item.is_furniture:
+			if FurnitureManager.catalog.has(item.furniture_id):
+				var fdata = FurnitureManager.catalog[item.furniture_id]
+				var tex = AtlasTexture.new()
+				tex.atlas = load(fdata["texture_path"])
+				tex.region = fdata["regions"][0]
+				item.icon_texture = tex
 		else:
 			# Harvested crop — ícone do All Crops.png (mesmo offset do seed, +2/3/4 por raridade)
 			var cfg = FarmManager.CROP_CONFIGS.get(item.id, {})
@@ -179,6 +206,9 @@ func _deserialize_inventory(slots_data: Array) -> void:
 	_inventory_data.inventory_updated.emit()
 
 func _deserialize_farm(farm_data: Array) -> void:
+	# Limpa entradas antigas para garantir estado limpo ao recarregar a cena da fazenda
+	FarmManager.farm_data.clear()
+
 	var dirt_layer := get_tree().get_first_node_in_group("dirt_layer") as TileMapLayer
 	if dirt_layer == null:
 		push_error("SaveManager: cannot restore farm — dirt_layer not found.")

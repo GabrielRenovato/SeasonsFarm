@@ -90,6 +90,8 @@ func _break() -> void:
 	if is_breaking:
 		return
 	is_breaking = true
+	if has_meta("env_id"):
+		FarmManager.remove_env_object(get_meta("env_id"))
 
 	if _active_shake_tween and _active_shake_tween.is_valid():
 		_active_shake_tween.kill()

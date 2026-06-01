@@ -1,5 +1,7 @@
 extends Node2D
 
+const DAY_NIGHT_SCRIPT = preload("res://levels/main_farm/day_night_cycle.gd")
+
 @export var tree_scene: PackedScene
 @export var stump_scene: PackedScene
 
@@ -18,6 +20,9 @@ var tree_variations: Array[PackedScene] = [
 ]
 
 @export var rock_scene: PackedScene = preload("res://objects/rock/rock.tscn")
+
+# Lookup preloaded scenes by path para evitar load() em loop no restore
+var _scene_lookup: Dictionary = {}
 
 @export_group("Procedural Generation")
 @export var spawn_trees: bool = true
@@ -43,22 +48,31 @@ var tree_variations: Array[PackedScene] = [
 @onready var ground_layer: TileMapLayer = $GroundLayer
 
 func _ready() -> void:
+	# Build lookup de cenas já preloaded para evitar load() em loop
+	for s in tree_variations:
+		_scene_lookup[s.resource_path] = s
+	for s in stump_variations:
+		_scene_lookup[s.resource_path] = s
+	if rock_scene:
+		_scene_lookup[rock_scene.resource_path] = rock_scene
+
 	# Clean up SpawnLayer if it exists in the scene
 	if has_node("SpawnLayer"):
 		$SpawnLayer.queue_free()
-		
-	if spawn_trees or spawn_stumps:
+
+	print("MapManager _ready: env_objects tem ", FarmManager.env_objects.size(), " objetos")
+	if not FarmManager.env_objects.is_empty():
+		_restore_environment()
+	elif spawn_trees or spawn_stumps:
 		generate_environment_procedurally()
 
 	# Dynamic Day/Night Cycle CanvasModulate
-	var day_night_script = load("res://levels/main_farm/day_night_cycle.gd")
-	if day_night_script:
-		var canvas_modulate = CanvasModulate.new()
-		canvas_modulate.set_script(day_night_script)
-		canvas_modulate.name = "DayNightCycle"
-		add_child(canvas_modulate)
+	var canvas_modulate = CanvasModulate.new()
+	canvas_modulate.set_script(DAY_NIGHT_SCRIPT)
+	canvas_modulate.name = "DayNightCycle"
+	add_child(canvas_modulate)
 
-	if TimeManager.has_signal("day_changed"):
+	if not TimeManager.day_changed.is_connected(_on_day_changed):
 		TimeManager.day_changed.connect(_on_day_changed)
 
 
@@ -137,8 +151,9 @@ func generate_environment_procedurally() -> void:
 						break
 				
 				if not too_close:
-					var new_tree = tree_variations.pick_random().instantiate() if not tree_variations.is_empty() else tree_scene.instantiate()
-					
+					var chosen_tree_scene = tree_variations.pick_random() if not tree_variations.is_empty() else tree_scene
+					var new_tree = chosen_tree_scene.instantiate()
+
 					# Randomize growth stage (more likely to be FULL)
 					var rand_val = randf()
 					if rand_val < 0.1:
@@ -151,9 +166,11 @@ func generate_environment_procedurally() -> void:
 						new_tree.current_stage = 3 # SMALL
 					else:
 						new_tree.current_stage = 4 # FULL
-						
+
 					new_tree.global_position = world_position + Vector2(0, 8)
 					add_child(new_tree)
+					var env_id = FarmManager.register_env_object(chosen_tree_scene.resource_path, new_tree.global_position, new_tree.current_stage)
+					new_tree.set_meta("env_id", env_id)
 
 					spawned_positions.append(world_position)
 					spawned_trees_count += 1
@@ -171,6 +188,8 @@ func generate_environment_procedurally() -> void:
 				var new_rock = rock_scene.instantiate()
 				new_rock.global_position = world_position
 				add_child(new_rock)
+				var env_id = FarmManager.register_env_object(rock_scene.resource_path, world_position, -1)
+				new_rock.set_meta("env_id", env_id)
 				spawned_positions.append(world_position)
 				spawned_rocks_count += 1
 				continue # Skip stump check if rock is spawned
@@ -185,9 +204,12 @@ func generate_environment_procedurally() -> void:
 						break
 				
 				if not too_close:
-					var new_stump = stump_variations.pick_random().instantiate() if not stump_variations.is_empty() else stump_scene.instantiate()
+					var chosen_stump_scene = stump_variations.pick_random() if not stump_variations.is_empty() else stump_scene
+					var new_stump = chosen_stump_scene.instantiate()
 					new_stump.global_position = world_position
 					add_child(new_stump)
+					var env_id = FarmManager.register_env_object(chosen_stump_scene.resource_path, world_position, -1)
+					new_stump.set_meta("env_id", env_id)
 					spawned_positions.append(world_position)
 					spawned_stumps_count += 1
 				
@@ -210,6 +232,8 @@ func _on_day_changed(_day: int) -> void:
 			if randf() <= 0.2:
 				tree.current_stage += 1
 				tree._update_appearance()
+				if tree.has_meta("env_id"):
+					FarmManager.update_env_stage(tree.get_meta("env_id"), tree.current_stage)
 		else:
 			# Fully grown trees spread seeds only if we are below population limit (max 100 trees)
 			# 2% spread chance per day prevents rapid overpopulation
@@ -269,6 +293,8 @@ func _spawn_random_wild_seed() -> void:
 			new_tree.current_stage = 0 # GrowthStage.SEED
 			new_tree.global_position = world_position + Vector2(0, 8)
 			add_child(new_tree)
+			var env_id = FarmManager.register_env_object(random_tree_scene.resource_path, new_tree.global_position, 0)
+			new_tree.set_meta("env_id", env_id)
 			print("MapManager: Spawned new wild seed of type ", random_tree_scene.resource_path, " at ", world_position)
 			break
 
@@ -308,5 +334,25 @@ func _spawn_random_rock() -> void:
 			var new_rock = rock_scene.instantiate()
 			new_rock.global_position = world_position
 			add_child(new_rock)
+			var env_id = FarmManager.register_env_object(rock_scene.resource_path, world_position, -1)
+			new_rock.set_meta("env_id", env_id)
 			print("MapManager: Spawned new rock at ", world_position)
 			break
+
+func _restore_environment() -> void:
+	for entry in FarmManager.env_objects:
+		var path: String = entry["scene_path"]
+		var scene: PackedScene = _scene_lookup.get(path)
+		if scene == null:
+			scene = load(path)
+			if scene:
+				_scene_lookup[path] = scene
+		if not scene:
+			continue
+		var obj = scene.instantiate()
+		obj.set_meta("env_id", entry["id"])
+		if "current_stage" in obj and entry["stage"] >= 0:
+			obj.current_stage = entry["stage"]
+		add_child(obj)
+		obj.global_position = entry["pos"]
+	print("MapManager: Restaurados ", FarmManager.env_objects.size(), " objetos do cache de sessão.")

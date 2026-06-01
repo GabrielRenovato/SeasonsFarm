@@ -33,7 +33,9 @@ func _ready() -> void:
 	
 
 	# Load existing furniture
-	_load_existing_furniture(furniture_container)
+	# Mobília desativada temporariamente (FurnitureManager.enabled)
+	if FurnitureManager.enabled:
+		_load_existing_furniture(furniture_container)
 
 func _load_existing_furniture(container: Node2D) -> void:
 	for id in FurnitureManager.placed_furniture:

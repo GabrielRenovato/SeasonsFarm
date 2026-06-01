@@ -111,4 +111,7 @@ func _open_door() -> void:
 	# Anima a abertura da porta e aguarda terminar antes de trocar de cena
 	animation_player.play("open_door")
 	await animation_player.animation_finished
+	# Auto-save ao entrar na casa para preservar plantações, inventário e estado do solo
+	if SaveManager:
+		SaveManager.save_game()
 	get_tree().change_scene_to_packed(interior_scene)

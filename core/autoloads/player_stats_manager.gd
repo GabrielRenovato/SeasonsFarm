@@ -3,8 +3,9 @@ extends Node
 signal energy_changed(current_energy: float, max_energy: float)
 signal energy_exhausted()
 
-var max_energy: float = 100.0
-var energy: float = 100.0
+@export var max_energy: float = 270.0 ## Energia maxima do jogador (Stardew Valley usa 270)
+@export var tool_energy_cost: float = 2.0 ## Custo de energia por uso de ferramenta
+var energy: float = 270.0
 
 func _ready() -> void:
 	energy = max_energy

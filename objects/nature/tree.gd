@@ -125,6 +125,8 @@ func _die() -> void:
 	if is_dying:
 		return
 	is_dying = true
+	if has_meta("env_id"):
+		FarmManager.remove_env_object(get_meta("env_id"))
 	
 	# Cancela as animações de hit para não atrapalhar a animação de queda
 	animation_player.stop()
@@ -276,4 +278,6 @@ func _spread_seed() -> void:
 			new_seed.current_stage = GrowthStage.SEED
 			new_seed.global_position = spawn_pos
 			parent.add_child(new_seed)
+			var env_id = FarmManager.register_env_object(scene_file_path, spawn_pos, GrowthStage.SEED)
+			new_seed.set_meta("env_id", env_id)
 			print("Tree spread seed of type ", scene_file_path, " to position ", spawn_pos)

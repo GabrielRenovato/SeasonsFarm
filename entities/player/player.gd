@@ -63,6 +63,13 @@ func _process(delta: float) -> void:
 	_update_lantern_energy(delta)
 
 func _physics_process(_delta: float) -> void:
+	# Enquanto sentado, só processamos movimento: qualquer input de direção
+	# faz o player levantar (ver MovementComponent.handle_movement). Pular o
+	# ToolComponent evita disparar ferramentas / re-sentar enquanto sentado.
+	if movement_component.is_sitting:
+		movement_component.handle_movement()
+		return
+
 	tool_component.update_target_preview(movement_component.last_direction)
 	tool_component.handle_tool_switch()
 	tool_component.handle_tool_use(movement_component.last_direction)
@@ -71,11 +78,28 @@ func _physics_process(_delta: float) -> void:
 		movement_component.stop_movement()
 	else:
 		movement_component.handle_movement()
-		
+
 	_handle_dust_particles()
 
 var current_chair: Node2D = null
 var current_sit_direction: String = ""
+
+# Direção (string) -> vetor unitário, para manter last_direction coerente
+const SIT_DIR_VECTORS := {
+	"down": Vector2.DOWN,
+	"up": Vector2.UP,
+	"right": Vector2.RIGHT,
+	"left": Vector2.LEFT,
+}
+
+# Offset do player em relação ao CENTRO da cadeira ao sentar (calibrado).
+# Lembre que o sprite Body fica em (0,-10) do player.
+const SIT_OFFSETS := {
+	"down": Vector2(0, 8),
+	"up": Vector2(0, 6),
+	"right": Vector2(1, 8),
+	"left": Vector2(-1, 8),
+}
 
 func sit_down(chair: Node2D, direction: String) -> void:
 	if movement_component.is_sitting:
@@ -84,20 +108,20 @@ func sit_down(chair: Node2D, direction: String) -> void:
 	current_chair = chair
 	current_sit_direction = direction
 
-	var offset_pos = Vector2(0, 19)
-	match direction:
-		"right": offset_pos = Vector2(3, 19)
-		"left":  offset_pos = Vector2(-3, 19)
-		"up":    offset_pos = Vector2(0, 17)
-
-	global_position = chair.global_position + offset_pos
+	# Posiciona o player sobre o assento
+	global_position = chair.global_position + SIT_OFFSETS.get(direction, Vector2(0, 6))
 	velocity = Vector2.ZERO
-	movement_component.stop_movement()
 
-	# Player fica atrás do encosto em todas as direções exceto frente
-	match direction:
-		"up", "left", "right": z_index = -1
-		_: z_index = 0
+	# Ordenação: o player fica sempre em z_index 0 (acima do piso, nunca some).
+	# Para down/right/left o Y-sort já desenha o player na frente do encosto.
+	# Para "up" (de costas), o encosto deve cobrir o corpo: elevamos o z_index
+	# DA CADEIRA para que ela desenhe por cima, deixando só a cabeça à mostra.
+	z_index = 0
+	if direction == "up":
+		chair.z_index = 1
+
+	# Mantém a direção coerente para quando levantar
+	movement_component.last_direction = SIT_DIR_VECTORS.get(direction, Vector2.DOWN)
 
 	$AnimationTree.active = false
 	$AnimationPlayer.play("sit_" + direction)
@@ -108,17 +132,11 @@ func stand_up() -> void:
 	movement_component.is_sitting = false
 	$AnimationTree.active = true
 	z_index = 0
-
-	# Posiciona o player à frente da cadeira baseado na direção
+	# Restaura o z_index da cadeira (caso tenha sido elevado no sit "up").
 	if current_chair and is_instance_valid(current_chair):
-		var exit := Vector2.ZERO
-		match current_sit_direction:
-			"down":  exit = Vector2(0, 18)
-			"up":    exit = Vector2(0, -18)
-			"right": exit = Vector2(18, 0)
-			"left":  exit = Vector2(-18, 0)
-		global_position = current_chair.global_position + exit
-
+		current_chair.z_index = 0
+	# O player levanta na própria posição do assento (fora da colisão da cadeira)
+	# e o MovementComponent já o coloca em movimento no mesmo frame.
 	current_chair = null
 	current_sit_direction = ""
 

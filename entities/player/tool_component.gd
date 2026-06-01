@@ -198,6 +198,8 @@ func _on_slot_changed(_index: int) -> void:
 		_show_carry_sprite(item)
 
 func _update_furniture_ghost(item: ItemData) -> void:
+	if not FurnitureManager.enabled:
+		return
 	if current_furniture_ghost:
 		current_furniture_ghost.queue_free()
 		current_furniture_ghost = null
@@ -270,7 +272,7 @@ func handle_tool_use(direction: Vector2) -> void:
 					if PlayerStatsManager and PlayerStatsManager.energy <= 0:
 						return
 					if PlayerStatsManager:
-						PlayerStatsManager.consume_energy(2.0)
+						PlayerStatsManager.consume_energy(PlayerStatsManager.tool_energy_cost)
 					is_using_tool = true
 					_active_tool_in_use = "Harvest"
 					_pending_target_map_position = target_map_position
@@ -284,7 +286,7 @@ func handle_tool_use(direction: Vector2) -> void:
 			if PlayerStatsManager and PlayerStatsManager.energy <= 0:
 				return
 			if PlayerStatsManager:
-				PlayerStatsManager.consume_energy(2.0)
+				PlayerStatsManager.consume_energy(PlayerStatsManager.tool_energy_cost)
 			is_using_tool = true
 			_active_tool_in_use = tool_name
 			_pending_hit_direction = strict_direction
@@ -297,6 +299,8 @@ func handle_tool_use(direction: Vector2) -> void:
 			_attempt_planting()
 
 func _attempt_pickup_furniture() -> bool:
+	if not FurnitureManager.enabled:
+		return false
 	var space_state = actor.get_world_2d().direct_space_state
 	var hit_origin: Vector2 = actor.global_position + strict_direction * (axe_reach + 8.0)
 	var shape_circle = CircleShape2D.new()

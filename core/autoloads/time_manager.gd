@@ -44,8 +44,8 @@ func _advance_to_next_day() -> void:
 	if PlayerStatsManager:
 		PlayerStatsManager.restore_full_energy()
 	print("TimeManager: Press 'T' - Advancing immediately to next day: ", day, " Season: ", current_season, " Year: ", year)
-	emit_signal("day_changed", day)
-	emit_signal("time_changed", day, hour, minute)
+	day_changed.emit(day)
+	time_changed.emit(day, hour, minute)
 
 func _add_minute() -> void:
 	minute += 1
@@ -62,10 +62,10 @@ func _add_minute() -> void:
 		time_accumulator = 0.0
 		if PlayerStatsManager:
 			PlayerStatsManager.restore_full_energy()
-		emit_signal("day_changed", day)
+		day_changed.emit(day)
 		print("TimeManager: Natural day rollover at 2:00 AM. Day: ", day, " Season: ", current_season, " Year: ", year)
-	
-	emit_signal("time_changed", day, hour, minute)
+
+	time_changed.emit(day, hour, minute)
 
 func _increment_day() -> void:
 	day += 1
@@ -78,8 +78,8 @@ func _advance_season() -> void:
 	if current_season > Season.WINTER:
 		current_season = Season.SPRING
 		year += 1
-		emit_signal("year_changed", year)
+		year_changed.emit(year)
 		print("TimeManager: Happy New Year! Year ", year)
-		
-	emit_signal("season_changed", current_season)
+
+	season_changed.emit(current_season)
 	print("TimeManager: Season changed to ", current_season)

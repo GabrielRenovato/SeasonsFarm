@@ -1,10 +1,13 @@
 extends Node
 class_name MovementComponent
 
+@export_group("References")
 @export var actor: CharacterBody2D
 @export var animation_tree: AnimationTree
-@export var movement_speed: float = 150.0
 @export var tool_component: ToolComponent
+
+@export_group("Tuning")
+@export var movement_speed: float = 150.0
 
 var state_machine: AnimationNodeStateMachinePlayback
 var last_direction: Vector2 = Vector2.DOWN
@@ -29,12 +32,25 @@ func stop_movement() -> void:
 	_update_blend_positions()
 	actor.move_and_slide()
 
+var is_sitting: bool = false
+
 func handle_movement() -> void:
 	if FurnitureManager.is_edit_mode:
 		stop_movement()
 		return
 		
 	var input_direction: Vector2 = Input.get_vector("left", "right", "up", "down")
+	
+	if is_sitting:
+		if input_direction != Vector2.ZERO:
+			actor.stand_up()
+		else:
+			# Parado e sentado: NÃO chamar move_and_slide, senão a colisão da
+			# cadeira empurra o player para fora do assento.
+			actor.velocity = Vector2.ZERO
+			return
+			
+
 	var carrying = tool_component != null and tool_component.is_carrying
 	
 	if input_direction != Vector2.ZERO:

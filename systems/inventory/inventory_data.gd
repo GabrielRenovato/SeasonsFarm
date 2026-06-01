@@ -71,46 +71,31 @@ func setup_default_inventory() -> void:
 	slots[3].item = water
 	slots[3].quantity = 1
 
-	# Adiciona todas as sementes disponíveis para teste (até o limite do inventário)
+	# Sementes removidas para teste
 	var slot_index = 4
-	for crop_id in FarmManager.CROP_CONFIGS.keys():
+		
+	# Add wooden test furniture (somente com o sistema de móveis ativo)
+	var furniture_keys = ["chair_2", "chair_3", "chair_4", "bed_single_1", "bed_double_2", "desk_2", "desk_3"] if FurnitureManager.enabled else []
+
+	for fid in furniture_keys:
 		if slot_index >= 36:
 			break
-		
-		var config = FarmManager.CROP_CONFIGS[crop_id]
-		var seed_item = ItemData.new()
-		seed_item.id = crop_id + "_seeds"
-		seed_item.name = config.get("name", crop_id) + " Seeds"
-		seed_item.is_seed = true
-		seed_item.crop_type = crop_id
-		seed_item.icon_color = Color(1.0, 1.0, 1.0)
-		seed_item.icon_texture = _get_seed_bag_icon(
-			config.get("seed_x", 0),
-			config.get("seed_y", 0)
-		)
-		
-		slots[slot_index].item = seed_item
-		slots[slot_index].quantity = 99
-		slot_index += 1
-		
-	# Add wooden test furniture
-	var wood_items = [
-		"res://systems/inventory/items/furniture_chair_2.tres",
-		"res://systems/inventory/items/furniture_chair_3.tres",
-		"res://systems/inventory/items/furniture_chair_4.tres",
-		"res://systems/inventory/items/furniture_bed_single_1.tres",
-		"res://systems/inventory/items/furniture_bed_double_2.tres",
-		"res://systems/inventory/items/furniture_desk_2.tres",
-		"res://systems/inventory/items/furniture_desk_3.tres"
-	]
-	
-	for path in wood_items:
-		if slot_index < 36:
-			var item = load(path)
-			if item:
-				slots[slot_index].item = item
-				slots[slot_index].quantity = 5 # 5 of each for testing
-				slot_index += 1
+		if FurnitureManager.catalog.has(fid):
+			var fdata = FurnitureManager.catalog[fid]
+			var f_item = ItemData.new()
+			f_item.id = "furniture_" + fid
+			f_item.name = fdata["name"]
+			f_item.is_furniture = true
+			f_item.furniture_id = fid
+			
+			var tex = AtlasTexture.new()
+			tex.atlas = load(fdata["texture_path"])
+			tex.region = fdata["regions"][0]
+			f_item.icon_texture = tex
+			
+			slots[slot_index].item = f_item
+			slots[slot_index].quantity = 5
+			slot_index += 1
 				
 	inventory_updated.emit()
 

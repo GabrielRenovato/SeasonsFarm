@@ -1,199 +1,199 @@
-extends Node
+extends RefCounted
 
 var data: Dictionary = {
 	"chair_1": {
 		"name": "Chair 1",
 		"texture_path": "res://Farm RPG - Tiny Asset Pack - (All in One)/Objects/Interior/Chairs.png",
-		"regions": [Rect2(0, 0, 16, 32), Rect2(48, 0, 16, 32), Rect2(16, 0, 16, 32), Rect2(32, 0, 16, 32)],
+		"regions": [Rect2(0, 0, 16, 32), Rect2(32, 0, 16, 32), Rect2(16, 0, 16, 32), Rect2(48, 0, 16, 32)],
 		"collision_sizes": [Vector2(14, 16), Vector2(14, 16), Vector2(14, 16), Vector2(14, 16)],
 		"collision_offsets": [Vector2(0, 8), Vector2(0, 8), Vector2(0, 8), Vector2(0, 8)]
 	},
 	"chair_2": {
 		"name": "Chair 2",
 		"texture_path": "res://Farm RPG - Tiny Asset Pack - (All in One)/Objects/Interior/Chairs.png",
-		"regions": [Rect2(64, 0, 16, 32), Rect2(112, 0, 16, 32), Rect2(80, 0, 16, 32), Rect2(96, 0, 16, 32)],
+		"regions": [Rect2(64, 0, 16, 32), Rect2(96, 0, 16, 32), Rect2(80, 0, 16, 32), Rect2(112, 0, 16, 32)],
 		"collision_sizes": [Vector2(14, 16), Vector2(14, 16), Vector2(14, 16), Vector2(14, 16)],
 		"collision_offsets": [Vector2(0, 8), Vector2(0, 8), Vector2(0, 8), Vector2(0, 8)]
 	},
 	"chair_3": {
 		"name": "Chair 3",
 		"texture_path": "res://Farm RPG - Tiny Asset Pack - (All in One)/Objects/Interior/Chairs.png",
-		"regions": [Rect2(128, 0, 16, 32), Rect2(176, 0, 16, 32), Rect2(144, 0, 16, 32), Rect2(160, 0, 16, 32)],
+		"regions": [Rect2(128, 0, 16, 32), Rect2(160, 0, 16, 32), Rect2(144, 0, 16, 32), Rect2(176, 0, 16, 32)],
 		"collision_sizes": [Vector2(14, 16), Vector2(14, 16), Vector2(14, 16), Vector2(14, 16)],
 		"collision_offsets": [Vector2(0, 8), Vector2(0, 8), Vector2(0, 8), Vector2(0, 8)]
 	},
 	"chair_4": {
 		"name": "Chair 4",
 		"texture_path": "res://Farm RPG - Tiny Asset Pack - (All in One)/Objects/Interior/Chairs.png",
-		"regions": [Rect2(192, 0, 16, 32), Rect2(240, 0, 16, 32), Rect2(208, 0, 16, 32), Rect2(224, 0, 16, 32)],
+		"regions": [Rect2(192, 0, 16, 32), Rect2(224, 0, 16, 32), Rect2(208, 0, 16, 32), Rect2(240, 0, 16, 32)],
 		"collision_sizes": [Vector2(14, 16), Vector2(14, 16), Vector2(14, 16), Vector2(14, 16)],
 		"collision_offsets": [Vector2(0, 8), Vector2(0, 8), Vector2(0, 8), Vector2(0, 8)]
 	},
 	"chair_5": {
 		"name": "Chair 5",
 		"texture_path": "res://Farm RPG - Tiny Asset Pack - (All in One)/Objects/Interior/Chairs.png",
-		"regions": [Rect2(0, 32, 16, 32), Rect2(48, 32, 16, 32), Rect2(16, 32, 16, 32), Rect2(32, 32, 16, 32)],
+		"regions": [Rect2(0, 32, 16, 32), Rect2(32, 32, 16, 32), Rect2(16, 32, 16, 32), Rect2(48, 32, 16, 32)],
 		"collision_sizes": [Vector2(14, 16), Vector2(14, 16), Vector2(14, 16), Vector2(14, 16)],
 		"collision_offsets": [Vector2(0, 8), Vector2(0, 8), Vector2(0, 8), Vector2(0, 8)]
 	},
 	"chair_6": {
 		"name": "Chair 6",
 		"texture_path": "res://Farm RPG - Tiny Asset Pack - (All in One)/Objects/Interior/Chairs.png",
-		"regions": [Rect2(64, 32, 16, 32), Rect2(112, 32, 16, 32), Rect2(80, 32, 16, 32), Rect2(96, 32, 16, 32)],
+		"regions": [Rect2(64, 32, 16, 32), Rect2(96, 32, 16, 32), Rect2(80, 32, 16, 32), Rect2(112, 32, 16, 32)],
 		"collision_sizes": [Vector2(14, 16), Vector2(14, 16), Vector2(14, 16), Vector2(14, 16)],
 		"collision_offsets": [Vector2(0, 8), Vector2(0, 8), Vector2(0, 8), Vector2(0, 8)]
 	},
 	"chair_7": {
 		"name": "Chair 7",
 		"texture_path": "res://Farm RPG - Tiny Asset Pack - (All in One)/Objects/Interior/Chairs.png",
-		"regions": [Rect2(128, 32, 16, 32), Rect2(176, 32, 16, 32), Rect2(144, 32, 16, 32), Rect2(160, 32, 16, 32)],
+		"regions": [Rect2(128, 32, 16, 32), Rect2(160, 32, 16, 32), Rect2(144, 32, 16, 32), Rect2(176, 32, 16, 32)],
 		"collision_sizes": [Vector2(14, 16), Vector2(14, 16), Vector2(14, 16), Vector2(14, 16)],
 		"collision_offsets": [Vector2(0, 8), Vector2(0, 8), Vector2(0, 8), Vector2(0, 8)]
 	},
 	"chair_8": {
 		"name": "Chair 8",
 		"texture_path": "res://Farm RPG - Tiny Asset Pack - (All in One)/Objects/Interior/Chairs.png",
-		"regions": [Rect2(192, 32, 16, 32), Rect2(240, 32, 16, 32), Rect2(208, 32, 16, 32), Rect2(224, 32, 16, 32)],
+		"regions": [Rect2(192, 32, 16, 32), Rect2(224, 32, 16, 32), Rect2(208, 32, 16, 32), Rect2(240, 32, 16, 32)],
 		"collision_sizes": [Vector2(14, 16), Vector2(14, 16), Vector2(14, 16), Vector2(14, 16)],
 		"collision_offsets": [Vector2(0, 8), Vector2(0, 8), Vector2(0, 8), Vector2(0, 8)]
 	},
 	"chair_9": {
 		"name": "Chair 9",
 		"texture_path": "res://Farm RPG - Tiny Asset Pack - (All in One)/Objects/Interior/Chairs.png",
-		"regions": [Rect2(0, 64, 16, 32), Rect2(48, 64, 16, 32), Rect2(16, 64, 16, 32), Rect2(32, 64, 16, 32)],
+		"regions": [Rect2(0, 64, 16, 32), Rect2(32, 64, 16, 32), Rect2(16, 64, 16, 32), Rect2(48, 64, 16, 32)],
 		"collision_sizes": [Vector2(14, 16), Vector2(14, 16), Vector2(14, 16), Vector2(14, 16)],
 		"collision_offsets": [Vector2(0, 8), Vector2(0, 8), Vector2(0, 8), Vector2(0, 8)]
 	},
 	"chair_10": {
 		"name": "Chair 10",
 		"texture_path": "res://Farm RPG - Tiny Asset Pack - (All in One)/Objects/Interior/Chairs.png",
-		"regions": [Rect2(64, 64, 16, 32), Rect2(112, 64, 16, 32), Rect2(80, 64, 16, 32), Rect2(96, 64, 16, 32)],
+		"regions": [Rect2(64, 64, 16, 32), Rect2(96, 64, 16, 32), Rect2(80, 64, 16, 32), Rect2(112, 64, 16, 32)],
 		"collision_sizes": [Vector2(14, 16), Vector2(14, 16), Vector2(14, 16), Vector2(14, 16)],
 		"collision_offsets": [Vector2(0, 8), Vector2(0, 8), Vector2(0, 8), Vector2(0, 8)]
 	},
 	"chair_11": {
 		"name": "Chair 11",
 		"texture_path": "res://Farm RPG - Tiny Asset Pack - (All in One)/Objects/Interior/Chairs.png",
-		"regions": [Rect2(128, 64, 16, 32), Rect2(176, 64, 16, 32), Rect2(144, 64, 16, 32), Rect2(160, 64, 16, 32)],
+		"regions": [Rect2(128, 64, 16, 32), Rect2(160, 64, 16, 32), Rect2(144, 64, 16, 32), Rect2(176, 64, 16, 32)],
 		"collision_sizes": [Vector2(14, 16), Vector2(14, 16), Vector2(14, 16), Vector2(14, 16)],
 		"collision_offsets": [Vector2(0, 8), Vector2(0, 8), Vector2(0, 8), Vector2(0, 8)]
 	},
 	"chair_12": {
 		"name": "Chair 12",
 		"texture_path": "res://Farm RPG - Tiny Asset Pack - (All in One)/Objects/Interior/Chairs.png",
-		"regions": [Rect2(192, 64, 16, 32), Rect2(240, 64, 16, 32), Rect2(208, 64, 16, 32), Rect2(224, 64, 16, 32)],
+		"regions": [Rect2(192, 64, 16, 32), Rect2(224, 64, 16, 32), Rect2(208, 64, 16, 32), Rect2(240, 64, 16, 32)],
 		"collision_sizes": [Vector2(14, 16), Vector2(14, 16), Vector2(14, 16), Vector2(14, 16)],
 		"collision_offsets": [Vector2(0, 8), Vector2(0, 8), Vector2(0, 8), Vector2(0, 8)]
 	},
 	"chair_13": {
 		"name": "Chair 13",
 		"texture_path": "res://Farm RPG - Tiny Asset Pack - (All in One)/Objects/Interior/Chairs.png",
-		"regions": [Rect2(0, 96, 16, 32), Rect2(48, 96, 16, 32), Rect2(16, 96, 16, 32), Rect2(32, 96, 16, 32)],
+		"regions": [Rect2(0, 96, 16, 32), Rect2(32, 96, 16, 32), Rect2(16, 96, 16, 32), Rect2(48, 96, 16, 32)],
 		"collision_sizes": [Vector2(14, 16), Vector2(14, 16), Vector2(14, 16), Vector2(14, 16)],
 		"collision_offsets": [Vector2(0, 8), Vector2(0, 8), Vector2(0, 8), Vector2(0, 8)]
 	},
 	"chair_14": {
 		"name": "Chair 14",
 		"texture_path": "res://Farm RPG - Tiny Asset Pack - (All in One)/Objects/Interior/Chairs.png",
-		"regions": [Rect2(64, 96, 16, 32), Rect2(112, 96, 16, 32), Rect2(80, 96, 16, 32), Rect2(96, 96, 16, 32)],
+		"regions": [Rect2(64, 96, 16, 32), Rect2(96, 96, 16, 32), Rect2(80, 96, 16, 32), Rect2(112, 96, 16, 32)],
 		"collision_sizes": [Vector2(14, 16), Vector2(14, 16), Vector2(14, 16), Vector2(14, 16)],
 		"collision_offsets": [Vector2(0, 8), Vector2(0, 8), Vector2(0, 8), Vector2(0, 8)]
 	},
 	"chair_15": {
 		"name": "Chair 15",
 		"texture_path": "res://Farm RPG - Tiny Asset Pack - (All in One)/Objects/Interior/Chairs.png",
-		"regions": [Rect2(128, 96, 16, 32), Rect2(176, 96, 16, 32), Rect2(144, 96, 16, 32), Rect2(160, 96, 16, 32)],
+		"regions": [Rect2(128, 96, 16, 32), Rect2(160, 96, 16, 32), Rect2(144, 96, 16, 32), Rect2(176, 96, 16, 32)],
 		"collision_sizes": [Vector2(14, 16), Vector2(14, 16), Vector2(14, 16), Vector2(14, 16)],
 		"collision_offsets": [Vector2(0, 8), Vector2(0, 8), Vector2(0, 8), Vector2(0, 8)]
 	},
 	"chair_16": {
 		"name": "Chair 16",
 		"texture_path": "res://Farm RPG - Tiny Asset Pack - (All in One)/Objects/Interior/Chairs.png",
-		"regions": [Rect2(192, 96, 16, 32), Rect2(240, 96, 16, 32), Rect2(208, 96, 16, 32), Rect2(224, 96, 16, 32)],
+		"regions": [Rect2(192, 96, 16, 32), Rect2(224, 96, 16, 32), Rect2(208, 96, 16, 32), Rect2(240, 96, 16, 32)],
 		"collision_sizes": [Vector2(14, 16), Vector2(14, 16), Vector2(14, 16), Vector2(14, 16)],
 		"collision_offsets": [Vector2(0, 8), Vector2(0, 8), Vector2(0, 8), Vector2(0, 8)]
 	},
 	"chair_17": {
 		"name": "Chair 17",
 		"texture_path": "res://Farm RPG - Tiny Asset Pack - (All in One)/Objects/Interior/Chairs.png",
-		"regions": [Rect2(0, 128, 16, 32), Rect2(48, 128, 16, 32), Rect2(16, 128, 16, 32), Rect2(32, 128, 16, 32)],
+		"regions": [Rect2(0, 128, 16, 32), Rect2(32, 128, 16, 32), Rect2(16, 128, 16, 32), Rect2(48, 128, 16, 32)],
 		"collision_sizes": [Vector2(14, 16), Vector2(14, 16), Vector2(14, 16), Vector2(14, 16)],
 		"collision_offsets": [Vector2(0, 8), Vector2(0, 8), Vector2(0, 8), Vector2(0, 8)]
 	},
 	"chair_18": {
 		"name": "Chair 18",
 		"texture_path": "res://Farm RPG - Tiny Asset Pack - (All in One)/Objects/Interior/Chairs.png",
-		"regions": [Rect2(64, 128, 16, 32), Rect2(112, 128, 16, 32), Rect2(80, 128, 16, 32), Rect2(96, 128, 16, 32)],
+		"regions": [Rect2(64, 128, 16, 32), Rect2(96, 128, 16, 32), Rect2(80, 128, 16, 32), Rect2(112, 128, 16, 32)],
 		"collision_sizes": [Vector2(14, 16), Vector2(14, 16), Vector2(14, 16), Vector2(14, 16)],
 		"collision_offsets": [Vector2(0, 8), Vector2(0, 8), Vector2(0, 8), Vector2(0, 8)]
 	},
 	"chair_19": {
 		"name": "Chair 19",
 		"texture_path": "res://Farm RPG - Tiny Asset Pack - (All in One)/Objects/Interior/Chairs.png",
-		"regions": [Rect2(128, 128, 16, 32), Rect2(176, 128, 16, 32), Rect2(144, 128, 16, 32), Rect2(160, 128, 16, 32)],
+		"regions": [Rect2(128, 128, 16, 32), Rect2(160, 128, 16, 32), Rect2(144, 128, 16, 32), Rect2(176, 128, 16, 32)],
 		"collision_sizes": [Vector2(14, 16), Vector2(14, 16), Vector2(14, 16), Vector2(14, 16)],
 		"collision_offsets": [Vector2(0, 8), Vector2(0, 8), Vector2(0, 8), Vector2(0, 8)]
 	},
 	"chair_20": {
 		"name": "Chair 20",
 		"texture_path": "res://Farm RPG - Tiny Asset Pack - (All in One)/Objects/Interior/Chairs.png",
-		"regions": [Rect2(192, 128, 16, 32), Rect2(240, 128, 16, 32), Rect2(208, 128, 16, 32), Rect2(224, 128, 16, 32)],
+		"regions": [Rect2(192, 128, 16, 32), Rect2(224, 128, 16, 32), Rect2(208, 128, 16, 32), Rect2(240, 128, 16, 32)],
 		"collision_sizes": [Vector2(14, 16), Vector2(14, 16), Vector2(14, 16), Vector2(14, 16)],
 		"collision_offsets": [Vector2(0, 8), Vector2(0, 8), Vector2(0, 8), Vector2(0, 8)]
 	},
 	"chair_21": {
 		"name": "Chair 21",
 		"texture_path": "res://Farm RPG - Tiny Asset Pack - (All in One)/Objects/Interior/Chairs.png",
-		"regions": [Rect2(0, 160, 16, 32), Rect2(48, 160, 16, 32), Rect2(16, 160, 16, 32), Rect2(32, 160, 16, 32)],
+		"regions": [Rect2(0, 160, 16, 32), Rect2(32, 160, 16, 32), Rect2(16, 160, 16, 32), Rect2(48, 160, 16, 32)],
 		"collision_sizes": [Vector2(14, 16), Vector2(14, 16), Vector2(14, 16), Vector2(14, 16)],
 		"collision_offsets": [Vector2(0, 8), Vector2(0, 8), Vector2(0, 8), Vector2(0, 8)]
 	},
 	"chair_22": {
 		"name": "Chair 22",
 		"texture_path": "res://Farm RPG - Tiny Asset Pack - (All in One)/Objects/Interior/Chairs.png",
-		"regions": [Rect2(64, 160, 16, 32), Rect2(112, 160, 16, 32), Rect2(80, 160, 16, 32), Rect2(96, 160, 16, 32)],
+		"regions": [Rect2(64, 160, 16, 32), Rect2(96, 160, 16, 32), Rect2(80, 160, 16, 32), Rect2(112, 160, 16, 32)],
 		"collision_sizes": [Vector2(14, 16), Vector2(14, 16), Vector2(14, 16), Vector2(14, 16)],
 		"collision_offsets": [Vector2(0, 8), Vector2(0, 8), Vector2(0, 8), Vector2(0, 8)]
 	},
 	"chair_23": {
 		"name": "Chair 23",
 		"texture_path": "res://Farm RPG - Tiny Asset Pack - (All in One)/Objects/Interior/Chairs.png",
-		"regions": [Rect2(128, 160, 16, 32), Rect2(176, 160, 16, 32), Rect2(144, 160, 16, 32), Rect2(160, 160, 16, 32)],
+		"regions": [Rect2(128, 160, 16, 32), Rect2(160, 160, 16, 32), Rect2(144, 160, 16, 32), Rect2(176, 160, 16, 32)],
 		"collision_sizes": [Vector2(14, 16), Vector2(14, 16), Vector2(14, 16), Vector2(14, 16)],
 		"collision_offsets": [Vector2(0, 8), Vector2(0, 8), Vector2(0, 8), Vector2(0, 8)]
 	},
 	"chair_24": {
 		"name": "Chair 24",
 		"texture_path": "res://Farm RPG - Tiny Asset Pack - (All in One)/Objects/Interior/Chairs.png",
-		"regions": [Rect2(192, 160, 16, 32), Rect2(240, 160, 16, 32), Rect2(208, 160, 16, 32), Rect2(224, 160, 16, 32)],
+		"regions": [Rect2(192, 160, 16, 32), Rect2(224, 160, 16, 32), Rect2(208, 160, 16, 32), Rect2(240, 160, 16, 32)],
 		"collision_sizes": [Vector2(14, 16), Vector2(14, 16), Vector2(14, 16), Vector2(14, 16)],
 		"collision_offsets": [Vector2(0, 8), Vector2(0, 8), Vector2(0, 8), Vector2(0, 8)]
 	},
 	"chair_25": {
 		"name": "Chair 25",
 		"texture_path": "res://Farm RPG - Tiny Asset Pack - (All in One)/Objects/Interior/Chairs.png",
-		"regions": [Rect2(0, 192, 16, 32), Rect2(48, 192, 16, 32), Rect2(16, 192, 16, 32), Rect2(32, 192, 16, 32)],
+		"regions": [Rect2(0, 192, 16, 32), Rect2(32, 192, 16, 32), Rect2(16, 192, 16, 32), Rect2(48, 192, 16, 32)],
 		"collision_sizes": [Vector2(14, 16), Vector2(14, 16), Vector2(14, 16), Vector2(14, 16)],
 		"collision_offsets": [Vector2(0, 8), Vector2(0, 8), Vector2(0, 8), Vector2(0, 8)]
 	},
 	"chair_26": {
 		"name": "Chair 26",
 		"texture_path": "res://Farm RPG - Tiny Asset Pack - (All in One)/Objects/Interior/Chairs.png",
-		"regions": [Rect2(64, 192, 16, 32), Rect2(112, 192, 16, 32), Rect2(80, 192, 16, 32), Rect2(96, 192, 16, 32)],
+		"regions": [Rect2(64, 192, 16, 32), Rect2(96, 192, 16, 32), Rect2(80, 192, 16, 32), Rect2(112, 192, 16, 32)],
 		"collision_sizes": [Vector2(14, 16), Vector2(14, 16), Vector2(14, 16), Vector2(14, 16)],
 		"collision_offsets": [Vector2(0, 8), Vector2(0, 8), Vector2(0, 8), Vector2(0, 8)]
 	},
 	"chair_27": {
 		"name": "Chair 27",
 		"texture_path": "res://Farm RPG - Tiny Asset Pack - (All in One)/Objects/Interior/Chairs.png",
-		"regions": [Rect2(128, 192, 16, 32), Rect2(176, 192, 16, 32), Rect2(144, 192, 16, 32), Rect2(160, 192, 16, 32)],
+		"regions": [Rect2(128, 192, 16, 32), Rect2(160, 192, 16, 32), Rect2(144, 192, 16, 32), Rect2(176, 192, 16, 32)],
 		"collision_sizes": [Vector2(14, 16), Vector2(14, 16), Vector2(14, 16), Vector2(14, 16)],
 		"collision_offsets": [Vector2(0, 8), Vector2(0, 8), Vector2(0, 8), Vector2(0, 8)]
 	},
 	"chair_28": {
 		"name": "Chair 28",
 		"texture_path": "res://Farm RPG - Tiny Asset Pack - (All in One)/Objects/Interior/Chairs.png",
-		"regions": [Rect2(192, 192, 16, 32), Rect2(240, 192, 16, 32), Rect2(208, 192, 16, 32), Rect2(224, 192, 16, 32)],
+		"regions": [Rect2(192, 192, 16, 32), Rect2(224, 192, 16, 32), Rect2(208, 192, 16, 32), Rect2(240, 192, 16, 32)],
 		"collision_sizes": [Vector2(14, 16), Vector2(14, 16), Vector2(14, 16), Vector2(14, 16)],
 		"collision_offsets": [Vector2(0, 8), Vector2(0, 8), Vector2(0, 8), Vector2(0, 8)]
 	},

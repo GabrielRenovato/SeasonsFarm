@@ -49,17 +49,39 @@ func rotate_item() -> void:
 # Updates the sprite region and collision size based on current rotation
 func update_visuals() -> void:
 	if not FurnitureManager.catalog.has(item_id): return
-	
+
 	var data = FurnitureManager.catalog[item_id]
 	if data.has("regions"):
+		var region: Rect2 = data["regions"][current_rotation_index]
 		var tex = sprite.texture as AtlasTexture
 		if tex:
-			tex.region = data["regions"][current_rotation_index]
-		
-		set_collision_size(
-			data["collision_sizes"][current_rotation_index],
-			data["collision_offsets"][current_rotation_index]
-		)
+			tex.region = region
+
+		# A colisão é derivada do tamanho do sprite (centrado) + política por
+		# categoria, garantindo navegação top-down natural e corrigindo móveis
+		# como a cama de casal (sprite 48 mas colisão antiga de 32).
+		var footprint := _compute_footprint(region.size)
+		set_collision_size(footprint[0], footprint[1])
+
+# Retorna [size, offset] da colisão para um sprite centrado de tamanho dado,
+# conforme a categoria do móvel (prefixo do item_id).
+func _compute_footprint(region_size: Vector2) -> Array:
+	var w := region_size.x
+	var h := region_size.y
+	if item_id.begins_with("chair"):
+		# Só a base da cadeira colide: dá pra encostar e sentar, e o
+		# encosto/assento fica sobreponível (profundidade top-down).
+		var sz := Vector2(w - 4.0, 8.0)
+		return [sz, Vector2(0, h / 2.0 - sz.y / 2.0)]
+	elif item_id.begins_with("desk"):
+		# Mesa/escrivaninha: base sólida, topo sobreponível.
+		var sz := Vector2(w - 2.0, h * 0.7)
+		return [sz, Vector2(0, h / 2.0 - sz.y / 2.0)]
+	elif item_id.begins_with("bed"):
+		# Cama: sólida quase inteira, com pequena folga no topo.
+		return [Vector2(w - 2.0, h - 4.0), Vector2(0, 1)]
+	# Fallback: sprite inteiro
+	return [region_size, Vector2.ZERO]
 
 # Checks if the placement area is overlapping anything
 func check_placement_validity() -> void:
