@@ -21,6 +21,7 @@ func _ready() -> void:
 	delete_btn.pressed.connect(_on_delete_pressed)
 	close_btn.pressed.connect(_on_close_pressed)
 	item_list.item_selected.connect(_on_item_selected)
+	FurnitureManager.furniture_picked_up.connect(_on_furniture_picked_up)
 	
 	# Populate catalog
 	for key in FurnitureManager.catalog:
@@ -102,6 +103,13 @@ func _place_ghost() -> void:
 	current_ghost = null
 	_spawn_ghost(current_item_id)
 	current_ghost.position = old_pos
+
+func _on_furniture_picked_up(item: Node2D) -> void:
+	if current_ghost and current_ghost != item:
+		_clear_ghost()
+	current_ghost = item
+	if item and "item_id" in item:
+		current_item_id = item.item_id
 
 func _on_rotate_pressed() -> void:
 	if current_ghost:

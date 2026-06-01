@@ -20,6 +20,8 @@ var can_place: bool = true
 var current_rotation_index: int = 0
 
 func _ready() -> void:
+	input_pickable = true
+	
 	# If we are in edit mode, but haven't placed it yet
 	if not is_placed:
 		modulate = Color(1, 1, 1, 0.5)
@@ -28,6 +30,13 @@ func _ready() -> void:
 		modulate = Color(1, 1, 1, 1)
 		collision_shape.disabled = false
 		
+func _input_event(viewport: Node, event: InputEvent, shape_idx: int) -> void:
+	if FurnitureManager.is_edit_mode and is_placed:
+		if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+			pickup()
+			FurnitureManager.furniture_picked_up.emit(self)
+			get_viewport().set_input_as_handled()
+
 func _process(_delta: float) -> void:
 	if not is_placed:
 		check_placement_validity()

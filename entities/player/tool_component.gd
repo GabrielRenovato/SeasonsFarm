@@ -26,6 +26,10 @@ var _carry_item: ItemData
 var _carry_sprite: Sprite2D
 var _bobbing_time: float = 0.0
 
+var FurnitureItemScene = preload("res://objects/furniture/furniture_item.tscn")
+var current_furniture_ghost: Node2D = null
+var current_furniture_rotation: int = 0
+
 func setup(new_inventory_data: InventoryData) -> void:
 	inventory_data = new_inventory_data
 	inventory_data.active_slot_changed.connect(_on_slot_changed)
@@ -108,18 +112,27 @@ func _update_carry_sprite_position() -> void:
 func update_target_preview(direction: Vector2) -> void:
 	_update_strict_direction(direction)
 		
+	var target_map_position: Vector2i = _get_target_map_position()
+	
 	if debug_rect != null and dirt_layer != null and dirt_layer.tile_set != null:
-		var target_map_position: Vector2i = _get_target_map_position()
 		var tile_size: Vector2i = dirt_layer.tile_set.tile_size
-		
 		var local_center: Vector2 = dirt_layer.map_to_local(target_map_position)
 		var top_left_local: Vector2 = local_center - (Vector2(tile_size) / 2.0)
 		
 		debug_rect.size = Vector2(tile_size)
 		debug_rect.global_position = dirt_layer.to_global(top_left_local)
+		
+	if current_furniture_ghost:
+		var parent = get_tree().current_scene
+		if parent.has_node("HouseInterior"):
+			var interior = parent.get_node("HouseInterior")
+			var local_pos = interior.map_to_local(target_map_position)
+			current_furniture_ghost.global_position = interior.to_global(local_pos)
+		else:
+			# Default behavior if not inside house (furniture shouldn't be placed outside usually, but for testing...)
+			current_furniture_ghost.global_position = debug_rect.global_position + (debug_rect.size / 2.0)
 
 func _unhandled_input(event: InputEvent) -> void:
-	if FurnitureManager.is_edit_mode: return
 	if not inventory_data or is_using_tool:
 		return
 		
@@ -133,6 +146,11 @@ func _unhandled_input(event: InputEvent) -> void:
 		elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
 			var next_slot = (inventory_data.active_slot_index + 1) % 9
 			inventory_data.active_slot_index = next_slot
+			get_viewport().set_input_as_handled()
+		elif event.button_index == MOUSE_BUTTON_RIGHT and current_furniture_ghost:
+			current_furniture_rotation = (current_furniture_rotation + 1) % 4
+			current_furniture_ghost.current_rotation_index = current_furniture_rotation
+			current_furniture_ghost.update_visuals()
 			get_viewport().set_input_as_handled()
 
 func handle_tool_switch() -> void:
@@ -157,6 +175,9 @@ func _on_slot_changed(_index: int) -> void:
 		return
 	var item = inventory_data.get_active_item()
 	var should_carry = item != null and not item.is_tool
+	
+	_update_furniture_ghost(item)
+	
 	if should_carry != is_carrying:
 		is_carrying = should_carry
 		if is_carrying:
@@ -172,6 +193,32 @@ func _on_slot_changed(_index: int) -> void:
 	elif is_carrying and item != _carry_item:
 		_carry_item = item
 		_show_carry_sprite(item)
+
+func _update_furniture_ghost(item: ItemData) -> void:
+	if current_furniture_ghost:
+		current_furniture_ghost.queue_free()
+		current_furniture_ghost = null
+		
+	if item and item.is_furniture:
+		var item_id = item.furniture_id
+		if FurnitureManager.catalog.has(item_id):
+			current_furniture_ghost = FurnitureItemScene.instantiate()
+			current_furniture_ghost.item_id = item_id
+			current_furniture_ghost.is_placed = false
+			current_furniture_ghost.current_rotation_index = current_furniture_rotation
+			
+			var item_data = FurnitureManager.catalog[item_id]
+			var tex = AtlasTexture.new()
+			tex.atlas = load(item_data["texture_path"])
+			current_furniture_ghost.set_texture(tex)
+			
+			var parent = get_tree().current_scene
+			if parent.has_node("FurnitureContainer"):
+				parent.get_node("FurnitureContainer").add_child(current_furniture_ghost)
+			else:
+				parent.add_child(current_furniture_ghost)
+			
+			current_furniture_ghost.update_visuals()
 
 func _show_carry_sprite(item: ItemData) -> void:
 	if _carry_sprite == null or item == null:
@@ -190,11 +237,25 @@ func _hide_carry_sprite() -> void:
 	_carry_sprite.visible = false
 
 func handle_tool_use(direction: Vector2) -> void:
-	if FurnitureManager.is_edit_mode: return
 	_update_strict_direction(direction)
 	
 	if Input.is_action_just_pressed("use_tool") and not is_using_tool:
 		var target_map_position: Vector2i = _get_target_map_position()
+		
+		# If holding furniture, place it
+		if current_furniture_ghost and current_furniture_ghost.can_place:
+			current_furniture_ghost.place()
+			var current_slot = inventory_data.slots[inventory_data.active_slot_index]
+			current_slot.quantity -= 1
+			if current_slot.quantity <= 0:
+				current_slot.item = null
+			inventory_data.inventory_updated.emit()
+			_update_furniture_ghost(inventory_data.get_active_item())
+			return
+			
+		# Pick up furniture if looking at one and holding an empty hand or tool
+		if _attempt_pickup_furniture():
+			return
 		
 		if FarmManager and FarmManager.farm_data.has(target_map_position):
 			var tile_data = FarmManager.farm_data[target_map_position]
@@ -229,6 +290,43 @@ func handle_tool_use(direction: Vector2) -> void:
 		
 		else:
 			_attempt_planting()
+
+func _attempt_pickup_furniture() -> bool:
+	var space_state = actor.get_world_2d().direct_space_state
+	var hit_origin: Vector2 = actor.global_position + strict_direction * axe_reach
+	var shape_circle = CircleShape2D.new()
+	shape_circle.radius = 8.0
+	var physics_query = PhysicsShapeQueryParameters2D.new()
+	physics_query.shape = shape_circle
+	physics_query.transform = Transform2D(0.0, hit_origin)
+	physics_query.collide_with_areas = false
+	physics_query.collide_with_bodies = true
+	physics_query.collision_mask = 4 # Furniture layer
+
+	var query_results = space_state.intersect_shape(physics_query, 1)
+	for result in query_results:
+		var obj = result.collider
+		if obj.has_method("pickup"):
+			var fid = obj.item_id
+			obj.pickup()
+			obj.queue_free()
+			
+			# Find the corresponding item in database and add to inventory
+			var res_path = "res://systems/inventory/items/furniture_" + fid + ".tres"
+			if FileAccess.file_exists(res_path):
+				var f_item = load(res_path)
+				inventory_data.add_item(f_item, 1)
+			else:
+				# Fallback: construct it dynamically
+				var new_item = ItemData.new()
+				new_item.id = "furniture_" + fid
+				new_item.name = FurnitureManager.catalog[fid]["name"]
+				new_item.is_furniture = true
+				new_item.furniture_id = fid
+				inventory_data.add_item(new_item, 1)
+				
+			return true
+	return false
 
 func _get_target_map_position() -> Vector2i:
 	if dirt_layer == null or dirt_layer.tile_set == null or grid_anchor == null:

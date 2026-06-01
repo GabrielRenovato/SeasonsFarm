@@ -16,3 +16,6 @@ class_name ItemData
 
 # Raridade (só para colheitas): "common", "silver", "gold"
 @export var rarity: String = "common"
+
+@export var is_furniture: bool = false
+@export var furniture_id: String = ""

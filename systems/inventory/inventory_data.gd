@@ -92,6 +92,28 @@ func setup_default_inventory() -> void:
 		slots[slot_index].item = seed_item
 		slots[slot_index].quantity = 99
 		slot_index += 1
+		
+	# Add test furniture
+	if slot_index < 36:
+		var chair = load("res://systems/inventory/items/furniture_chair_1.tres")
+		if chair:
+			slots[slot_index].item = chair
+			slots[slot_index].quantity = 1
+			slot_index += 1
+			
+	if slot_index < 36:
+		var bed = load("res://systems/inventory/items/furniture_bed_double_1.tres")
+		if bed:
+			slots[slot_index].item = bed
+			slots[slot_index].quantity = 1
+			slot_index += 1
+			
+	if slot_index < 36:
+		var desk = load("res://systems/inventory/items/furniture_desk_1.tres")
+		if desk:
+			slots[slot_index].item = desk
+			slots[slot_index].quantity = 1
+			slot_index += 1
 	
 	inventory_updated.emit()
 

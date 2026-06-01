@@ -11,82 +11,11 @@ var placed_furniture: Dictionary = {}
 
 # We emit this when edit mode is toggled
 signal edit_mode_changed(is_editing: bool)
+signal furniture_picked_up(item: Node2D)
 
 # Catalog of available furniture items
 # In a real game, this could be loaded from a Resource or JSON
-var catalog: Dictionary = {
-	"bed_single": {
-		"name": "Single Blue Bed",
-		"texture_path": "res://Farm RPG - Tiny Asset Pack - (All in One)/Objects/Interior/Beds.png",
-		"regions": [
-			Rect2(0, 0, 32, 48), Rect2(0, 0, 32, 48), Rect2(0, 0, 32, 48), Rect2(0, 0, 32, 48)
-		],
-		"collision_sizes": [
-			Vector2(32, 48), Vector2(32, 48), Vector2(32, 48), Vector2(32, 48)
-		],
-		"collision_offsets": [
-			Vector2(0, 0), Vector2(0, 0), Vector2(0, 0), Vector2(0, 0)
-		]
-	},
-	"bed_double": {
-		"name": "Double Red Bed",
-		"texture_path": "res://Farm RPG - Tiny Asset Pack - (All in One)/Objects/Interior/Beds.png",
-		"regions": [
-			Rect2(0, 256, 64, 48), Rect2(0, 256, 64, 48), Rect2(0, 256, 64, 48), Rect2(0, 256, 64, 48)
-		],
-		"collision_sizes": [
-			Vector2(64, 48), Vector2(64, 48), Vector2(64, 48), Vector2(64, 48)
-		],
-		"collision_offsets": [
-			Vector2(0, 0), Vector2(0, 0), Vector2(0, 0), Vector2(0, 0)
-		]
-	},
-	"chair_office": {
-		"name": "Red Office Chair",
-		"texture_path": "res://Farm RPG - Tiny Asset Pack - (All in One)/Objects/Interior/Chairs.png",
-		"regions": [
-			Rect2(0, 32, 16, 32),   # Down
-			Rect2(48, 32, 16, 32),  # Right
-			Rect2(16, 32, 16, 32),  # Up
-			Rect2(32, 32, 16, 32)   # Left
-		],
-		"collision_sizes": [
-			Vector2(14, 16), Vector2(14, 16), Vector2(14, 16), Vector2(14, 16)
-		],
-		"collision_offsets": [
-			Vector2(0, 8), Vector2(0, 8), Vector2(0, 8), Vector2(0, 8)
-		]
-	},
-	"chair_office_blue": {
-		"name": "Blue Office Chair",
-		"texture_path": "res://Farm RPG - Tiny Asset Pack - (All in One)/Objects/Interior/Chairs.png",
-		"regions": [
-			Rect2(0, 64, 16, 32),   # Down
-			Rect2(48, 64, 16, 32),  # Right
-			Rect2(16, 64, 16, 32),  # Up
-			Rect2(32, 64, 16, 32)   # Left
-		],
-		"collision_sizes": [
-			Vector2(14, 16), Vector2(14, 16), Vector2(14, 16), Vector2(14, 16)
-		],
-		"collision_offsets": [
-			Vector2(0, 8), Vector2(0, 8), Vector2(0, 8), Vector2(0, 8)
-		]
-	},
-	"desk": {
-		"name": "Blue Desk",
-		"texture_path": "res://Farm RPG - Tiny Asset Pack - (All in One)/Objects/Interior/Tables and desks.png",
-		"regions": [
-			Rect2(0, 0, 32, 32), Rect2(0, 0, 32, 32), Rect2(0, 0, 32, 32), Rect2(0, 0, 32, 32)
-		],
-		"collision_sizes": [
-			Vector2(32, 32), Vector2(32, 32), Vector2(32, 32), Vector2(32, 32)
-		],
-		"collision_offsets": [
-			Vector2(0, 0), Vector2(0, 0), Vector2(0, 0), Vector2(0, 0)
-		]
-	}
-}
+var catalog: Dictionary = {}
 
 var is_edit_mode: bool = false:
 	set(value):
@@ -94,6 +23,10 @@ var is_edit_mode: bool = false:
 		edit_mode_changed.emit(is_edit_mode)
 
 func _ready() -> void:
+	var catalog_script = preload("res://systems/furniture/furniture_catalog_data.gd").new()
+	catalog = catalog_script.data
+	catalog_script.free()
+	
 	load_furniture_data()
 
 # Saves the current furniture configuration to a JSON file
