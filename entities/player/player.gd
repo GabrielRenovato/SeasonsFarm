@@ -95,7 +95,7 @@ func _handle_dust_particles() -> void:
 			
 	dust_particles.emitting = is_on_dirt
 
-func _update_lantern_energy(_delta: float) -> void:
+func _update_lantern_energy(delta: float) -> void:
 	if not lantern or not is_instance_valid(lantern):
 		return
 		

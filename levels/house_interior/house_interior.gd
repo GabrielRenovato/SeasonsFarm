@@ -17,7 +17,6 @@ const FARM_SCENE: String = "res://levels/main_farm/farm.tscn"
 var _is_exiting: bool = false  # Evita disparar a troca de cena várias vezes
 
 var FurnitureItemScene = preload("res://objects/furniture/furniture_item.tscn")
-var FurnitureEditUIScene = preload("res://ui/furniture/furniture_edit_ui.tscn")
 
 func _ready() -> void:
 	# Conecta a porta de saída
@@ -32,9 +31,7 @@ func _ready() -> void:
 	furniture_container.y_sort_enabled = true
 	add_child(furniture_container)
 	
-	var ui = FurnitureEditUIScene.instantiate()
-	add_child(ui)
-	
+
 	# Load existing furniture
 	_load_existing_furniture(furniture_container)
 
@@ -66,11 +63,7 @@ func _load_existing_furniture(container: Node2D) -> void:
 			f_item.set_texture(tex)
 			f_item.update_visuals()
 
-func _input(event: InputEvent) -> void:
-	# Toggle edit mode when pressing 'E' (or another key) just for testing.
-	if event is InputEventKey and event.pressed and event.keycode == KEY_E:
-		if not FurnitureManager.is_edit_mode:
-			FurnitureManager.is_edit_mode = true
+
 
 # Faz o player olhar para cima ao entrar pela porta
 func _setup_player_spawn() -> void:
