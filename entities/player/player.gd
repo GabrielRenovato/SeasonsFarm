@@ -1,5 +1,8 @@
 extends CharacterBody2D
 
+const HUD_SCENE = preload("res://ui/hud/hud.tscn")
+const CUSTOMIZATION_COMPONENT = preload("res://entities/player/customization_component.gd")
+
 @onready var movement_component: MovementComponent = $MovementComponent
 @onready var tool_component: ToolComponent = $ToolComponent
 
@@ -26,19 +29,15 @@ func _ready() -> void:
 		tool_component.setup(inventory_data)
 		
 	# Instantiate HUD
-	var hud_scene = load("res://ui/hud/hud.tscn")
-	if hud_scene:
-		var hud_instance = hud_scene.instantiate()
-		add_child(hud_instance)
-		hud_instance.setup(inventory_data)
-		
+	var hud_instance = HUD_SCENE.instantiate()
+	add_child(hud_instance)
+	hud_instance.setup(inventory_data)
+
 	# Initialize Customization Component
-	var customization_script = load("res://entities/player/customization_component.gd")
-	if customization_script:
-		var customization_instance = customization_script.new()
-		customization_instance.animation_player = $AnimationPlayer
-		customization_instance.name = "CustomizationComponent"
-		add_child(customization_instance)
+	var customization_instance = CUSTOMIZATION_COMPONENT.new()
+	customization_instance.animation_player = $AnimationPlayer
+	customization_instance.name = "CustomizationComponent"
+	add_child(customization_instance)
 	
 	# Setup Player Lantern (PointLight2D)
 	lantern = PointLight2D.new()
@@ -74,6 +73,54 @@ func _physics_process(_delta: float) -> void:
 		movement_component.handle_movement()
 		
 	_handle_dust_particles()
+
+var current_chair: Node2D = null
+var current_sit_direction: String = ""
+
+func sit_down(chair: Node2D, direction: String) -> void:
+	if movement_component.is_sitting:
+		return
+	movement_component.is_sitting = true
+	current_chair = chair
+	current_sit_direction = direction
+
+	var offset_pos = Vector2(0, 19)
+	match direction:
+		"right": offset_pos = Vector2(3, 19)
+		"left":  offset_pos = Vector2(-3, 19)
+		"up":    offset_pos = Vector2(0, 17)
+
+	global_position = chair.global_position + offset_pos
+	velocity = Vector2.ZERO
+	movement_component.stop_movement()
+
+	# Player fica atrás do encosto em todas as direções exceto frente
+	match direction:
+		"up", "left", "right": z_index = -1
+		_: z_index = 0
+
+	$AnimationTree.active = false
+	$AnimationPlayer.play("sit_" + direction)
+
+func stand_up() -> void:
+	if not movement_component.is_sitting:
+		return
+	movement_component.is_sitting = false
+	$AnimationTree.active = true
+	z_index = 0
+
+	# Posiciona o player à frente da cadeira baseado na direção
+	if current_chair and is_instance_valid(current_chair):
+		var exit := Vector2.ZERO
+		match current_sit_direction:
+			"down":  exit = Vector2(0, 18)
+			"up":    exit = Vector2(0, -18)
+			"right": exit = Vector2(18, 0)
+			"left":  exit = Vector2(-18, 0)
+		global_position = current_chair.global_position + exit
+
+	current_chair = null
+	current_sit_direction = ""
 
 func _handle_dust_particles() -> void:
 	var dust_particles = get_node_or_null("FloorEffects/DustParticles") as CPUParticles2D

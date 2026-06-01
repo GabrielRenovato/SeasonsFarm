@@ -1,11 +1,14 @@
 extends Node
 class_name ToolComponent
 
+@export_group("References")
 @export var animation_tree: AnimationTree
 @export var actor: CharacterBody2D
 @export var grid_anchor: Marker2D
 @export var debug_rect: ColorRect
 @export var tool_area: Area2D
+
+@export_group("Tuning")
 @export var tilled_dirt_source_id: int = 0
 @export var tilled_dirt_atlas_coords: Vector2i = Vector2i(0, 0)
 @export var axe_reach: float = 14.0
@@ -93,21 +96,16 @@ func _update_carry_sprite_position() -> void:
 	if actor.velocity.length() > 0.0:
 		bobbing_offset = round(sin(_bobbing_time) * 2.0)
 	
-	if strict_direction == Vector2.UP:
-		_carry_sprite.position = Vector2(0.0, -24.0 + bobbing_offset)
-		_carry_sprite.z_index = -1
-	elif strict_direction == Vector2.DOWN:
-		_carry_sprite.position = Vector2(0.0, -20.0 + bobbing_offset)
-		_carry_sprite.z_index = 1
-	elif strict_direction == Vector2.LEFT:
-		_carry_sprite.position = Vector2(0.0, -21.0 + bobbing_offset)
-		_carry_sprite.z_index = 1
-	elif strict_direction == Vector2.RIGHT:
-		_carry_sprite.position = Vector2(0.0, -21.0 + bobbing_offset)
-		_carry_sprite.z_index = 1
-	else:
-		_carry_sprite.position = Vector2(0.0, -20.0 + bobbing_offset)
-		_carry_sprite.z_index = 1
+	match strict_direction:
+		Vector2.UP:
+			_carry_sprite.position = Vector2(0.0, -24.0 + bobbing_offset)
+			_carry_sprite.z_index = -1
+		Vector2.LEFT, Vector2.RIGHT:
+			_carry_sprite.position = Vector2(0.0, -21.0 + bobbing_offset)
+			_carry_sprite.z_index = 1
+		_:
+			_carry_sprite.position = Vector2(0.0, -20.0 + bobbing_offset)
+			_carry_sprite.z_index = 1
 
 func update_target_preview(direction: Vector2) -> void:
 	_update_strict_direction(direction)
@@ -300,39 +298,49 @@ func handle_tool_use(direction: Vector2) -> void:
 
 func _attempt_pickup_furniture() -> bool:
 	var space_state = actor.get_world_2d().direct_space_state
-	var hit_origin: Vector2 = actor.global_position + strict_direction * axe_reach
+	var hit_origin: Vector2 = actor.global_position + strict_direction * (axe_reach + 8.0)
 	var shape_circle = CircleShape2D.new()
-	shape_circle.radius = 8.0
+	shape_circle.radius = 12.0
 	var physics_query = PhysicsShapeQueryParameters2D.new()
 	physics_query.shape = shape_circle
 	physics_query.transform = Transform2D(0.0, hit_origin)
 	physics_query.collide_with_areas = false
 	physics_query.collide_with_bodies = true
-	physics_query.collision_mask = 4 # Furniture layer
+	physics_query.collision_mask = 4
 
 	var query_results = space_state.intersect_shape(physics_query, 1)
 	for result in query_results:
 		var obj = result.collider
-		if obj.has_method("pickup"):
-			var fid = obj.item_id
+		if not obj.has_method("pickup"):
+			continue
+		var fid = obj.item_id
+
+		if FurnitureManager.is_edit_mode:
 			obj.pickup()
 			obj.queue_free()
-			
-			# Find the corresponding item in database and add to inventory
 			var res_path = "res://systems/inventory/items/furniture_" + fid + ".tres"
 			if FileAccess.file_exists(res_path):
-				var f_item = load(res_path)
-				inventory_data.add_item(f_item, 1)
+				inventory_data.add_item(load(res_path), 1)
 			else:
-				# Fallback: construct it dynamically
 				var new_item = ItemData.new()
 				new_item.id = "furniture_" + fid
 				new_item.name = FurnitureManager.catalog[fid]["name"]
 				new_item.is_furniture = true
 				new_item.furniture_id = fid
 				inventory_data.add_item(new_item, 1)
-				
 			return true
+
+		# Modo normal: sentar em cadeiras independente do item na mão
+		if fid.begins_with("chair"):
+			var rot := int(obj.current_rotation_index)
+			var dir_str := "down"
+			match rot:
+				1: dir_str = "right"
+				2: dir_str = "up"
+				3: dir_str = "left"
+			actor.sit_down(obj, dir_str)
+			return true
+
 	return false
 
 func _get_target_map_position() -> Vector2i:
