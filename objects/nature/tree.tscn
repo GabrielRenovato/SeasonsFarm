@@ -212,13 +212,6 @@ vframes = 8
 visible = false
 position = Vector2(0, -21)
 
-[node name="ShakeEffectSprite" type="Sprite2D" parent="SpriteOffset"]
-visible = false
-position = Vector2(0, -21)
-texture = ExtResource("1_r6wkp")
-hframes = 4
-vframes = 8
-
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, -2)
 shape = SubResource("RectangleShape2D_r6wkp")
