@@ -6,6 +6,8 @@
 [ext_resource type="Texture2D" path="res://assets/sprites/tree/Common/Shadow/Birch Tree.png" id="4_growth"]
 
 [node name="BirchTree" instance=ExtResource("1_base")]
+big_shake_row = 0
+small_shake_row = 4
 growth_sprite_sheet = ExtResource("4_growth")
 stump_scene = ExtResource("3_stump")
 
