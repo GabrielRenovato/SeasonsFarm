@@ -239,8 +239,8 @@ func _play_stardew_shake() -> void:
 	_active_shake_tween = create_tween()
 	
 	if is_instance_valid(full_sprite):
-		# The hit animation for the big tree is at column 1 (base_frame + 1)
-		_active_shake_tween.tween_callback(func(): full_sprite.frame = base_frame + 1)
+		# The hit animation for the big tree is at column 2 (base_frame + 2)
+		_active_shake_tween.tween_callback(func(): full_sprite.frame = base_frame + 2)
 		_active_shake_tween.tween_property($SpriteOffset, "rotation_degrees", 3.0, 0.05)
 		_active_shake_tween.tween_property($SpriteOffset, "rotation_degrees", -3.0, 0.1)
 		_active_shake_tween.tween_property($SpriteOffset, "rotation_degrees", 0.0, 0.05)
