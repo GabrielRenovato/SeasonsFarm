@@ -17,11 +17,9 @@ enum GrowthStage { SEED, SPROUT, SAPLING, SMALL, FULL }
 @export var current_stage: GrowthStage = GrowthStage.FULL
 @export var growth_sprite_sheet: Texture2D
 
-@export_group("Season Rows")
-@export var spring_row: int = 0
-@export var summer_row: int = 0
-@export var fall_row: int = 1
-@export var winter_row: int = 2
+@export_group("Animation Rows")
+@export var big_idle_row: int = 1
+@export var medium_idle_row: int = 0
 @onready var full_sprite: Sprite2D = $SpriteOffset/Sprite2D
 @onready var growth_sprite: Sprite2D = $SpriteOffset.get_node_or_null("GrowthSprite")
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D
@@ -32,47 +30,18 @@ var is_dying: bool = false
 
 var _active_shake_tween: Tween
 var _active_pos_tween: Tween
-var base_frame: int = 0
 
 func _ready() -> void:
 	if full_sprite.texture != null and "Animation" in full_sprite.texture.resource_path:
 		is_stardew_tree = true
 		
-	base_frame = full_sprite.frame
-	
-	if TimeManager:
-		TimeManager.season_changed.connect(_on_season_changed)
-		
-	_update_season_frame()
 	_update_appearance()
-
-func _on_season_changed(_season: int) -> void:
-	_update_season_frame()
-
-func _update_season_frame() -> void:
-	if not is_stardew_tree or not TimeManager:
-		return
-		
-	var hframes = full_sprite.hframes
-	var row = 0
-	
-	match TimeManager.current_season:
-		TimeManager.Season.SPRING:
-			row = spring_row
-		TimeManager.Season.SUMMER:
-			row = summer_row
-		TimeManager.Season.FALL:
-			row = fall_row
-		TimeManager.Season.WINTER:
-			row = winter_row
-			
-	base_frame = row * hframes
-	if not is_dying and current_stage == GrowthStage.FULL:
-		full_sprite.frame = base_frame
 
 func _update_appearance() -> void:
 	if current_stage == GrowthStage.FULL:
 		full_sprite.visible = true
+		if is_stardew_tree:
+			full_sprite.frame = big_idle_row * full_sprite.hframes
 		if is_instance_valid(growth_sprite):
 			growth_sprite.visible = false
 		collision_shape.set_deferred("disabled", false)
@@ -169,7 +138,8 @@ func _die() -> void:
 		
 	# Reseta o frame, rotação e opacidade para o estado normal caso o tween/anim tenha parado no meio
 	if current_stage == GrowthStage.FULL:
-		full_sprite.frame = base_frame
+		if is_stardew_tree:
+			full_sprite.frame = big_idle_row * full_sprite.hframes
 		full_sprite.modulate.a = 1.0
 		$SpriteOffset.rotation_degrees = 0.0
 	elif is_instance_valid(growth_sprite):
@@ -239,12 +209,15 @@ func _play_stardew_shake() -> void:
 	_active_shake_tween = create_tween()
 	
 	if is_instance_valid(full_sprite):
-		# The hit animation for the big tree is at column 2 (base_frame + 2)
-		_active_shake_tween.tween_callback(func(): full_sprite.frame = base_frame + 2)
-		_active_shake_tween.tween_property($SpriteOffset, "rotation_degrees", 3.0, 0.05)
-		_active_shake_tween.tween_property($SpriteOffset, "rotation_degrees", -3.0, 0.1)
-		_active_shake_tween.tween_property($SpriteOffset, "rotation_degrees", 0.0, 0.05)
-		_active_shake_tween.tween_callback(func(): full_sprite.frame = base_frame)
+		var big_base_frame = big_idle_row * full_sprite.hframes
+		# The hit animation for the big tree is at frame + 1, 2, 3 of its row
+		_active_shake_tween.tween_callback(func(): full_sprite.frame = big_base_frame + 1)
+		_active_shake_tween.tween_interval(0.08)
+		_active_shake_tween.tween_callback(func(): full_sprite.frame = big_base_frame + 2)
+		_active_shake_tween.tween_interval(0.08)
+		_active_shake_tween.tween_callback(func(): full_sprite.frame = big_base_frame + 3)
+		_active_shake_tween.tween_interval(0.08)
+		_active_shake_tween.tween_callback(func(): full_sprite.frame = big_base_frame)
 	else:
 		_active_shake_tween.tween_property($SpriteOffset, "rotation_degrees", 3.0, 0.05)
 		_active_shake_tween.tween_property($SpriteOffset, "rotation_degrees", -3.0, 0.1)
@@ -261,11 +234,14 @@ func _play_small_shake() -> void:
 		growth_sprite.visible = false
 		full_sprite.visible = true
 		
-		# The hit animation for the medium tree is at column 3 (base_frame + 3)
-		_active_pos_tween.tween_callback(func(): full_sprite.frame = base_frame + 3)
-		_active_pos_tween.tween_property($SpriteOffset, "rotation_degrees", 3.0, 0.05)
-		_active_pos_tween.tween_property($SpriteOffset, "rotation_degrees", -3.0, 0.1)
-		_active_pos_tween.tween_property($SpriteOffset, "rotation_degrees", 0.0, 0.05)
+		var med_base_frame = medium_idle_row * full_sprite.hframes
+		# The hit animation for the medium tree is at frame + 1, 2, 3 of its row
+		_active_pos_tween.tween_callback(func(): full_sprite.frame = med_base_frame + 1)
+		_active_pos_tween.tween_interval(0.08)
+		_active_pos_tween.tween_callback(func(): full_sprite.frame = med_base_frame + 2)
+		_active_pos_tween.tween_interval(0.08)
+		_active_pos_tween.tween_callback(func(): full_sprite.frame = med_base_frame + 3)
+		_active_pos_tween.tween_interval(0.08)
 		_active_pos_tween.tween_callback(func(): 
 			full_sprite.visible = false
 			growth_sprite.visible = true
