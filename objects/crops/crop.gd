@@ -52,7 +52,7 @@ func update_visuals() -> void:
 	# Use total PNG frames for hframes so each cell is exactly frame_size px wide
 	var total_frames := max_growth_stages
 	if sprite.texture and frame_size > 0:
-		total_frames = sprite.texture.get_width() / frame_size
+		total_frames = int(sprite.texture.get_width() / float(frame_size))
 	sprite.hframes = total_frames
 	sprite.vframes = 1
 	# Map stage to actual PNG frame, skipping empty separator frames
@@ -68,6 +68,6 @@ func update_visuals() -> void:
 	# para cima para que a base da planta continue alinhada com a terra
 	if sprite.texture and sprite.texture.get_height() > 16:
 		var height_diff = sprite.texture.get_height() - 16
-		base_offset -= height_diff / 2
+		base_offset -= int(height_diff / 2.0)
 		
 	sprite.offset.y = base_offset

@@ -54,10 +54,10 @@
 [ext_resource type="Texture2D" uid="uid://byymcjaienw0q" path="res://assets/sprites/Character/PNG/7. Watering/Hair's/Standard/Brown.png" id="water_hair"]
 [ext_resource type="Texture2D" uid="uid://bysqf6fpwnlre" path="res://assets/sprites/Character/PNG/7. Watering/Skins/1.png" id="water_skin"]
 [ext_resource type="Texture2D" uid="uid://dntm3xew2aad7" path="res://assets/sprites/Character/PNG/7. Watering/Weapons/Watering/1.png" id="water_tool"]
-[ext_resource type="Texture2D" uid="uid://sitcloth001" path="res://assets/sprites/Character/PNG/18. Setting/Clothers/Farm/Blue.png" id="sit_cloth"]
-[ext_resource type="Texture2D" uid="uid://siteyes0001" path="res://assets/sprites/Character/PNG/18. Setting/Eyes/Male/Black.png" id="sit_eyes"]
-[ext_resource type="Texture2D" uid="uid://sithair0001" path="res://assets/sprites/Character/PNG/18. Setting/Hair's/Standard/Brown.png" id="sit_hair"]
-[ext_resource type="Texture2D" uid="uid://sitskin0001" path="res://assets/sprites/Character/PNG/18. Setting/Skins/1.png" id="sit_skin"]
+[ext_resource type="Texture2D" path="res://assets/sprites/Character/PNG/18. Setting/Clothers/Farm/Blue.png" id="sit_cloth"]
+[ext_resource type="Texture2D" path="res://assets/sprites/Character/PNG/18. Setting/Eyes/Male/Black.png" id="sit_eyes"]
+[ext_resource type="Texture2D" path="res://assets/sprites/Character/PNG/18. Setting/Hair's/Standard/Brown.png" id="sit_hair"]
+[ext_resource type="Texture2D" path="res://assets/sprites/Character/PNG/18. Setting/Skins/1.png" id="sit_skin"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_player_col"]
 size = Vector2(9, 2)

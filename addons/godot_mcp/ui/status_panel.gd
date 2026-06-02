@@ -256,7 +256,7 @@ func _update_clients_tab() -> void:
 			if websocket_server.has_method("get_port_connect_time"):
 				var elapsed: float = websocket_server.get_port_connect_time(p)
 				if elapsed >= 0:
-					var mins := int(elapsed) / 60
+					var mins := int(elapsed / 60.0)
 					var secs := int(elapsed) % 60
 					time_str = "  (%dm %02ds)" % [mins, secs]
 

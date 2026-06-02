@@ -52,7 +52,7 @@ func _load_existing_furniture(container: Node2D) -> void:
 			# Map old rotation degrees to index if needed, otherwise use it directly
 			var rot_val = data["rotation"]
 			if rot_val >= 90: # Handle old saves where it was degrees
-				f_item.current_rotation_index = int(rot_val / 90) % 4
+				f_item.current_rotation_index = int(rot_val / 90.0) % 4
 			else:
 				f_item.current_rotation_index = int(rot_val) % 4
 				
