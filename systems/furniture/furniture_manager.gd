@@ -11,6 +11,7 @@ var placed_furniture: Dictionary = {}
 
 # We emit this when edit mode is toggled
 signal edit_mode_changed(is_editing: bool)
+@warning_ignore("unused_signal")
 signal furniture_picked_up(item: Node2D)
 
 # Catalog of available furniture items

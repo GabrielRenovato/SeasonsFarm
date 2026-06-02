@@ -30,7 +30,7 @@ func _ready() -> void:
 		modulate = Color(1, 1, 1, 1)
 		collision_shape.disabled = false
 		
-func _input_event(viewport: Node, event: InputEvent, shape_idx: int) -> void:
+func _input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
 	if FurnitureManager.is_edit_mode and is_placed:
 		if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 			pickup()
