@@ -19,7 +19,6 @@ enum GrowthStage { SEED, SPROUT, SAPLING, SMALL, FULL }
 
 @export_group("Animation Rows")
 @export var big_idle_row: int = 1
-@export var medium_idle_row: int = 0
 @onready var full_sprite: Sprite2D = $SpriteOffset/Sprite2D
 @onready var growth_sprite: Sprite2D = $SpriteOffset.get_node_or_null("GrowthSprite")
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D
@@ -228,28 +227,20 @@ func _play_small_shake() -> void:
 		return
 	if _active_pos_tween and _active_pos_tween.is_valid():
 		_active_pos_tween.kill()
-	_active_pos_tween = create_tween()
-	
+
+	# Árvores pequenas/médias (SEED..SMALL) só existem no sheet de crescimento
+	# (growth_sprite). NÃO trocamos para o sheet de animação: a linha 0 dele contém
+	# frames de CRESCIMENTO de tamanhos diferentes (largura ~25 -> 29 -> 32 px), o que
+	# fazia a árvore "encolher e voltar a crescer" ao ser atingida. Aqui só balançamos
+	# o sprite no lugar, mantendo o tamanho constante.
+	growth_sprite.visible = true
 	if is_instance_valid(full_sprite):
-		growth_sprite.visible = false
-		full_sprite.visible = true
-		
-		var med_base_frame = medium_idle_row * full_sprite.hframes
-		# The hit animation for the medium tree is at frame + 1, 2, 3 of its row
-		_active_pos_tween.tween_callback(func(): full_sprite.frame = med_base_frame + 1)
-		_active_pos_tween.tween_interval(0.08)
-		_active_pos_tween.tween_callback(func(): full_sprite.frame = med_base_frame + 2)
-		_active_pos_tween.tween_interval(0.08)
-		_active_pos_tween.tween_callback(func(): full_sprite.frame = med_base_frame + 3)
-		_active_pos_tween.tween_interval(0.08)
-		_active_pos_tween.tween_callback(func(): 
-			full_sprite.visible = false
-			growth_sprite.visible = true
-		)
-	else:
-		_active_pos_tween.tween_property(growth_sprite, "position:x", 2.0, 0.05)
-		_active_pos_tween.tween_property(growth_sprite, "position:x", -2.0, 0.1)
-		_active_pos_tween.tween_property(growth_sprite, "position:x", 0.0, 0.05)
+		full_sprite.visible = false
+
+	_active_pos_tween = create_tween()
+	_active_pos_tween.tween_property(growth_sprite, "position:x", 2.0, 0.05)
+	_active_pos_tween.tween_property(growth_sprite, "position:x", -2.0, 0.1)
+	_active_pos_tween.tween_property(growth_sprite, "position:x", 0.0, 0.05)
 
 func _play_fall_tween() -> void:
 	# Brief shake first

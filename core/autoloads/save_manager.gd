@@ -69,8 +69,14 @@ func load_game() -> void:
 	EconomyManager.gold_changed.emit(EconomyManager.gold)
 	TimeManager.day = int(data.get("day", 1))
 	if PlayerStatsManager:
-		PlayerStatsManager.max_energy = float(data.get("max_energy", 270.0))
-		PlayerStatsManager.energy = float(data.get("energy", PlayerStatsManager.max_energy))
+		PlayerStatsManager.max_energy = float(data.get("max_energy", PlayerStatsManager.max_energy))
+		var loaded_energy := float(data.get("energy", PlayerStatsManager.max_energy))
+		# Evita soft-lock: não há cama/sono e a energia só recarrega ao virar o dia (T).
+		# Carregar um save com energia zerada deixava o player sem conseguir usar
+		# ferramentas. Nesse caso, o player começa "descansado" com energia cheia.
+		if loaded_energy <= 0.0:
+			loaded_energy = PlayerStatsManager.max_energy
+		PlayerStatsManager.energy = clampf(loaded_energy, 0.0, PlayerStatsManager.max_energy)
 		PlayerStatsManager.energy_changed.emit(PlayerStatsManager.energy, PlayerStatsManager.max_energy)
 
 	_deserialize_inventory(data.get("inventory", []))

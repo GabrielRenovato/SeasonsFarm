@@ -21,6 +21,7 @@ var state_machine: AnimationNodeStateMachinePlayback
 var inventory_data: InventoryData
 var is_using_tool: bool = false
 var _active_tool_in_use: String = ""
+var _tool_use_id: int = 0 ## Incrementa a cada uso; usado pelo watchdog para evitar liberar o uso errado
 var strict_direction: Vector2 = Vector2.DOWN
 var _pending_hit_direction: Vector2 = Vector2.ZERO
 var _pending_target_map_position: Vector2i = Vector2i.ZERO
@@ -278,6 +279,8 @@ func handle_tool_use(direction: Vector2) -> void:
 					_pending_target_map_position = target_map_position
 					animation_tree.set("parameters/Sickle/blend_position", strict_direction)
 					state_machine.travel("Sickle")
+					_tool_use_id += 1
+					_start_tool_use_watchdog(_tool_use_id)
 					return
 		
 		var tool_name = get_current_tool()
@@ -294,6 +297,8 @@ func handle_tool_use(direction: Vector2) -> void:
 			
 			animation_tree.set("parameters/" + tool_name + "/blend_position", strict_direction)
 			state_machine.travel(tool_name)
+			_tool_use_id += 1
+			_start_tool_use_watchdog(_tool_use_id)
 		
 		else:
 			_attempt_planting()
@@ -450,6 +455,32 @@ func _on_animation_finished(_animation_name: StringName) -> void:
 			FarmManager.water_soil(_pending_target_map_position)
 	elif tool_used == "Harvest":
 		_do_harvest(_pending_target_map_position)
+
+func _current_tool_anim_length() -> float:
+	# Duracao da animacao atual da ferramenta (ex: "axe_down"), usada pelo watchdog.
+	var anim_player := actor.get_node_or_null("AnimationPlayer") as AnimationPlayer
+	if anim_player == null:
+		return 1.0
+	# Colheita usa a animacao da foice (estado "Sickle")
+	var prefix := "sickle" if _active_tool_in_use == "Harvest" else _active_tool_in_use.to_lower()
+	var suffix := "down"
+	if strict_direction == Vector2.UP: suffix = "up"
+	elif strict_direction == Vector2.LEFT: suffix = "left"
+	elif strict_direction == Vector2.RIGHT: suffix = "right"
+	var anim_name := prefix + "_" + suffix
+	if anim_player.has_animation(anim_name):
+		return anim_player.get_animation(anim_name).length
+	return 1.0
+
+func _start_tool_use_watchdog(use_id: int) -> void:
+	# Rede de seguranca: o sinal animation_finished do AnimationTree as vezes nao
+	# dispara (hitch de frame ao derrubar a arvore / peculiaridade da state machine
+	# do Godot 4), deixando o player preso na pose de bater. Garante a liberacao
+	# apos a duracao da animacao, sem interferir no caso normal (idempotente).
+	var timeout := _current_tool_anim_length() + 0.25
+	await get_tree().create_timer(timeout).timeout
+	if is_using_tool and _tool_use_id == use_id:
+		_on_animation_finished(&"watchdog")
 
 func _attempt_planting() -> void:
 	if not inventory_data:
