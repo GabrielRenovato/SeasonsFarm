@@ -8,6 +8,7 @@ extends StaticBody2D
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
 
 @export var stump_scene: PackedScene = preload("res://objects/nature/stump.tscn")
+@export var leaf_scene: PackedScene = preload("res://objects/nature/effects/leaf_effect.tscn")
 
 var chosen_fall_anim: String = ""
 var spawn_direction: float = 1.0
@@ -239,14 +240,21 @@ func _play_stardew_shake() -> void:
 		_active_shake_tween.kill()
 	_active_shake_tween = create_tween()
 	
+	_spawn_leaf_effect()
+	
+	# Efeito de piscar (Flash)
+	full_sprite.modulate = Color(3, 3, 3, 1) # Super branco
+	_active_shake_tween.tween_property(full_sprite, "modulate", Color.WHITE, 0.2)
+	
+	var frame_tween = create_tween()
 	# Usa os quadros reais da animação no spritesheet
-	_active_shake_tween.tween_callback(func(): full_sprite.frame = base_frame + 1)
-	_active_shake_tween.tween_interval(0.08)
-	_active_shake_tween.tween_callback(func(): full_sprite.frame = base_frame + 2)
-	_active_shake_tween.tween_interval(0.08)
-	_active_shake_tween.tween_callback(func(): full_sprite.frame = base_frame + 3)
-	_active_shake_tween.tween_interval(0.08)
-	_active_shake_tween.tween_callback(func(): full_sprite.frame = base_frame)
+	frame_tween.tween_callback(func(): full_sprite.frame = base_frame + 1)
+	frame_tween.tween_interval(0.08)
+	frame_tween.tween_callback(func(): full_sprite.frame = base_frame + 2)
+	frame_tween.tween_interval(0.08)
+	frame_tween.tween_callback(func(): full_sprite.frame = base_frame + 3)
+	frame_tween.tween_interval(0.08)
+	frame_tween.tween_callback(func(): full_sprite.frame = base_frame)
 
 func _play_small_shake() -> void:
 	if not is_instance_valid(growth_sprite):
@@ -254,10 +262,26 @@ func _play_small_shake() -> void:
 	if _active_pos_tween and _active_pos_tween.is_valid():
 		_active_pos_tween.kill()
 	_active_pos_tween = create_tween()
+	
+	_spawn_leaf_effect()
+	
+	# Efeito de piscar (Flash)
+	growth_sprite.modulate = Color(3, 3, 3, 1)
+	_active_pos_tween.tween_property(growth_sprite, "modulate", Color.WHITE, 0.2)
+	
+	var pos_tween = create_tween()
 	# Usa movimentação física ao invés de trocar region_rect para evitar exibir sprites vazios ou tocos
-	_active_pos_tween.tween_property(growth_sprite, "position:x", 2.0, 0.05)
-	_active_pos_tween.tween_property(growth_sprite, "position:x", -2.0, 0.1)
-	_active_pos_tween.tween_property(growth_sprite, "position:x", 0.0, 0.05)
+	pos_tween.tween_property(growth_sprite, "position:x", 2.0, 0.05)
+	pos_tween.tween_property(growth_sprite, "position:x", -2.0, 0.1)
+	pos_tween.tween_property(growth_sprite, "position:x", 0.0, 0.05)
+
+func _spawn_leaf_effect() -> void:
+	if leaf_scene == null:
+		return
+	var leaf_instance = leaf_scene.instantiate()
+	get_parent().add_child(leaf_instance)
+	var y_offset = -20 if current_stage == GrowthStage.FULL else -10
+	leaf_instance.global_position = global_position + Vector2(0, y_offset)
 
 func _play_fall_tween() -> void:
 	# Brief shake first
