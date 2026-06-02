@@ -422,14 +422,6 @@ func _hit_objects_in_direction(tool_name: String) -> void:
 			best_distance = distance
 			best_target = target_node
 
-	# [ARV] diagnóstico temporário — remover depois de confirmar o conserto
-	if _dbg_targets.size() > 0:
-		var _desc := ""
-		for _tn in _dbg_targets:
-			var _st = _tn.current_stage if "current_stage" in _tn else -1
-			_desc += _tn.name + "(estagio " + str(_st) + ") "
-		var _bst = best_target.current_stage if (best_target != null and "current_stage" in best_target) else -1
-		print("[ARV] machado: ", _dbg_targets.size(), " alvo(s) no alcance -> ", _desc, "| ACERTOU: ", (best_target.name if best_target != null else "nada"), " (estagio ", _bst, ")")
 
 	if best_target != null:
 		best_target.take_damage(1, actor.global_position, tool_name)

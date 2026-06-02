@@ -148,8 +148,6 @@ func take_damage(amount: int, hitter_position: Vector2 = Vector2.ZERO, tool_name
 	if tool_name == "Axe" and current_stage == GrowthStage.SEED:
 		return
 
-	# [ARV] diagnóstico temporário — remover depois de confirmar o conserto
-	print("[ARV] -> ", scene_file_path.get_file(), " atingida: estagio=", current_stage, " (4=GRANDE, 3/2=media) | vida=", health, " | grande_visivel=", full_sprite.visible, " | media_visivel=", (growth_sprite.visible if is_instance_valid(growth_sprite) else false))
 
 	if current_stage < GrowthStage.SAPLING:
 		# Mudinhas (Seed, Sprout) são destruídas em um único golpe
@@ -248,17 +246,20 @@ func _spawn_wood(amount_override: int = -1) -> void:
 		return
 		
 	var amount = wood_amount if amount_override == -1 else amount_override
+	var height_offset = -30.0 if current_stage == GrowthStage.FULL else -15.0
+	var drop_origin = global_position + Vector2(0, height_offset)
+	
 	for i in range(amount):
 		var wood_instance = wood_scene.instantiate()
 		get_parent().add_child(wood_instance)
-		wood_instance.global_position = global_position
+		wood_instance.global_position = drop_origin
 		
 		var random_x = randf_range(10, 50) * spawn_direction
 		var random_offset = Vector2(random_x, randf_range(10, 40))
 		var target_position = global_position + random_offset
 		
 		var duration = 0.5
-		var peak_y = global_position.y - randf_range(20, 40)
+		var peak_y = drop_origin.y - randf_range(10, 20)
 		
 		var x_tween = wood_instance.create_tween()
 		x_tween.tween_property(wood_instance, "global_position:x", target_position.x, duration).set_trans(Tween.TRANS_LINEAR)
