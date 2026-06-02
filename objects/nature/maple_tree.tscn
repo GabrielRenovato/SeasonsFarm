@@ -6,8 +6,8 @@
 [ext_resource type="Texture2D" path="res://assets/sprites/tree/Common/Shadow/Maple Tree.png" id="4_growth"]
 
 [node name="MapleTree" instance=ExtResource("1_base")]
-spring_row = 0
-summer_row = 1
+spring_row = 1
+summer_row = 4
 fall_row = 2
 winter_row = 6
 growth_sprite_sheet = ExtResource("4_growth")

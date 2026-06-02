@@ -19,6 +19,17 @@ enum GrowthStage { SEED, SPROUT, SAPLING, SMALL, FULL }
 
 @export_group("Animation Rows")
 @export var big_idle_row: int = 1
+## Linha (0-index) da árvore adulta em cada estação no sheet de animação.
+## -1 = sem variante sazonal -> usa big_idle_row. Maple/Mahogany têm as 4
+## variantes (verde/laranja/branco/verde-escuro); Pine/Birch são perenes e
+## mantêm big_idle_row o ano todo.
+@export var spring_row: int = -1
+@export var summer_row: int = -1
+@export var fall_row: int = -1
+@export var winter_row: int = -1
+## Árvores sem sprite de inverno (ex.: pinheiro/bétula) somem no inverno e
+## voltam nas demais estações, em vez de exibir um sprite de inverno.
+@export var hide_in_winter: bool = false
 @onready var full_sprite: Sprite2D = $SpriteOffset/Sprite2D
 @onready var growth_sprite: Sprite2D = $SpriteOffset.get_node_or_null("GrowthSprite")
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D
@@ -33,14 +44,18 @@ var _active_pos_tween: Tween
 func _ready() -> void:
 	if full_sprite.texture != null and "Animation" in full_sprite.texture.resource_path:
 		is_stardew_tree = true
-		
+
+	# Reage à troca de estação (troca a cor da árvore adulta: outono/inverno, etc.)
+	if not TimeManager.season_changed.is_connected(_on_season_changed):
+		TimeManager.season_changed.connect(_on_season_changed)
+
 	_update_appearance()
 
 func _update_appearance() -> void:
 	if current_stage == GrowthStage.FULL:
 		full_sprite.visible = true
 		if is_stardew_tree:
-			full_sprite.frame = big_idle_row * full_sprite.hframes
+			full_sprite.frame = _get_seasonal_big_row() * full_sprite.hframes
 		if is_instance_valid(growth_sprite):
 			growth_sprite.visible = false
 		collision_shape.set_deferred("disabled", false)
@@ -77,6 +92,41 @@ func _update_appearance() -> void:
 					health = 2
 				collision_shape.set_deferred("disabled", false)
 				area_collision.set_deferred("disabled", false)
+
+	# Aplica o estado de inverno por último (pode ocultar a árvore e desligar colisão)
+	_apply_winter_state()
+
+# Oculta/restaura a árvore conforme a estação. Árvores marcadas com hide_in_winter
+# (sem sprite de galho seco) desaparecem do mapa no inverno e voltam nas outras
+# estações. As demais ficam visíveis e mostram seu sprite sazonal normalmente.
+func _apply_winter_state() -> void:
+	var is_winter := TimeManager.current_season == TimeManager.Season.WINTER
+	var hidden := hide_in_winter and is_winter
+	visible = not hidden
+	if hidden:
+		collision_shape.set_deferred("disabled", true)
+		area_collision.set_deferred("disabled", true)
+
+# Retorna a linha (0-index) da árvore adulta conforme a estação atual.
+# Árvores perenes (rows sazonais = -1) caem de volta em big_idle_row.
+func _get_seasonal_big_row() -> int:
+	match TimeManager.current_season:
+		TimeManager.Season.SPRING:
+			return spring_row if spring_row >= 0 else big_idle_row
+		TimeManager.Season.SUMMER:
+			return summer_row if summer_row >= 0 else big_idle_row
+		TimeManager.Season.FALL:
+			return fall_row if fall_row >= 0 else big_idle_row
+		TimeManager.Season.WINTER:
+			return winter_row if winter_row >= 0 else big_idle_row
+	return big_idle_row
+
+# Atualiza a árvore quando a estação muda: troca o sprite sazonal (verde ->
+# laranja -> galho seco) e oculta/restaura as árvores que somem no inverno.
+func _on_season_changed(_season: int) -> void:
+	if is_dying:
+		return
+	_update_appearance()
 
 func take_damage(amount: int, hitter_position: Vector2 = Vector2.ZERO, tool_name: String = "") -> void:
 	if is_dying or health <= 0:
@@ -138,7 +188,7 @@ func _die() -> void:
 	# Reseta o frame, rotação e opacidade para o estado normal caso o tween/anim tenha parado no meio
 	if current_stage == GrowthStage.FULL:
 		if is_stardew_tree:
-			full_sprite.frame = big_idle_row * full_sprite.hframes
+			full_sprite.frame = _get_seasonal_big_row() * full_sprite.hframes
 		full_sprite.modulate.a = 1.0
 		$SpriteOffset.rotation_degrees = 0.0
 	elif is_instance_valid(growth_sprite):
@@ -208,7 +258,7 @@ func _play_stardew_shake() -> void:
 	_active_shake_tween = create_tween()
 	
 	if is_instance_valid(full_sprite):
-		var big_base_frame = big_idle_row * full_sprite.hframes
+		var big_base_frame = _get_seasonal_big_row() * full_sprite.hframes
 		# The hit animation for the big tree is at frame + 1, 2, 3 of its row
 		_active_shake_tween.tween_callback(func(): full_sprite.frame = big_base_frame + 1)
 		_active_shake_tween.tween_interval(0.08)
