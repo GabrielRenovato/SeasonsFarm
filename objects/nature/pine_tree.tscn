@@ -10,6 +10,8 @@ spring_row = 0
 summer_row = 1
 fall_row = 2
 winter_row = 3
+big_shake_row = 0
+medium_shake_row = 1
 growth_sprite_sheet = ExtResource("4_growth")
 stump_scene = ExtResource("3_stump")
 

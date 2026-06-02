@@ -23,6 +23,10 @@ enum GrowthStage { SEED, SPROUT, SAPLING, SMALL, FULL }
 @export var fall_row: int = 1
 @export var winter_row: int = 2
 
+@export_group("Shake Animation Rows")
+@export var big_shake_row: int = 0
+@export var medium_shake_row: int = 1
+
 @onready var full_sprite: Sprite2D = $SpriteOffset/Sprite2D
 @onready var growth_sprite: Sprite2D = $SpriteOffset.get_node_or_null("GrowthSprite")
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D
@@ -239,14 +243,21 @@ func _play_stardew_shake() -> void:
 		_active_shake_tween.kill()
 	_active_shake_tween = create_tween()
 	
-	# Usa os quadros reais da animação no spritesheet
-	_active_shake_tween.tween_callback(func(): full_sprite.frame = base_frame + 1)
-	_active_shake_tween.tween_interval(0.08)
-	_active_shake_tween.tween_callback(func(): full_sprite.frame = base_frame + 2)
-	_active_shake_tween.tween_interval(0.08)
-	_active_shake_tween.tween_callback(func(): full_sprite.frame = base_frame + 3)
-	_active_shake_tween.tween_interval(0.08)
-	_active_shake_tween.tween_callback(func(): full_sprite.frame = base_frame)
+	if is_instance_valid(full_sprite):
+		var shake_base = big_shake_row * full_sprite.hframes
+		
+		# Animação nos quadros 1, 2, 3 do sprite (onde 0 é o idle)
+		_active_shake_tween.tween_callback(func(): full_sprite.frame = shake_base + 1)
+		_active_shake_tween.tween_interval(0.08)
+		_active_shake_tween.tween_callback(func(): full_sprite.frame = shake_base + 2)
+		_active_shake_tween.tween_interval(0.08)
+		_active_shake_tween.tween_callback(func(): full_sprite.frame = shake_base + 3)
+		_active_shake_tween.tween_interval(0.08)
+		_active_shake_tween.tween_callback(func(): full_sprite.frame = base_frame)
+	else:
+		_active_shake_tween.tween_property($SpriteOffset, "rotation_degrees", 3.0, 0.05)
+		_active_shake_tween.tween_property($SpriteOffset, "rotation_degrees", -3.0, 0.1)
+		_active_shake_tween.tween_property($SpriteOffset, "rotation_degrees", 0.0, 0.05)
 
 func _play_small_shake() -> void:
 	if not is_instance_valid(growth_sprite):
@@ -254,10 +265,27 @@ func _play_small_shake() -> void:
 	if _active_pos_tween and _active_pos_tween.is_valid():
 		_active_pos_tween.kill()
 	_active_pos_tween = create_tween()
-	# Usa movimentação física ao invés de trocar region_rect para evitar exibir sprites vazios ou tocos
-	_active_pos_tween.tween_property(growth_sprite, "position:x", 2.0, 0.05)
-	_active_pos_tween.tween_property(growth_sprite, "position:x", -2.0, 0.1)
-	_active_pos_tween.tween_property(growth_sprite, "position:x", 0.0, 0.05)
+	
+	if is_instance_valid(full_sprite):
+		growth_sprite.visible = false
+		full_sprite.visible = true
+		var shake_base = medium_shake_row * full_sprite.hframes
+		
+		# Toca os quadros de shake da arvore media
+		_active_pos_tween.tween_callback(func(): full_sprite.frame = shake_base + 1)
+		_active_pos_tween.tween_interval(0.08)
+		_active_pos_tween.tween_callback(func(): full_sprite.frame = shake_base + 2)
+		_active_pos_tween.tween_interval(0.08)
+		_active_pos_tween.tween_callback(func(): full_sprite.frame = shake_base + 3)
+		_active_pos_tween.tween_interval(0.08)
+		_active_pos_tween.tween_callback(func(): 
+			full_sprite.visible = false
+			growth_sprite.visible = true
+		)
+	else:
+		_active_pos_tween.tween_property(growth_sprite, "position:x", 2.0, 0.05)
+		_active_pos_tween.tween_property(growth_sprite, "position:x", -2.0, 0.1)
+		_active_pos_tween.tween_property(growth_sprite, "position:x", 0.0, 0.05)
 
 func _play_fall_tween() -> void:
 	# Brief shake first
