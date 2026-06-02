@@ -391,7 +391,14 @@ func _hit_objects_in_direction(tool_name: String) -> void:
 
 	var query_results = space_state.intersect_shape(physics_query, 8)
 
-	var hit_something := false
+	# A consulta de física devolve os alvos em ordem ARBITRÁRIA. Se houver mais de um
+	# objeto atacável no raio do golpe (ex.: uma árvore média/muda perto de uma árvore
+	# grande), pegar o "primeiro da lista" pode acertar o alvo errado — e então tocar a
+	# animação errada (a grande "virava" a animação da média). Escolhemos o alvo MAIS
+	# PRÓXIMO DO PLAYER: você fica encostado na árvore que está cortando, então é ela.
+	var best_target = null
+	var best_distance := INF
+	var _dbg_targets := []
 	for collision_result in query_results:
 		var hit_object = collision_result.collider
 		# Ignora colliders de objetos que já estão sendo liberados (ex: árvore caindo)
@@ -406,19 +413,33 @@ func _hit_objects_in_direction(tool_name: String) -> void:
 			continue
 		if target_node == actor or target_node.is_ancestor_of(actor):
 			continue
+		if not target_node.has_method("take_damage"):
+			continue
 
-		if target_node.has_method("take_damage"):
-			target_node.take_damage(1, actor.global_position, tool_name)
-			hit_something = true
+		_dbg_targets.append(target_node)
+		var distance: float = target_node.global_position.distance_to(actor.global_position)
+		if distance < best_distance:
+			best_distance = distance
+			best_target = target_node
 
-			if tool_name == "Pickaxe":
-				var effect_instance = HIT_EFFECT_SCENE.instantiate()
-				actor.get_parent().add_child(effect_instance)
-				effect_instance.global_position = hit_origin
+	# [ARV] diagnóstico temporário — remover depois de confirmar o conserto
+	if _dbg_targets.size() > 0:
+		var _desc := ""
+		for _tn in _dbg_targets:
+			var _st = _tn.current_stage if "current_stage" in _tn else -1
+			_desc += _tn.name + "(estagio " + str(_st) + ") "
+		var _bst = best_target.current_stage if (best_target != null and "current_stage" in best_target) else -1
+		print("[ARV] machado: ", _dbg_targets.size(), " alvo(s) no alcance -> ", _desc, "| ACERTOU: ", (best_target.name if best_target != null else "nada"), " (estagio ", _bst, ")")
 
-			break
+	if best_target != null:
+		best_target.take_damage(1, actor.global_position, tool_name)
 
-	_flash_debug_rect(Color.GREEN if hit_something else Color.RED)
+		if tool_name == "Pickaxe":
+			var effect_instance = HIT_EFFECT_SCENE.instantiate()
+			actor.get_parent().add_child(effect_instance)
+			effect_instance.global_position = hit_origin
+
+	_flash_debug_rect(Color.GREEN if best_target != null else Color.RED)
 
 func _flash_debug_rect(flash_color: Color) -> void:
 	if debug_rect == null:

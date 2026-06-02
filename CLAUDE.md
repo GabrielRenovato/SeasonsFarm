@@ -2,6 +2,10 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Idioma / Language (REGRA OBRIGATÓRIA)
+
+**Responda SEMPRE em português do Brasil (pt-BR).** Toda comunicação com o usuário — explicações, resumos, perguntas, mensagens de status — deve ser em pt-BR. (Código, nomes de variáveis e comandos permanecem como estão; apenas a conversa é em pt-BR.)
+
 ## Project Overview
 
 **Seasons Farm** — a Stardew Valley-inspired farming sim built with **Godot 4.6** (GDScript). Pixel art, 2D top-down perspective, viewport 480×240 scaled up to 1920×1080.

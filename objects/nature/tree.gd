@@ -40,6 +40,7 @@ var is_dying: bool = false
 
 var _active_shake_tween: Tween
 var _active_pos_tween: Tween
+var _active_blink_tween: Tween
 
 func _ready() -> void:
 	if full_sprite.texture != null and "Animation" in full_sprite.texture.resource_path:
@@ -58,6 +59,10 @@ func _update_appearance() -> void:
 			full_sprite.frame = _get_seasonal_big_row() * full_sprite.hframes
 		if is_instance_valid(growth_sprite):
 			growth_sprite.visible = false
+		# Reset da vida ao virar adulta (3 golpes). Sem isso, uma árvore que cresceu
+		# de SMALL->FULL herdava health=2 e caía em 2 golpes (como a média).
+		if not is_dying:
+			health = 3
 		collision_shape.set_deferred("disabled", false)
 		area_collision.set_deferred("disabled", false)
 	else:
@@ -142,12 +147,15 @@ func take_damage(amount: int, hitter_position: Vector2 = Vector2.ZERO, tool_name
 	# Axe only works once it leaves the seed stage (sprout and above)
 	if tool_name == "Axe" and current_stage == GrowthStage.SEED:
 		return
-		
-	if current_stage < GrowthStage.SMALL:
-		# Seed, Sprout, Sapling are destroyed in a single hit
+
+	# [ARV] diagnóstico temporário — remover depois de confirmar o conserto
+	print("[ARV] -> ", scene_file_path.get_file(), " atingida: estagio=", current_stage, " (4=GRANDE, 3/2=media) | vida=", health, " | grande_visivel=", full_sprite.visible, " | media_visivel=", (growth_sprite.visible if is_instance_valid(growth_sprite) else false))
+
+	if current_stage < GrowthStage.SAPLING:
+		# Mudinhas (Seed, Sprout) são destruídas em um único golpe
 		health = 0
-	elif current_stage == GrowthStage.SMALL:
-		# Small trees take 2 hits (set health on first hit, then decrement)
+	elif current_stage == GrowthStage.SAPLING or current_stage == GrowthStage.SMALL:
+		# Árvore média (Sapling/Small) leva 2 golpes: pisca no 1º, tomba no 2º
 		if health > 2:
 			health = 2
 		health -= amount
@@ -163,11 +171,14 @@ func take_damage(amount: int, hitter_position: Vector2 = Vector2.ZERO, tool_name
 			spawn_direction = 1.0
 			
 	if health > 0:
+		# Pisca (flash branco) em qualquer estágio para um feedback de dano claro e
+		# confiável, independente de o sheet ter ou não frames de balanço (ex.: a
+		# bétula no outono usa frames estáticos e não "balança").
+		_play_hit_blink()
 		if current_stage == GrowthStage.FULL:
 			_play_stardew_shake()
-		else:
-			if is_instance_valid(growth_sprite):
-				_play_small_shake()
+		elif is_instance_valid(growth_sprite):
+			_play_small_shake()
 	else:
 		_die()
 
@@ -184,41 +195,45 @@ func _die() -> void:
 		_active_shake_tween.kill()
 	if _active_pos_tween and _active_pos_tween.is_valid():
 		_active_pos_tween.kill()
-		
-	# Reseta o frame, rotação e opacidade para o estado normal caso o tween/anim tenha parado no meio
+	if _active_blink_tween and _active_blink_tween.is_valid():
+		_active_blink_tween.kill()
+
+	# Reseta frame, rotação e modulate (cor + opacidade) caso um tween/flash tenha
+	# parado no meio — modulate completo para limpar também o brilho do flash de hit.
 	if current_stage == GrowthStage.FULL:
 		if is_stardew_tree:
 			full_sprite.frame = _get_seasonal_big_row() * full_sprite.hframes
-		full_sprite.modulate.a = 1.0
+		full_sprite.modulate = Color(1.0, 1.0, 1.0, 1.0)
 		$SpriteOffset.rotation_degrees = 0.0
 	elif is_instance_valid(growth_sprite):
 		growth_sprite.position.x = 0.0
-		growth_sprite.modulate.a = 1.0
+		growth_sprite.modulate = Color(1.0, 1.0, 1.0, 1.0)
 
 	$CollisionShape2D.set_deferred("disabled", true)
 	$Area2D/CollisionShape2D.set_deferred("disabled", true)
 
-	if current_stage == GrowthStage.FULL:
+	# Árvore grande (FULL) e média (SAPLING/SMALL) tombam e caem ao serem quebradas.
+	# O toco só nasce da árvore grande (ver _play_fall_tween); a média cai sem toco.
+	# Mudinhas (SPROUT/SEED) apenas desaparecem.
+	if current_stage >= GrowthStage.SAPLING:
 		# Aguarda a animação da árvore (tremida e queda) terminar
 		await _play_fall_tween()
-		
+
 		# Só após a árvore cair completamente que a madeira deve spawnar
-		_spawn_wood()
+		if current_stage == GrowthStage.FULL:
+			_spawn_wood()
+		else:
+			_spawn_wood(2)
 	else:
 		if is_instance_valid(growth_sprite):
-			if current_stage == GrowthStage.SMALL:
-				_play_small_shake()
-				await get_tree().create_timer(0.15).timeout
 			var fade_tween = create_tween()
 			fade_tween.tween_property(growth_sprite, "modulate:a", 0.0, 0.2)
 			fade_tween.tween_property(growth_sprite, "scale", Vector2(1.2, 1.2), 0.2)
 			await fade_tween.finished
-			
-		if current_stage == GrowthStage.SMALL:
-			_spawn_wood(2)
-		elif current_stage == GrowthStage.SAPLING or current_stage == GrowthStage.SPROUT:
+
+		if current_stage == GrowthStage.SPROUT:
 			_spawn_wood(1)
-	
+
 	queue_free()
 
 func _spawn_stump() -> void:
@@ -292,18 +307,31 @@ func _play_small_shake() -> void:
 	_active_pos_tween.tween_property(growth_sprite, "position:x", -2.0, 0.1)
 	_active_pos_tween.tween_property(growth_sprite, "position:x", 0.0, 0.05)
 
+# Pisca rápido (flash branco) no sprite visível como feedback de dano. Funciona em
+# qualquer estágio e independe dos frames do sheet de animação, garantindo o "piscar"
+# tanto na árvore média (sprite único, sem frames de balanço) quanto em árvores cujo
+# sheet sazonal não tem frames de balanço (ex.: bétula no outono).
+func _play_hit_blink() -> void:
+	var spr: Sprite2D = full_sprite if current_stage == GrowthStage.FULL else growth_sprite
+	if not is_instance_valid(spr):
+		return
+	if _active_blink_tween and _active_blink_tween.is_valid():
+		_active_blink_tween.kill()
+	# Brilho > 1 clareia o sprite (flash branco) em 2D no Godot; volta ao normal suave.
+	spr.modulate = Color(2.2, 2.2, 2.2, 1.0)
+	_active_blink_tween = create_tween()
+	_active_blink_tween.tween_property(spr, "modulate", Color(1.0, 1.0, 1.0, 1.0), 0.18)
+
 func _play_fall_tween() -> void:
-	# Brief shake first
-	if current_stage == GrowthStage.SMALL:
-		_play_small_shake()
-		
+	# Tremida rápida antes de cair (vale para árvore grande e média, pois balança
+	# o $SpriteOffset que contém ambos os sprites).
 	var shake_tween = create_tween()
 	shake_tween.tween_property($SpriteOffset, "position:x", 3.0 * spawn_direction, 0.05)
 	shake_tween.tween_property($SpriteOffset, "position:x", -3.0 * spawn_direction, 0.1)
 	shake_tween.tween_property($SpriteOffset, "position:x", 0.0, 0.05)
 	await shake_tween.finished
-	
-	# Cria o toco no momento exato em que a árvore começa a inclinar e cair (momento da queda)
+
+	# O toco só nasce da árvore grande (FULL). A árvore média (SMALL) cai sem deixar toco.
 	if current_stage == GrowthStage.FULL:
 		_spawn_stump()
 	
