@@ -17,6 +17,12 @@ enum GrowthStage { SEED, SPROUT, SAPLING, SMALL, FULL }
 @export var current_stage: GrowthStage = GrowthStage.FULL
 @export var growth_sprite_sheet: Texture2D
 
+@export_group("Season Rows")
+@export var spring_row: int = 0
+@export var summer_row: int = 0
+@export var fall_row: int = 1
+@export var winter_row: int = 2
+
 @onready var full_sprite: Sprite2D = $SpriteOffset/Sprite2D
 @onready var growth_sprite: Sprite2D = $SpriteOffset.get_node_or_null("GrowthSprite")
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D
@@ -32,11 +38,38 @@ var base_frame: int = 0
 func _ready() -> void:
 	if full_sprite.texture != null and "Animation" in full_sprite.texture.resource_path:
 		is_stardew_tree = true
-		full_sprite.frame = 4
 		
 	base_frame = full_sprite.frame
 	
+	if TimeManager:
+		TimeManager.season_changed.connect(_on_season_changed)
+		
+	_update_season_frame()
 	_update_appearance()
+
+func _on_season_changed(_season: int) -> void:
+	_update_season_frame()
+
+func _update_season_frame() -> void:
+	if not is_stardew_tree or not TimeManager:
+		return
+		
+	var hframes = full_sprite.hframes
+	var row = 0
+	
+	match TimeManager.current_season:
+		TimeManager.Season.SPRING:
+			row = spring_row
+		TimeManager.Season.SUMMER:
+			row = summer_row
+		TimeManager.Season.FALL:
+			row = fall_row
+		TimeManager.Season.WINTER:
+			row = winter_row
+			
+	base_frame = row * hframes
+	if not is_dying and current_stage == GrowthStage.FULL:
+		full_sprite.frame = base_frame
 
 func _update_appearance() -> void:
 	if current_stage == GrowthStage.FULL:
@@ -205,10 +238,15 @@ func _play_stardew_shake() -> void:
 	if _active_shake_tween and _active_shake_tween.is_valid():
 		_active_shake_tween.kill()
 	_active_shake_tween = create_tween()
-	# Usa rotação física no Node ao invés de trocar frames para evitar glitches com spritesheets diferentes
-	_active_shake_tween.tween_property($SpriteOffset, "rotation_degrees", 3.0, 0.05)
-	_active_shake_tween.tween_property($SpriteOffset, "rotation_degrees", -3.0, 0.1)
-	_active_shake_tween.tween_property($SpriteOffset, "rotation_degrees", 0.0, 0.05)
+	
+	# Usa os quadros reais da animação no spritesheet
+	_active_shake_tween.tween_callback(func(): full_sprite.frame = base_frame + 1)
+	_active_shake_tween.tween_interval(0.08)
+	_active_shake_tween.tween_callback(func(): full_sprite.frame = base_frame + 2)
+	_active_shake_tween.tween_interval(0.08)
+	_active_shake_tween.tween_callback(func(): full_sprite.frame = base_frame + 3)
+	_active_shake_tween.tween_interval(0.08)
+	_active_shake_tween.tween_callback(func(): full_sprite.frame = base_frame)
 
 func _play_small_shake() -> void:
 	if not is_instance_valid(growth_sprite):

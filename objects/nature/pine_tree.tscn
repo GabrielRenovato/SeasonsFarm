@@ -6,6 +6,10 @@
 [ext_resource type="Texture2D" path="res://assets/sprites/tree/Common/Shadow/Pine Tree.png" id="4_growth"]
 
 [node name="PineTree" instance=ExtResource("1_base")]
+spring_row = 0
+summer_row = 1
+fall_row = 2
+winter_row = 3
 growth_sprite_sheet = ExtResource("4_growth")
 stump_scene = ExtResource("3_stump")
 
