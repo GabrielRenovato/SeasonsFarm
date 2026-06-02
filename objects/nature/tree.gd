@@ -177,48 +177,40 @@ func _die() -> void:
 	is_dying = true
 	if has_meta("env_id"):
 		FarmManager.remove_env_object(get_meta("env_id"))
-	
-	# Cancela as animações de hit para não atrapalhar a animação de queda
-	animation_player.stop()
+
+	# Para tweens de hit em andamento
 	if _active_shake_tween and _active_shake_tween.is_valid():
 		_active_shake_tween.kill()
 	if _active_pos_tween and _active_pos_tween.is_valid():
 		_active_pos_tween.kill()
-		
-	# Reseta o frame, rotação e opacidade para o estado normal caso o tween/anim tenha parado no meio
-	if current_stage == GrowthStage.FULL:
-		if is_stardew_tree:
-			full_sprite.frame = _get_seasonal_big_row() * full_sprite.hframes
-		full_sprite.modulate.a = 1.0
-		$SpriteOffset.rotation_degrees = 0.0
-	elif is_instance_valid(growth_sprite):
-		growth_sprite.position.x = 0.0
-		growth_sprite.modulate.a = 1.0
 
 	$CollisionShape2D.set_deferred("disabled", true)
 	$Area2D/CollisionShape2D.set_deferred("disabled", true)
 
 	if current_stage == GrowthStage.FULL:
-		# Aguarda a animação da árvore (tremida e queda) terminar
+		# Reseta estado visual para a queda começar limpa
+		animation_player.stop()
+		if is_stardew_tree:
+			full_sprite.frame = _get_seasonal_big_row() * full_sprite.hframes
+		full_sprite.modulate.a = 1.0
+		$SpriteOffset.rotation = 0.0
+		$SpriteOffset.position.x = 0.0
+
 		await _play_fall_tween()
-		
-		# Só após a árvore cair completamente que a madeira deve spawnar
 		_spawn_wood()
 	else:
 		if is_instance_valid(growth_sprite):
-			if current_stage == GrowthStage.SMALL:
-				_play_small_shake()
-				await get_tree().create_timer(0.15).timeout
-			var fade_tween = create_tween()
-			fade_tween.tween_property(growth_sprite, "modulate:a", 0.0, 0.2)
-			fade_tween.tween_property(growth_sprite, "scale", Vector2(1.2, 1.2), 0.2)
-			await fade_tween.finished
-			
+			growth_sprite.position.x = 0.0
+			growth_sprite.modulate.a = 1.0
+			growth_sprite.scale = Vector2.ONE
+
+		await _play_small_fall()
+
 		if current_stage == GrowthStage.SMALL:
 			_spawn_wood(2)
 		elif current_stage == GrowthStage.SAPLING or current_stage == GrowthStage.SPROUT:
 			_spawn_wood(1)
-	
+
 	queue_free()
 
 func _spawn_stump() -> void:
@@ -293,35 +285,53 @@ func _play_small_shake() -> void:
 	_active_pos_tween.tween_property(growth_sprite, "position:x", 0.0, 0.05)
 
 func _play_fall_tween() -> void:
-	# Brief shake first
-	if current_stage == GrowthStage.SMALL:
-		_play_small_shake()
-		
+	# Tremida curta antes de cair
 	var shake_tween = create_tween()
 	shake_tween.tween_property($SpriteOffset, "position:x", 3.0 * spawn_direction, 0.05)
 	shake_tween.tween_property($SpriteOffset, "position:x", -3.0 * spawn_direction, 0.1)
 	shake_tween.tween_property($SpriteOffset, "position:x", 0.0, 0.05)
 	await shake_tween.finished
-	
-	# Cria o toco no momento exato em que a árvore começa a inclinar e cair (momento da queda)
-	if current_stage == GrowthStage.FULL:
-		_spawn_stump()
-	
-	# Then fall smoothly (Inicia a inclinação e queda suave)
+
+	# Spawna o toco no momento em que a inclinação começa
+	_spawn_stump()
+
+	# Deslocamento relativo evita dependência da posição inicial do SpriteOffset
+	var base_pos := $SpriteOffset.position
 	var tween = create_tween().set_parallel(true)
-	var target_rotation = 1.5708 * spawn_direction
-	var target_position = Vector2(15.0 * spawn_direction, 16.0)
-	
-	tween.tween_property($SpriteOffset, "rotation", target_rotation, 0.8).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
-	tween.tween_property($SpriteOffset, "position", target_position, 0.8).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
-	
+	tween.tween_property($SpriteOffset, "rotation", 1.5708 * spawn_direction, 0.8).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	tween.tween_property($SpriteOffset, "position", base_pos + Vector2(15.0 * spawn_direction, 14.0), 0.8).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+
 	var fade_tween = create_tween()
 	fade_tween.tween_interval(0.5)
-	var active_sprite = full_sprite if current_stage == GrowthStage.FULL else growth_sprite
-	if is_instance_valid(active_sprite):
-		fade_tween.tween_property(active_sprite, "modulate:a", 0.0, 0.3)
-	
+	if is_instance_valid(full_sprite):
+		fade_tween.tween_property(full_sprite, "modulate:a", 0.0, 0.3)
+
 	await tween.finished
+
+func _play_small_fall() -> void:
+	if not is_instance_valid(growth_sprite):
+		return
+
+	if current_stage == GrowthStage.SMALL:
+		# Tremida seguida de mini-queda com rotação
+		_play_small_shake()
+		await get_tree().create_timer(0.15).timeout
+
+		var base_pos := $SpriteOffset.position
+		var tween = create_tween().set_parallel(true)
+		tween.tween_property($SpriteOffset, "rotation", 1.2 * spawn_direction, 0.45).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+		tween.tween_property($SpriteOffset, "position", base_pos + Vector2(8.0 * spawn_direction, 5.0), 0.45).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+
+		var fade_tween = create_tween()
+		fade_tween.tween_interval(0.25)
+		fade_tween.tween_property(growth_sprite, "modulate:a", 0.0, 0.25)
+
+		await tween.finished
+	else:
+		# Seed / Sprout / Sapling: desaparece rápido sem queda
+		var fade_tween = create_tween()
+		fade_tween.tween_property(growth_sprite, "modulate:a", 0.0, 0.2)
+		await fade_tween.finished
 
 func _spread_seed() -> void:
 	if scene_file_path == "":
