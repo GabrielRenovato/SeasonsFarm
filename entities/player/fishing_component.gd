@@ -194,7 +194,7 @@ func _setup_animations() -> void:
 	var res = load("res://systems/fishing/fishing_animations.tres")
 	if not res: return
 	
-	# Adiciona todas as animações geradas ao player principal
+	# Adiciona todas as animaÃ§Ãµes geradas ao player principal
 	var lib = anim_player.get_animation_library("")
 	for anim_name in res.get_animation_list():
 		if not lib.has_animation(anim_name):
