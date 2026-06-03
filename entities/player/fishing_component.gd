@@ -114,8 +114,13 @@ func _start_biting() -> void:
 		state_machine.travel("FishBite")
 		
 	# Rola o peixe agora para passar a dificuldade pro minigame
-	current_fish_data = FishDatabase.roll_fish()
-	
+	var db = get_node_or_null("/root/FishDatabase")
+	if db:
+		current_fish_data = db.roll_fish()
+	else:
+		# Fallback se o autoload não carregar
+		current_fish_data = {"id": "bluegill", "name": "Bluegill", "rarity": "common", "weight": 1.0, "color": Color(0.8, 0.8, 0.8)}
+		
 	timer.start(bite_window)
 
 func _start_minigame() -> void:
