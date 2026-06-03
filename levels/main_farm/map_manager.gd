@@ -74,6 +74,11 @@ func _ready() -> void:
 
 	if not TimeManager.day_changed.is_connected(_on_day_changed):
 		TimeManager.day_changed.connect(_on_day_changed)
+		
+	if not TimeManager.season_changed.is_connected(_on_season_changed):
+		TimeManager.season_changed.connect(_on_season_changed)
+		
+	_apply_season_tiles(TimeManager.current_season)
 
 
 func generate_environment_procedurally() -> void:
@@ -356,3 +361,30 @@ func _restore_environment() -> void:
 		add_child(obj)
 		obj.global_position = entry["pos"]
 	print("MapManager: Restaurados ", FarmManager.env_objects.size(), " objetos do cache de sessão.")
+
+# Updates the grass tile layer with the texture matching the current season
+func _on_season_changed(new_season: int) -> void:
+	_apply_season_tiles(new_season)
+
+func _apply_season_tiles(season: int) -> void:
+	if not has_node("Grass_layer"):
+		return
+		
+	var grass_layer: TileMapLayer = $Grass_layer
+	if not grass_layer.tile_set:
+		return
+		
+	# The grass source has ID 2 in our TileSet
+	var grass_source = grass_layer.tile_set.get_source(2) as TileSetAtlasSource
+	if not grass_source:
+		return
+		
+	match season:
+		0: # TimeManager.Season.SPRING
+			grass_source.texture = preload("res://assets/tiles/farm/Tileset Grass Spring.png")
+		1: # TimeManager.Season.SUMMER
+			grass_source.texture = preload("res://assets/tiles/farm/Tileset Grass Summer.png")
+		2: # TimeManager.Season.FALL
+			grass_source.texture = preload("res://assets/tiles/farm/Tileset Grass Fall.png")
+		3: # TimeManager.Season.WINTER
+			grass_source.texture = preload("res://assets/tiles/farm/Tileset Grass Winter.png")
