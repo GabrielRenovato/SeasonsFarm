@@ -367,24 +367,27 @@ func _on_season_changed(new_season: int) -> void:
 	_apply_season_tiles(new_season)
 
 func _apply_season_tiles(season: int) -> void:
-	if not has_node("Grass_layer"):
-		return
-		
-	var grass_layer: TileMapLayer = $Grass_layer
-	if not grass_layer.tile_set:
-		return
-		
-	# The grass source has ID 2 in our TileSet
-	var grass_source = grass_layer.tile_set.get_source(2) as TileSetAtlasSource
-	if not grass_source:
-		return
-		
+	var tex_spring = preload("res://assets/tiles/farm/Tileset Grass Spring.png")
+	var tex_summer = preload("res://assets/tiles/farm/Tileset Grass Summer.png")
+	var tex_fall = preload("res://assets/tiles/farm/Tileset Grass Fall.png")
+	var tex_winter = preload("res://assets/tiles/farm/Tileset Grass Winter.png")
+
+	var current_tex = tex_spring
 	match season:
-		0: # TimeManager.Season.SPRING
-			grass_source.texture = preload("res://assets/tiles/farm/Tileset Grass Spring.png")
-		1: # TimeManager.Season.SUMMER
-			grass_source.texture = preload("res://assets/tiles/farm/Tileset Grass Summer.png")
-		2: # TimeManager.Season.FALL
-			grass_source.texture = preload("res://assets/tiles/farm/Tileset Grass Fall.png")
-		3: # TimeManager.Season.WINTER
-			grass_source.texture = preload("res://assets/tiles/farm/Tileset Grass Winter.png")
+		1: current_tex = tex_summer
+		2: current_tex = tex_fall
+		3: current_tex = tex_winter
+
+	# Update base ground layer (tileset_grama.tres, source id 3)
+	if ground_layer and ground_layer.tile_set:
+		var grama_source = ground_layer.tile_set.get_source(3) as TileSetAtlasSource
+		if grama_source:
+			grama_source.texture = current_tex
+
+	# Update secondary grass layer (tileset_grass_layer.tres, source id 2)
+	if has_node("Grass_layer"):
+		var grass_layer: TileMapLayer = $Grass_layer
+		if grass_layer.tile_set:
+			var grass_source = grass_layer.tile_set.get_source(2) as TileSetAtlasSource
+			if grass_source:
+				grass_source.texture = current_tex
