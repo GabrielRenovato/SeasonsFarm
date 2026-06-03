@@ -1,5 +1,4 @@
-@tool
-extends EditorScript
+extends SceneTree
 
 # Paths for the new animations
 const BASE_PATH = "res://assets/sprites/Character/PNG/"
@@ -11,13 +10,14 @@ const CATCH_DIR = BASE_PATH + "12.4. Fishing - Catch/"
 const DIRECTIONS = ["down", "left", "right", "up"]
 const STATES = ["Wait", "Bite", "Reel", "Catch"]
 
-func _run() -> void:
+func _init() -> void:
 	print("Starting animation injection...")
 	
 	var scene_path = "res://entities/player/player.tscn"
 	var packed_scene = ResourceLoader.load(scene_path)
 	if not packed_scene:
 		print("Error: Could not load player.tscn")
+		quit()
 		return
 		
 	var player = packed_scene.instantiate()
@@ -26,12 +26,14 @@ func _run() -> void:
 	
 	if not anim_player or not anim_tree:
 		print("Error: Missing AnimationPlayer or AnimationTree")
+		quit()
 		return
 		
 	# Get the base fish_cast animations to copy their track structure
 	var lib = anim_player.get_animation_library("")
 	if not lib:
 		print("Error: Default animation library not found")
+		quit()
 		return
 		
 	for state in STATES:
@@ -79,15 +81,6 @@ func _run() -> void:
 				if track_type == Animation.TYPE_VALUE:
 					var prop_name = track_path.get_subname(0)
 					if prop_name == "texture":
-						# We don't change texture here via EditorScript easily because texture injection
-						# is handled by CustomizationComponent at runtime. CustomizationComponent reads
-						# the texture from the sprite. We just need to make sure the animation doesn't
-						# reset the texture to fish_cast if we are trying to play something else.
-						# Actually, CustomizationComponent swaps textures based on state name prefixes!
-						# It doesn't use the animation tracks for textures, except that the original
-						# animations HAVE texture tracks that we need to overwrite.
-						# To be safe, we just copy the track keys and assume CustomizationComponent
-						# handles the dynamic texture swapping at runtime.
 						for key_idx in range(base_anim.track_get_key_count(track_idx)):
 							var time = base_anim.track_get_key_time(track_idx, key_idx)
 							var val = base_anim.track_get_key_value(track_idx, key_idx)
@@ -149,10 +142,6 @@ func _run() -> void:
 				
 				root.add_node(state_name, blend_space)
 				print("Added blend space to state machine: ", state_name)
-				
-				# Add transition from FishCast -> FishWait? 
-				# The FishingComponent handles transitions programmatically via playback.travel(),
-				# but we need to ensure the nodes are registered.
 
 	print("Saving modified scene...")
 	var new_packed = PackedScene.new()
@@ -164,3 +153,4 @@ func _run() -> void:
 		print("Failed to save player.tscn, error code: ", err)
 
 	player.queue_free()
+	quit()
