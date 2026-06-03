@@ -13774,14 +13774,13 @@ animation_tree = NodePath("../AnimationTree")
 movement_speed = 70.0
 tool_component = NodePath("../ToolComponent")
 
-[node name="ToolComponent" type="Node2D" parent="." unique_id=426993156 node_paths=PackedStringArray("animation_tree", "actor", "grid_anchor", "debug_rect", "tool_area")]
+[node name="ToolComponent" type="Node2D" parent="." unique_id=426993156 node_paths=PackedStringArray("animation_tree", "actor", "grid_anchor", "debug_rect")]
 y_sort_enabled = true
 script = ExtResource("script_tool")
 animation_tree = NodePath("../AnimationTree")
 actor = NodePath("..")
 grid_anchor = NodePath("../GridAnchor")
 debug_rect = NodePath("../ColorRect")
-tool_area = NodePath("../Tool/ToolArea")
 
 [node name="GridAnchor" type="Marker2D" parent="." unique_id=1593552443]
 y_sort_enabled = true

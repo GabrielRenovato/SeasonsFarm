@@ -53,14 +53,16 @@ func _ready() -> void:
 	_update_appearance()
 
 func _update_appearance() -> void:
-	if current_stage == GrowthStage.FULL:
+	# SMALL e FULL usam o sprite da árvore ADULTA (na bétula/pinheiro/mogno o frame de
+	# crescimento SMALL já é do tamanho da adulta). Por isso ambos compartilham aparência,
+	# animação de balanço de folhas e 3 golpes — só a SAPLING é a "árvore média".
+	if current_stage >= GrowthStage.SMALL:
 		full_sprite.visible = true
 		if is_stardew_tree:
 			full_sprite.frame = _get_seasonal_big_row() * full_sprite.hframes
 		if is_instance_valid(growth_sprite):
 			growth_sprite.visible = false
-		# Reset da vida ao virar adulta (3 golpes). Sem isso, uma árvore que cresceu
-		# de SMALL->FULL herdava health=2 e caía em 2 golpes (como a média).
+		# Vida cheia (3 golpes) para todo estágio adulto (SMALL/FULL).
 		if not is_dying:
 			health = 3
 		collision_shape.set_deferred("disabled", false)
@@ -90,13 +92,7 @@ func _update_appearance() -> void:
 				growth_sprite.region_rect = Rect2(64, 0, 32, 48)
 				collision_shape.set_deferred("disabled", false)
 				area_collision.set_deferred("disabled", false)
-			GrowthStage.SMALL:
-				growth_sprite.region_rect = Rect2(96, 0, 32, 48)
-				# Reset health quando cresce para SMALL
-				if not is_dying:
-					health = 2
-				collision_shape.set_deferred("disabled", false)
-				area_collision.set_deferred("disabled", false)
+			# SMALL não aparece aqui: é tratado como adulto no ramo acima (full_sprite).
 
 	# Aplica o estado de inverno por último (pode ocultar a árvore e desligar colisão)
 	_apply_winter_state()
@@ -152,8 +148,10 @@ func take_damage(amount: int, hitter_position: Vector2 = Vector2.ZERO, tool_name
 	if current_stage < GrowthStage.SAPLING:
 		# Mudinhas (Seed, Sprout) são destruídas em um único golpe
 		health = 0
-	elif current_stage == GrowthStage.SAPLING or current_stage == GrowthStage.SMALL:
-		# Árvore média (Sapling/Small) leva 2 golpes: pisca no 1º, tomba no 2º
+	elif current_stage == GrowthStage.SAPLING:
+		# Árvore média (Sapling) leva 2 golpes: pisca no 1º, tomba no 2º.
+		# SMALL não entra aqui: seu sprite é o da árvore adulta, então cai no ramo abaixo
+		# (3 golpes, balanço de folhas), evitando "árvore adulta com animação de média".
 		if health > 2:
 			health = 2
 		health -= amount
@@ -173,7 +171,7 @@ func take_damage(amount: int, hitter_position: Vector2 = Vector2.ZERO, tool_name
 		# confiável, independente de o sheet ter ou não frames de balanço (ex.: a
 		# bétula no outono usa frames estáticos e não "balança").
 		_play_hit_blink()
-		if current_stage == GrowthStage.FULL:
+		if current_stage >= GrowthStage.SMALL:
 			_play_stardew_shake()
 		elif is_instance_valid(growth_sprite):
 			_play_small_shake()
@@ -198,7 +196,7 @@ func _die() -> void:
 
 	# Reseta frame, rotação e modulate (cor + opacidade) caso um tween/flash tenha
 	# parado no meio — modulate completo para limpar também o brilho do flash de hit.
-	if current_stage == GrowthStage.FULL:
+	if current_stage >= GrowthStage.SMALL:
 		if is_stardew_tree:
 			full_sprite.frame = _get_seasonal_big_row() * full_sprite.hframes
 		full_sprite.modulate = Color(1.0, 1.0, 1.0, 1.0)
@@ -218,7 +216,7 @@ func _die() -> void:
 		await _play_fall_tween()
 
 		# Só após a árvore cair completamente que a madeira deve spawnar
-		if current_stage == GrowthStage.FULL:
+		if current_stage >= GrowthStage.SMALL:
 			_spawn_wood()
 		else:
 			_spawn_wood(2)
@@ -246,7 +244,7 @@ func _spawn_wood(amount_override: int = -1) -> void:
 		return
 		
 	var amount = wood_amount if amount_override == -1 else amount_override
-	var height_offset = -30.0 if current_stage == GrowthStage.FULL else -15.0
+	var height_offset = -30.0 if current_stage >= GrowthStage.SMALL else -15.0
 	var drop_origin = global_position + Vector2(0, height_offset)
 	
 	for i in range(amount):
@@ -313,7 +311,7 @@ func _play_small_shake() -> void:
 # tanto na árvore média (sprite único, sem frames de balanço) quanto em árvores cujo
 # sheet sazonal não tem frames de balanço (ex.: bétula no outono).
 func _play_hit_blink() -> void:
-	var spr: Sprite2D = full_sprite if current_stage == GrowthStage.FULL else growth_sprite
+	var spr: Sprite2D = full_sprite if current_stage >= GrowthStage.SMALL else growth_sprite
 	if not is_instance_valid(spr):
 		return
 	if _active_blink_tween and _active_blink_tween.is_valid():
@@ -333,7 +331,7 @@ func _play_fall_tween() -> void:
 	await shake_tween.finished
 
 	# O toco só nasce da árvore grande (FULL). A árvore média (SMALL) cai sem deixar toco.
-	if current_stage == GrowthStage.FULL:
+	if current_stage >= GrowthStage.SMALL:
 		_spawn_stump()
 	
 	# Then fall smoothly (Inicia a inclinação e queda suave)
@@ -346,7 +344,7 @@ func _play_fall_tween() -> void:
 	
 	var fade_tween = create_tween()
 	fade_tween.tween_interval(0.5)
-	var active_sprite = full_sprite if current_stage == GrowthStage.FULL else growth_sprite
+	var active_sprite = full_sprite if current_stage >= GrowthStage.SMALL else growth_sprite
 	if is_instance_valid(active_sprite):
 		fade_tween.tween_property(active_sprite, "modulate:a", 0.0, 0.3)
 	

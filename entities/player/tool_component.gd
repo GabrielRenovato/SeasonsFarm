@@ -6,13 +6,10 @@ class_name ToolComponent
 @export var actor: CharacterBody2D
 @export var grid_anchor: Marker2D
 @export var debug_rect: ColorRect
-@export var tool_area: Area2D
 
 @export_group("Tuning")
 @export var tilled_dirt_source_id: int = 0
 @export var tilled_dirt_atlas_coords: Vector2i = Vector2i(0, 0)
-@export var axe_reach: float = 14.0
-@export var axe_hit_radius: float = 8.0
 
 const HIT_EFFECT_SCENE = preload("res://objects/nature/effects/hit_effect.tscn")
 
@@ -23,7 +20,6 @@ var is_using_tool: bool = false
 var _active_tool_in_use: String = ""
 var _tool_use_id: int = 0 ## Incrementa a cada uso; usado pelo watchdog para evitar liberar o uso errado
 var strict_direction: Vector2 = Vector2.DOWN
-var _pending_hit_direction: Vector2 = Vector2.ZERO
 var _pending_target_map_position: Vector2i = Vector2i.ZERO
 var is_carrying: bool = false
 var _carry_item: ItemData
@@ -110,29 +106,15 @@ func _update_carry_sprite_position() -> void:
 
 func update_target_preview(direction: Vector2) -> void:
 	_update_strict_direction(direction)
-		
+
 	var target_map_position: Vector2i = _get_target_map_position()
-	
-	var active_layer: TileMapLayer = dirt_layer
-	if active_layer == null:
-		var scene = get_tree().current_scene
-		if scene:
-			var layers = scene.find_children("*", "TileMapLayer")
-			if layers.size() > 0:
-				active_layer = layers[0]
-				
-	var tile_size = Vector2(16, 16)
-	var global_snapped = Vector2(target_map_position.x * 16.0, target_map_position.y * 16.0)
-	
-	if active_layer != null and active_layer.tile_set != null:
-		tile_size = Vector2(active_layer.tile_set.tile_size)
-		var local_center = active_layer.map_to_local(target_map_position)
-		global_snapped = active_layer.to_global(local_center)
-		
+	var global_snapped: Vector2 = _cell_center_world(target_map_position)
+	var tile_size := Vector2(_tile_size_px(), _tile_size_px())
+
 	if debug_rect != null:
 		debug_rect.size = tile_size
 		debug_rect.global_position = global_snapped - (tile_size / 2.0)
-		
+
 	if current_furniture_ghost:
 		current_furniture_ghost.global_position = global_snapped
 
@@ -292,7 +274,6 @@ func handle_tool_use(direction: Vector2) -> void:
 				PlayerStatsManager.consume_energy(PlayerStatsManager.tool_energy_cost)
 			is_using_tool = true
 			_active_tool_in_use = tool_name
-			_pending_hit_direction = strict_direction
 			_pending_target_map_position = target_map_position
 			
 			animation_tree.set("parameters/" + tool_name + "/blend_position", strict_direction)
@@ -307,7 +288,8 @@ func _attempt_pickup_furniture() -> bool:
 	if not FurnitureManager.enabled:
 		return false
 	var space_state = actor.get_world_2d().direct_space_state
-	var hit_origin: Vector2 = actor.global_position + strict_direction * (axe_reach + 8.0)
+	# Alcance de coleta de móvel: ~1,4 tile à frente dos pés do player.
+	var hit_origin: Vector2 = actor.global_position + strict_direction * 22.0
 	var shape_circle = CircleShape2D.new()
 	shape_circle.radius = 12.0
 	var physics_query = PhysicsShapeQueryParameters2D.new()
@@ -352,63 +334,97 @@ func _attempt_pickup_furniture() -> bool:
 
 	return false
 
+func _active_layer() -> TileMapLayer:
+	if dirt_layer != null and is_instance_valid(dirt_layer):
+		return dirt_layer
+	var scene := get_tree().current_scene
+	if scene:
+		var layers := scene.find_children("*", "TileMapLayer")
+		if layers.size() > 0:
+			return layers[0] as TileMapLayer
+	return null
+
+func _tile_size_px() -> float:
+	var layer := _active_layer()
+	if layer != null and layer.tile_set != null:
+		return float(layer.tile_set.tile_size.x)
+	return 16.0
+
+# Centro, em coordenadas globais, da célula informada. Origem única usada por preview,
+# arado e golpe de ferramenta — garante que tudo aponte para a MESMA célula.
+func _cell_center_world(cell: Vector2i) -> Vector2:
+	var layer := _active_layer()
+	if layer != null and layer.tile_set != null:
+		return layer.to_global(layer.map_to_local(cell))
+	var t := _tile_size_px()
+	return Vector2(cell.x * t + t / 2.0, cell.y * t + t / 2.0)
+
+# Célula onde o player está, ancorada no GridAnchor (origem canônica já calibrada).
+func _player_cell() -> Vector2i:
+	var origin: Vector2 = grid_anchor.global_position if grid_anchor != null else actor.global_position
+	var layer := _active_layer()
+	if layer != null and layer.tile_set != null:
+		return layer.local_to_map(layer.to_local(origin))
+	var t := _tile_size_px()
+	return Vector2i(floori(origin.x / t), floori(origin.y / t))
+
+# Célula imediatamente à frente do player, na direção cardinal atual.
+func _target_cell() -> Vector2i:
+	return _player_cell() + Vector2i(int(strict_direction.x), int(strict_direction.y))
+
 func _get_target_map_position() -> Vector2i:
 	if grid_anchor == null:
 		return Vector2i.ZERO
-		
-	var active_layer: TileMapLayer = dirt_layer
-	if active_layer == null:
-		var scene = get_tree().current_scene
-		if scene:
-			var layers = scene.find_children("*", "TileMapLayer")
-			if layers.size() > 0:
-				active_layer = layers[0]
-				
-	if active_layer == null or active_layer.tile_set == null:
-		var global_pos = grid_anchor.global_position + strict_direction * 16.0
-		return Vector2i(round(global_pos.x / 16.0), round(global_pos.y / 16.0))
-		
-	var tile_size: Vector2i = active_layer.tile_set.tile_size
-	var offset_distance: Vector2 = Vector2(strict_direction.x * tile_size.x, strict_direction.y * tile_size.y)
-	var target_global_position: Vector2 = grid_anchor.global_position + offset_distance
-	
-	return active_layer.local_to_map(active_layer.to_local(target_global_position))
+	return _target_cell()
 
-func _hit_objects_in_direction(tool_name: String) -> void:
-	var space_state = actor.get_world_2d().direct_space_state
-
-	var hit_origin: Vector2 = actor.global_position + _pending_hit_direction * axe_reach
-
-	var shape_circle = CircleShape2D.new()
-	shape_circle.radius = axe_hit_radius
-
-	var physics_query = PhysicsShapeQueryParameters2D.new()
-	physics_query.shape = shape_circle
-	physics_query.transform = Transform2D(0.0, hit_origin)
-	physics_query.collide_with_areas = true
-	physics_query.collide_with_bodies = false
+# Consulta física centrada na célula informada. include_areas pega também as Area2D
+# (mudas que só têm hitbox de área, sem corpo sólido); size_mult amplia o shape além do
+# tile para tolerar hitboxes ancoradas na base do objeto (deslocadas para baixo da
+# célula lógica).
+func _query_in_cell(cell: Vector2i, size_mult: float, include_areas: bool) -> Array:
+	if actor == null:
+		return []
+	var space_state := actor.get_world_2d().direct_space_state
+	var t := _tile_size_px()
+	var shape := RectangleShape2D.new()
+	shape.size = Vector2(t, t) * size_mult
+	var physics_query := PhysicsShapeQueryParameters2D.new()
+	physics_query.shape = shape
+	physics_query.transform = Transform2D(0.0, _cell_center_world(cell))
+	physics_query.collide_with_areas = include_areas
+	physics_query.collide_with_bodies = true
 	physics_query.exclude = [actor.get_rid()]
+	return space_state.intersect_shape(physics_query, 8)
 
-	var query_results = space_state.intersect_shape(physics_query, 8)
+# Objeto atacável (com take_damage) que OCUPA a célula mirada. Faz uma consulta de física
+# num shape 1,5x o tile (pega árvores grandes, médias, mudas e pedras de qualquer direção)
+# e, para cada candidato, calcula a CÉLULA-DONA dele e exige que seja a célula mirada.
+# Isso resolve na raiz o bug do alvo errado: antes ordenávamos por distância (ao centro da
+# célula OU ao player) e, como a base do tronco fica a meio-tile do centro — bem na
+# FRONTEIRA entre duas células —, árvores vizinhas empatavam e a grande às vezes "perdia"
+# para uma média/muda ao lado, tocando a animação errada.
+func _get_attackable_in_cell(cell: Vector2i) -> Node:
+	var layer := _active_layer()
+	var cell_center := _cell_center_world(cell)
+	var half_tile := _tile_size_px() * 0.5
+	var max_distance := _tile_size_px() * 0.9
 
-	# A consulta de física devolve os alvos em ordem ARBITRÁRIA. Se houver mais de um
-	# objeto atacável no raio do golpe (ex.: uma árvore média/muda perto de uma árvore
-	# grande), pegar o "primeiro da lista" pode acertar o alvo errado — e então tocar a
-	# animação errada (a grande "virava" a animação da média). Escolhemos o alvo MAIS
-	# PRÓXIMO DO PLAYER: você fica encostado na árvore que está cortando, então é ela.
-	var best_target = null
-	var best_distance := INF
-	var _dbg_targets := []
-	for collision_result in query_results:
+	# Preferimos sempre o objeto cuja célula-dona É a mirada. Só caímos no "fallback" (o
+	# mais próximo do centro, dentro de ~1 tile) quando NENHUM candidato ocupa exatamente a
+	# célula — ex.: objeto desalinhado do grid (árvore nascida por dispersão de semente) ou
+	# árvore atingida pela célula de baixo.
+	var exact_target: Node = null
+	var exact_distance := INF
+	var fallback_target: Node = null
+	var fallback_distance := INF
+
+	for collision_result in _query_in_cell(cell, 1.5, true):
 		var hit_object = collision_result.collider
-		# Ignora colliders de objetos que já estão sendo liberados (ex: árvore caindo)
 		if not is_instance_valid(hit_object):
 			continue
-
 		var target_node = hit_object
 		if hit_object is Area2D:
 			target_node = hit_object.get_parent()
-
 		if not is_instance_valid(target_node):
 			continue
 		if target_node == actor or target_node.is_ancestor_of(actor):
@@ -416,12 +432,32 @@ func _hit_objects_in_direction(tool_name: String) -> void:
 		if not target_node.has_method("take_damage"):
 			continue
 
-		_dbg_targets.append(target_node)
-		var distance: float = target_node.global_position.distance_to(actor.global_position)
-		if distance < best_distance:
-			best_distance = distance
-			best_target = target_node
+		var base_pos: Vector2 = target_node.global_position
+		var dist_center := base_pos.distance_to(cell_center)
 
+		# Célula-dona do objeto. A base do tronco fica ~meio-tile ABAIXO do centro da célula
+		# (offset visual), logo na FRONTEIRA com a célula de baixo — mapear a base direto a
+		# atribuiria à célula errada de forma instável. Subtraímos meio-tile para trazer o
+		# ponto de volta ao centro da célula real antes de mapear.
+		var owner_cell := cell
+		if layer != null:
+			owner_cell = layer.local_to_map(layer.to_local(base_pos) - Vector2(0, half_tile))
+
+		if owner_cell == cell:
+			# Desempate estável entre objetos na MESMA célula (raro): o mais próximo do
+			# centro. Não depende da ordem da física nem da posição do player.
+			if dist_center < exact_distance:
+				exact_distance = dist_center
+				exact_target = target_node
+		elif dist_center <= max_distance:
+			if dist_center < fallback_distance:
+				fallback_distance = dist_center
+				fallback_target = target_node
+
+	return exact_target if exact_target != null else fallback_target
+
+func _hit_objects_in_direction(tool_name: String) -> void:
+	var best_target := _get_attackable_in_cell(_pending_target_map_position)
 
 	if best_target != null:
 		best_target.take_damage(1, actor.global_position, tool_name)
@@ -429,7 +465,7 @@ func _hit_objects_in_direction(tool_name: String) -> void:
 		if tool_name == "Pickaxe":
 			var effect_instance = HIT_EFFECT_SCENE.instantiate()
 			actor.get_parent().add_child(effect_instance)
-			effect_instance.global_position = hit_origin
+			effect_instance.global_position = _cell_center_world(_pending_target_map_position)
 
 	_flash_debug_rect(Color.GREEN if best_target != null else Color.RED)
 
@@ -461,7 +497,7 @@ func _on_animation_finished(_animation_name: StringName) -> void:
 	if tool_used == "Axe" or tool_used == "Pickaxe":
 		_hit_objects_in_direction(tool_used)
 	elif tool_used == "Hoe":
-		if FarmManager:
+		if FarmManager and _can_till(_pending_target_map_position):
 			FarmManager.till_soil(_pending_target_map_position)
 	elif tool_used == "Water":
 		if FarmManager:
@@ -494,6 +530,37 @@ func _start_tool_use_watchdog(use_id: int) -> void:
 	await get_tree().create_timer(timeout).timeout
 	if is_using_tool and _tool_use_id == use_id:
 		_on_animation_finished(&"watchdog")
+
+# Bloqueia o arado se a célula tiver qualquer corpo sólido (árvore, pedra, casa, cerca,
+# móvel). Shape do tamanho do tile e só corpos, para não bloquear falsamente as células
+# vizinhas a um objeto.
+func _cell_has_obstacle(cell: Vector2i) -> bool:
+	for collision_result in _query_in_cell(cell, 1.0, false):
+		var obj = collision_result.collider
+		if is_instance_valid(obj) and obj != actor:
+			return true
+	return false
+
+# Só permite arar onde: ainda não está arado, existe chão no grupo "ground_layer", não
+# há grama decorativa (Grass_layer) e não há obstáculo sólido na célula.
+func _can_till(cell: Vector2i) -> bool:
+	if FarmManager and FarmManager.farm_data.has(cell):
+		return false
+	var has_ground := false
+	for layer in get_tree().get_nodes_in_group("ground_layer"):
+		if layer is TileMapLayer and layer.get_cell_source_id(cell) != -1:
+			has_ground = true
+			break
+	if not has_ground:
+		return false
+	var scene := get_tree().current_scene
+	if scene:
+		var grass := scene.get_node_or_null("Grass_layer") as TileMapLayer
+		if grass != null and grass.get_cell_source_id(cell) != -1:
+			return false
+	if _cell_has_obstacle(cell):
+		return false
+	return true
 
 func _attempt_planting() -> void:
 	if not inventory_data:
