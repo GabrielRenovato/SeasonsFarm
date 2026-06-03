@@ -268,11 +268,16 @@ func handle_tool_use(direction: Vector2) -> void:
 		var tool_name = get_current_tool()
 		
 		if tool_name == "FishCast":
+			if PlayerStatsManager and PlayerStatsManager.energy <= 0:
+				return
+			
 			var fishing = actor.get_node_or_null("FishingComponent")
 			if fishing:
 				# Tenta iniciar a pesca; se falhar (ex: não está olhando pra água), não faz nada
 				var success = fishing.start_fishing(strict_direction, target_map_position)
 				if success:
+					if PlayerStatsManager:
+						PlayerStatsManager.consume_energy(PlayerStatsManager.tool_energy_cost)
 					is_using_tool = true
 					_active_tool_in_use = "FishCast"
 			return

@@ -32,7 +32,7 @@ const RARITIES = {
 }
 
 # Catálogo de peixes do jogo
-# Cada peixe tem: nome visível, raridade base, e faixa de peso (em kg)
+# Cada peixe tem: nome visível, raridade base, faixa de peso, e comportamento (behavior)
 const FISH_CATALOG = {
 	"bluegill": {
 		"name": "Bluegill",
@@ -40,6 +40,8 @@ const FISH_CATALOG = {
 		"min_weight": 0.2,
 		"max_weight": 1.5,
 		"description": "A small, common freshwater fish.",
+		"behavior": "smooth",
+		"difficulty": 20,
 	},
 	"catfish": {
 		"name": "Catfish",
@@ -47,6 +49,8 @@ const FISH_CATALOG = {
 		"min_weight": 0.5,
 		"max_weight": 3.0,
 		"description": "A whiskered bottom-feeder.",
+		"behavior": "sinker",
+		"difficulty": 35,
 	},
 	"bass": {
 		"name": "Bass",
@@ -54,6 +58,8 @@ const FISH_CATALOG = {
 		"min_weight": 0.8,
 		"max_weight": 4.0,
 		"description": "A popular sport fish with a strong bite.",
+		"behavior": "mixed",
+		"difficulty": 50,
 	},
 	"trout": {
 		"name": "Trout",
@@ -61,6 +67,8 @@ const FISH_CATALOG = {
 		"min_weight": 0.5,
 		"max_weight": 3.5,
 		"description": "A beautiful spotted fish from cold waters.",
+		"behavior": "dart",
+		"difficulty": 65,
 	},
 	"salmon": {
 		"name": "Salmon",
@@ -68,6 +76,8 @@ const FISH_CATALOG = {
 		"min_weight": 1.0,
 		"max_weight": 6.0,
 		"description": "A prized fish known for swimming upstream.",
+		"behavior": "floater",
+		"difficulty": 80,
 	},
 	"golden_koi": {
 		"name": "Golden Koi",
@@ -75,6 +85,8 @@ const FISH_CATALOG = {
 		"min_weight": 2.0,
 		"max_weight": 8.0,
 		"description": "A mythical golden fish said to bring fortune.",
+		"behavior": "mixed",
+		"difficulty": 95,
 	},
 }
 
