@@ -52,7 +52,7 @@ func _setup_window_light() -> void:
 	window_light.name = "WindowLight"
 	add_child(window_light)
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	# Abre a porta se o player estiver perto e apertar o botão da ferramenta
 	if _player_in_range and not _is_opening and Input.is_action_just_pressed("use_tool"):
 		_open_door()

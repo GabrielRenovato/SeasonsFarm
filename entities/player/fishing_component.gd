@@ -37,7 +37,7 @@ func _ready() -> void:
 	
 	_setup_animations()
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	if current_state == FishingState.BITING:
 		if Input.is_action_just_pressed("use_tool"):
 			_start_minigame()

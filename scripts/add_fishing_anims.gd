@@ -93,11 +93,11 @@ func _init() -> void:
 						# Generate frames based on direction
 						var start_frame = 0
 						if dir == "down": start_frame = 0
-						elif dir == "left": start_frame = hframes / 4
-						elif dir == "right": start_frame = (hframes / 4) * 2
-						elif dir == "up": start_frame = (hframes / 4) * 3
+						elif dir == "left": start_frame = int(hframes / 4.0)
+						elif dir == "right": start_frame = int(hframes / 4.0) * 2
+						elif dir == "up": start_frame = int(hframes / 4.0) * 3
 						
-						var frame_count = hframes / 4
+						var frame_count = int(hframes / 4.0)
 						var step = length / frame_count
 						
 						for i in range(frame_count):
