@@ -558,6 +558,10 @@ func _can_till(cell: Vector2i) -> bool:
 		var grass := scene.get_node_or_null("Grass_layer") as TileMapLayer
 		if grass != null and grass.get_cell_source_id(cell) != -1:
 			return false
+		# Não permite arar dentro do lago.
+		var water := scene.get_node_or_null("WaterLayer") as TileMapLayer
+		if water != null and water.get_cell_source_id(cell) != -1:
+			return false
 	if _cell_has_obstacle(cell):
 		return false
 	return true
