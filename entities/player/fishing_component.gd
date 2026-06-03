@@ -34,6 +34,8 @@ func _ready() -> void:
 	timer.one_shot = true
 	timer.timeout.connect(_on_timer_timeout)
 	add_child(timer)
+	
+	_setup_animations()
 
 func _process(delta: float) -> void:
 	if current_state == FishingState.BITING:
@@ -183,3 +185,43 @@ func _is_water_tile(cell: Vector2i) -> bool:
 	var water = scene.get_node_or_null("WaterLayer") as TileMapLayer
 	if water and water.get_cell_source_id(cell) != -1: return true
 	return false
+
+func _setup_animations() -> void:
+	if not animation_tree: return
+	var anim_player = actor.get_node_or_null("AnimationPlayer")
+	if not anim_player: return
+	
+	var res = load("res://systems/fishing/fishing_animations.tres")
+	if not res: return
+	
+	# Adiciona todas as animações geradas ao player principal
+	var lib = anim_player.get_animation_library("")
+	for anim_name in res.get_animation_list():
+		if not lib.has_animation(anim_name):
+			lib.add_animation(anim_name, res.get_animation(anim_name))
+			
+	# Atualiza o State Machine
+	var root = animation_tree.tree_root as AnimationNodeStateMachine
+	if root:
+		for state in ["Wait", "Bite", "Reel", "Catch"]:
+			var state_name = "Fish" + state
+			if not root.has_node(state_name):
+				var blend_space = AnimationNodeBlendSpace2D.new()
+				
+				var anim_up = AnimationNodeAnimation.new()
+				anim_up.animation = "fish_" + state.to_lower() + "_up"
+				blend_space.add_blend_point(anim_up, Vector2(0, -1))
+				
+				var anim_down = AnimationNodeAnimation.new()
+				anim_down.animation = "fish_" + state.to_lower() + "_down"
+				blend_space.add_blend_point(anim_down, Vector2(0, 1))
+				
+				var anim_left = AnimationNodeAnimation.new()
+				anim_left.animation = "fish_" + state.to_lower() + "_left"
+				blend_space.add_blend_point(anim_left, Vector2(-1, 0))
+				
+				var anim_right = AnimationNodeAnimation.new()
+				anim_right.animation = "fish_" + state.to_lower() + "_right"
+				blend_space.add_blend_point(anim_right, Vector2(1, 0))
+				
+				root.add_node(state_name, blend_space)

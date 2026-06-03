@@ -42,12 +42,12 @@ func _ready() -> void:
 	# Fundo principal escuro
 	bg_panel = ColorRect.new()
 	bg_panel.color = Color(0, 0, 0, 0.5)
-	bg_panel.set_anchors_preset(PRESET_FULL_RECT)
+	bg_panel.set_anchors_preset(Control.PRESET_FULL_RECT)
 	add_child(bg_panel)
 	
 	# Container central (ajustado para o tamanho da tela)
 	var center = Control.new()
-	center.set_anchors_preset(PRESET_CENTER)
+	center.set_anchors_preset(Control.PRESET_CENTER)
 	bg_panel.add_child(center)
 	
 	# Água (fundo do minigame)
