@@ -102,7 +102,7 @@ func start(fish_data: Dictionary) -> void:
 	var tw = create_tween()
 	tw.tween_property(bg_panel, "modulate:a", 1.0, 0.3)
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
 	if not is_active:
 		return
 		
