@@ -267,6 +267,16 @@ func handle_tool_use(direction: Vector2) -> void:
 		
 		var tool_name = get_current_tool()
 		
+		if tool_name == "FishCast":
+			var fishing = actor.get_node_or_null("FishingComponent")
+			if fishing:
+				# Tenta iniciar a pesca; se falhar (ex: não está olhando pra água), não faz nada
+				var success = fishing.start_fishing(strict_direction, target_map_position)
+				if success:
+					is_using_tool = true
+					_active_tool_in_use = "FishCast"
+			return
+		
 		if tool_name != "":
 			if PlayerStatsManager and PlayerStatsManager.energy <= 0:
 				return
@@ -482,6 +492,12 @@ func _on_animation_finished(_animation_name: StringName) -> void:
 		return
 
 	var tool_used := _active_tool_in_use
+
+	if tool_used == "FishCast":
+		var fishing = actor.get_node_or_null("FishingComponent")
+		if fishing:
+			fishing.on_animation_finished(_animation_name)
+		return
 
 	# Libera o estado ANTES de executar a ação: se a ação falhar/erro,
 	# o player não fica preso na pose da ferramenta.

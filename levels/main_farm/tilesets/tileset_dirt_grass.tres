@@ -1,0 +1,19 @@
+[gd_resource type="TileSet" load_steps=3 format=3]
+
+[ext_resource type="Texture2D" uid="uid://cxfuus8gcvs7y" path="res://assets/tiles/water/dirt_grass.png" id="1_dirt"]
+
+[sub_resource type="TileSetAtlasSource" id="src_dirt"]
+texture = ExtResource("1_dirt")
+texture_region_size = Vector2i(16, 16)
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+2:1/0 = 0
+0:2/0 = 0
+1:2/0 = 0
+2:2/0 = 0
+
+[resource]
+sources/0 = SubResource("src_dirt")

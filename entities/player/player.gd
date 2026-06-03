@@ -39,6 +39,14 @@ func _ready() -> void:
 	customization_instance.name = "CustomizationComponent"
 	add_child(customization_instance)
 	
+	# Initialize Fishing Component
+	var fishing_component = preload("res://entities/player/fishing_component.gd").new()
+	fishing_component.actor = self
+	fishing_component.animation_tree = $AnimationTree
+	fishing_component.tool_component = tool_component
+	fishing_component.name = "FishingComponent"
+	add_child(fishing_component)
+	
 	# Setup Player Lantern (PointLight2D)
 	lantern = PointLight2D.new()
 	var texture_2d = GradientTexture2D.new()

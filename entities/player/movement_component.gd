@@ -39,6 +39,11 @@ func handle_movement() -> void:
 		stop_movement()
 		return
 		
+	var fishing = actor.get_node_or_null("FishingComponent")
+	if fishing and fishing.is_fishing:
+		stop_movement()
+		return
+		
 	var input_direction: Vector2 = Input.get_vector("left", "right", "up", "down")
 	
 	if is_sitting:

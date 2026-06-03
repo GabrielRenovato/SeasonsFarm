@@ -54,7 +54,7 @@ position = Vector2(80, 80)
 tile_set = ExtResource("ts_spawn")
 
 [node name="PlayerTeste" parent="." unique_id=1305772278 instance=ExtResource("7_b4i1y")]
-position = Vector2(486, 10)
+position = Vector2(105, 435)
 
 [node name="StaticBody2D3" type="StaticBody2D" parent="." unique_id=1678776377]
 position = Vector2(-686, 688)

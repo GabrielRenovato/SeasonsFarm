@@ -7,7 +7,7 @@ class_name ItemData
 
 @export_group("Tool")
 @export var is_tool: bool = false
-@export_enum("Hoe", "Axe", "Pickaxe", "Water", "Sickle") var tool_type: String = ""
+@export_enum("Hoe", "Axe", "Pickaxe", "Water", "Sickle", "FishCast") var tool_type: String = ""
 @export_enum("Wood", "Cooper", "Iron", "Gold", "Platinum", "Crimson", "Frost", "Shadow", "Fairy", "Obsidian") var tier: String = "Wood"
 
 @export_group("Seed / Crop")

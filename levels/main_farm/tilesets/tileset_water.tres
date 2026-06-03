@@ -1,29 +1,64 @@
-[gd_resource type="TileSet" load_steps=5 format=3]
+[gd_resource type="TileSet" load_steps=3 format=3]
 
-[ext_resource type="Texture2D" uid="uid://dcw1t2b340416" path="res://assets/tiles/water/water_anim.png" id="1_fill"]
-[ext_resource type="Texture2D" uid="uid://cfaanlg04ifih" path="res://assets/tiles/water/Tileset Grass Water Spring.png" id="2_edge"]
+[ext_resource type="Texture2D" uid="uid://dv85ajcawew6k" path="res://assets/tiles/water/water_lake.png" id="1_lake"]
 
-[sub_resource type="TileSetAtlasSource" id="src_fill"]
-texture = ExtResource("1_fill")
+[sub_resource type="TileSetAtlasSource" id="src_lake"]
+texture = ExtResource("1_lake")
+texture_region_size = Vector2i(16, 16)
 0:0/animation_columns = 4
 0:0/animation_frame_0/duration = 0.4
 0:0/animation_frame_1/duration = 0.4
 0:0/animation_frame_2/duration = 0.4
 0:0/animation_frame_3/duration = 0.4
 0:0/0 = 0
-
-[sub_resource type="TileSetAtlasSource" id="src_edge"]
-texture = ExtResource("2_edge")
-22:1/0 = 0
-21:4/0 = 0
-21:7/0 = 0
-20:6/0 = 0
-23:5/0 = 0
-23:3/0 = 0
-20:3/0 = 0
-20:7/0 = 0
-23:7/0 = 0
+4:0/animation_columns = 4
+4:0/animation_frame_0/duration = 0.4
+4:0/animation_frame_1/duration = 0.4
+4:0/animation_frame_2/duration = 0.4
+4:0/animation_frame_3/duration = 0.4
+4:0/0 = 0
+8:0/animation_columns = 4
+8:0/animation_frame_0/duration = 0.4
+8:0/animation_frame_1/duration = 0.4
+8:0/animation_frame_2/duration = 0.4
+8:0/animation_frame_3/duration = 0.4
+8:0/0 = 0
+0:1/animation_columns = 4
+0:1/animation_frame_0/duration = 0.4
+0:1/animation_frame_1/duration = 0.4
+0:1/animation_frame_2/duration = 0.4
+0:1/animation_frame_3/duration = 0.4
+0:1/0 = 0
+4:1/animation_columns = 4
+4:1/animation_frame_0/duration = 0.4
+4:1/animation_frame_1/duration = 0.4
+4:1/animation_frame_2/duration = 0.4
+4:1/animation_frame_3/duration = 0.4
+4:1/0 = 0
+8:1/animation_columns = 4
+8:1/animation_frame_0/duration = 0.4
+8:1/animation_frame_1/duration = 0.4
+8:1/animation_frame_2/duration = 0.4
+8:1/animation_frame_3/duration = 0.4
+8:1/0 = 0
+0:2/animation_columns = 4
+0:2/animation_frame_0/duration = 0.4
+0:2/animation_frame_1/duration = 0.4
+0:2/animation_frame_2/duration = 0.4
+0:2/animation_frame_3/duration = 0.4
+0:2/0 = 0
+4:2/animation_columns = 4
+4:2/animation_frame_0/duration = 0.4
+4:2/animation_frame_1/duration = 0.4
+4:2/animation_frame_2/duration = 0.4
+4:2/animation_frame_3/duration = 0.4
+4:2/0 = 0
+8:2/animation_columns = 4
+8:2/animation_frame_0/duration = 0.4
+8:2/animation_frame_1/duration = 0.4
+8:2/animation_frame_2/duration = 0.4
+8:2/animation_frame_3/duration = 0.4
+8:2/0 = 0
 
 [resource]
-sources/0 = SubResource("src_fill")
-sources/1 = SubResource("src_edge")
+sources/0 = SubResource("src_lake")

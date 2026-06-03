@@ -4,19 +4,28 @@ const DAY_NIGHT_SCRIPT = preload("res://levels/main_farm/day_night_cycle.gd")
 
 # --- Lago (laguinho estilo Stardew) ---
 const WATER_TILESET = preload("res://levels/main_farm/tilesets/tileset_water.tres")
-const WATER_EDGE_SPRING = preload("res://assets/tiles/water/Tileset Grass Water Spring.png")
-const WATER_EDGE_SUMMER = preload("res://assets/tiles/water/Tileset Grass Water Summer.png")
-const WATER_EDGE_FALL = preload("res://assets/tiles/water/Tileset Grass Water Fall.png")
-const WATER_EDGE_WINTER = preload("res://assets/tiles/water/Tileset Grass Water Winter.png")
-
-# Coordenadas (no atlas das margens, source 1) de cada peça da moldura do lago.
-# Bloco em cols 20-23: existe em todas as 4 texturas sazonais (inclusive inverno,
-# cujo atlas é mais estreito), então a troca de estação só substitui a textura.
+# Coords no atlas water_lake.png. Cada peça tem 4 frames de animação, então a
+# coluna-base avança de 4 em 4. A animação (espuma da costa) só ocorre nas bordas;
+# o centro é água calma.
 const WATER_EDGE_TILES := {
-	"NW": Vector2i(23, 3), "N": Vector2i(21, 4), "NE": Vector2i(20, 3),
-	"W": Vector2i(20, 6), "E": Vector2i(23, 5),
-	"SW": Vector2i(20, 7), "S": Vector2i(21, 7), "SE": Vector2i(23, 7),
+	"NW": Vector2i(0, 0), "N": Vector2i(4, 0), "NE": Vector2i(8, 0),
+	"W": Vector2i(0, 1), "E": Vector2i(8, 1),
+	"SW": Vector2i(0, 2), "S": Vector2i(4, 2), "SE": Vector2i(8, 2),
 }
+const WATER_CENTER_TILE := Vector2i(4, 1)
+
+# Anel de terra (margem) ao redor do lago — tileset estático terra↔grama (pixels do pacote).
+const DIRT_TILESET = preload("res://levels/main_farm/tilesets/tileset_dirt_grass.tres")
+const DIRT_EDGE_TILES := {
+	"NW": Vector2i(0, 0), "N": Vector2i(1, 0), "NE": Vector2i(2, 0),
+	"W": Vector2i(0, 1), "E": Vector2i(2, 1),
+	"SW": Vector2i(0, 2), "S": Vector2i(1, 2), "SE": Vector2i(2, 2),
+}
+const DIRT_CENTER_TILE := Vector2i(1, 1)
+const _NEIGHBORS_8 := [
+	Vector2i(0, -1), Vector2i(0, 1), Vector2i(-1, 0), Vector2i(1, 0),
+	Vector2i(-1, -1), Vector2i(1, -1), Vector2i(-1, 1), Vector2i(1, 1),
+]
 
 @export var tree_scene: PackedScene
 @export var stump_scene: PackedScene
@@ -69,9 +78,13 @@ var _scene_lookup: Dictionary = {}
 ## Célula central do lago. No valor sentinela (-9999,-9999) é escolhido
 ## automaticamente um canto afastado da casa e do player.
 @export var lake_center_cell: Vector2i = Vector2i(-9999, -9999)
+## Largura (em tiles) da margem de terra ao redor do lago. 0 = sem margem.
+@export_range(0, 4) var lake_shore_width: int = 2
 
 # Células ocupadas pelo lago (Vector2i -> true). Usado para excluir spawn e arar.
 var lake_cells: Dictionary = {}
+# Células da margem de terra ao redor do lago (Vector2i -> true). Excluem spawn.
+var shore_cells: Dictionary = {}
 
 @onready var ground_layer: TileMapLayer = $GroundLayer
 
@@ -164,8 +177,8 @@ func generate_environment_procedurally() -> void:
 		if has_node("Grass_layer") and $Grass_layer.get_cell_source_id(cell) != -1:
 			continue
 
-		# Não spawnar dentro do lago.
-		if lake_cells.has(cell):
+		# Não spawnar dentro do lago nem na margem de terra.
+		if _is_water_or_shore(cell):
 			continue
 
 		var world_position := ground_layer.map_to_local(cell)
@@ -294,35 +307,57 @@ func _generate_lake() -> void:
 			if ex + ey <= cut:
 				lake_cells[Vector2i(center.x + dx, center.y + dy)] = true
 
-	# Camada de água (base) e camada de margens (por cima). Mesmo tile_set; z baixo.
+	# Margem de terra (anel) ao redor da água, ABAIXO da água e ACIMA da grama.
+	shore_cells.clear()
+	if lake_shore_width > 0:
+		var solid := lake_cells.duplicate()       # lago ∪ margem (já expandida)
+		var frontier: Array = lake_cells.keys()
+		for _step in range(lake_shore_width):
+			var next_frontier: Array = []
+			for c in frontier:
+				for d in _NEIGHBORS_8:
+					var nb: Vector2i = c + d
+					if not solid.has(nb):
+						solid[nb] = true
+						shore_cells[nb] = true
+						next_frontier.append(nb)
+			frontier = next_frontier
+
+		var terra := TileMapLayer.new()
+		terra.name = "ShoreLayer"
+		terra.tile_set = DIRT_TILESET
+		terra.z_index = -1
+		add_child(terra)
+		# A borda da margem (transição p/ grama) é onde o vizinho NÃO está em solid.
+		for cell in shore_cells:
+			var role := _lake_edge_role(cell, solid)
+			if role != "":
+				terra.set_cell(cell, 0, DIRT_EDGE_TILES[role])
+			else:
+				terra.set_cell(cell, 0, DIRT_CENTER_TILE)
+
+	# Camada de água animada com bordas de terra (por cima da margem).
 	var water := TileMapLayer.new()
 	water.name = "WaterLayer"
 	water.tile_set = WATER_TILESET
 	water.z_index = -1
 	add_child(water)
 
-	var edge := TileMapLayer.new()
-	edge.name = "WaterEdgeLayer"
-	edge.tile_set = WATER_TILESET
-	edge.z_index = -1
-	add_child(edge)
-
-	_apply_season_water(TimeManager.current_season)
-
 	for cell in lake_cells:
-		water.set_cell(cell, 0, Vector2i(0, 0))
 		var role := _lake_edge_role(cell)
 		if role != "":
-			edge.set_cell(cell, 1, WATER_EDGE_TILES[role])
+			water.set_cell(cell, 0, WATER_EDGE_TILES[role])
+		else:
+			water.set_cell(cell, 0, WATER_CENTER_TILE) # Centro do lago (água calma)
 
 	_build_lake_collision()
 
 # Decide qual peça de margem usar para uma célula, conforme os vizinhos ortogonais.
-func _lake_edge_role(cell: Vector2i) -> String:
-	var n := lake_cells.has(cell + Vector2i(0, -1))
-	var s := lake_cells.has(cell + Vector2i(0, 1))
-	var w := lake_cells.has(cell + Vector2i(-1, 0))
-	var e := lake_cells.has(cell + Vector2i(1, 0))
+func _lake_edge_role(cell: Vector2i, cells: Dictionary = lake_cells) -> String:
+	var n := cells.has(cell + Vector2i(0, -1))
+	var s := cells.has(cell + Vector2i(0, 1))
+	var w := cells.has(cell + Vector2i(-1, 0))
+	var e := cells.has(cell + Vector2i(1, 0))
 	if not n and not w: return "NW"
 	if not n and not e: return "NE"
 	if not s and not w: return "SW"
@@ -332,6 +367,10 @@ func _lake_edge_role(cell: Vector2i) -> String:
 	if not w: return "W"
 	if not e: return "E"
 	return ""  # interior (sem margem, mostra a água base)
+
+# Verdadeiro se a célula é água do lago OU margem de terra (não spawnar objetos aqui).
+func _is_water_or_shore(cell: Vector2i) -> bool:
+	return lake_cells.has(cell) or shore_cells.has(cell)
 
 # Colisão do lago: um retângulo 16x16 por célula de água (bloqueia o player).
 func _build_lake_collision() -> void:
@@ -350,18 +389,9 @@ func _build_lake_collision() -> void:
 		shape.position = ground_layer.map_to_local(cell)
 		body.add_child(shape)
 
-# Troca a textura das margens do lago conforme a estação.
+# Lago animado do Farm RPG não tem variações de estação, mantido vazio para evitar crash
 func _apply_season_water(season: int) -> void:
-	if not WATER_TILESET:
-		return
-	var tex := WATER_EDGE_SPRING
-	match season:
-		1: tex = WATER_EDGE_SUMMER
-		2: tex = WATER_EDGE_FALL
-		3: tex = WATER_EDGE_WINTER
-	var src := WATER_TILESET.get_source(1) as TileSetAtlasSource
-	if src:
-		src.texture = tex
+	pass
 
 func _on_day_changed(_day: int) -> void:
 	# Centralized daily update to optimize signal connections and enforce population caps
@@ -419,8 +449,8 @@ func _spawn_random_wild_seed() -> void:
 		if has_node("Grass_layer") and $Grass_layer.get_cell_source_id(cell) != -1:
 			continue
 
-		# Não spawnar dentro do lago.
-		if lake_cells.has(cell):
+		# Não spawnar dentro do lago nem na margem de terra.
+		if _is_water_or_shore(cell):
 			continue
 
 		var world_position = ground_layer.map_to_local(cell)
@@ -466,8 +496,8 @@ func _spawn_random_rock() -> void:
 		if has_node("Grass_layer") and $Grass_layer.get_cell_source_id(cell) != -1:
 			continue
 
-		# Não spawnar dentro do lago.
-		if lake_cells.has(cell):
+		# Não spawnar dentro do lago nem na margem de terra.
+		if _is_water_or_shore(cell):
 			continue
 
 		var world_position = ground_layer.map_to_local(cell)
@@ -496,12 +526,12 @@ func _spawn_random_rock() -> void:
 			break
 
 func _restore_environment() -> void:
-	# Remove do cache objetos que caiam dentro do lago (compatível com saves antigos).
-	if not lake_cells.is_empty() and ground_layer:
+	# Remove do cache objetos que caiam dentro do lago ou na margem (compat. saves antigos).
+	if (not lake_cells.is_empty() or not shore_cells.is_empty()) and ground_layer:
 		var filtered: Array[Dictionary] = []
 		for entry in FarmManager.env_objects:
 			var cell := ground_layer.local_to_map(ground_layer.to_local(entry["pos"]))
-			if not lake_cells.has(cell):
+			if not _is_water_or_shore(cell):
 				filtered.append(entry)
 		FarmManager.env_objects = filtered
 

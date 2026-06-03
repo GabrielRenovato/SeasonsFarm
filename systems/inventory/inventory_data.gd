@@ -71,8 +71,19 @@ func setup_default_inventory() -> void:
 	slots[3].item = water
 	slots[3].quantity = 1
 
+	var fishing_rod = ItemData.new()
+	fishing_rod.id = "fishing_rod"
+	fishing_rod.name = "Fishing Rod"
+	fishing_rod.is_tool = true
+	fishing_rod.tool_type = "FishCast"
+	fishing_rod.tier = "Wood"
+	fishing_rod.icon_texture = _get_tool_icon("Fishing Rod", "Wood")
+
+	slots[4].item = fishing_rod
+	slots[4].quantity = 1
+
 	# Sementes removidas para teste
-	var slot_index = 4
+	var slot_index = 5
 		
 	# Add wooden test furniture (somente com o sistema de móveis ativo)
 	var furniture_keys = ["chair_2", "chair_3", "chair_4", "bed_single_1", "bed_double_2", "desk_2", "desk_3"] if FurnitureManager.enabled else []
