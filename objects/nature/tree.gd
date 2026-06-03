@@ -102,9 +102,9 @@ func _update_appearance() -> void:
 # estações. As demais ficam visíveis e mostram seu sprite sazonal normalmente.
 func _apply_winter_state() -> void:
 	var is_winter := TimeManager.current_season == TimeManager.Season.WINTER
-	var hidden := hide_in_winter and is_winter
-	visible = not hidden
-	if hidden:
+	var is_hidden := hide_in_winter and is_winter
+	visible = not is_hidden
+	if is_hidden:
 		collision_shape.set_deferred("disabled", true)
 		area_collision.set_deferred("disabled", true)
 

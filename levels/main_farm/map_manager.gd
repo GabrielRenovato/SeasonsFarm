@@ -390,7 +390,7 @@ func _build_lake_collision() -> void:
 		body.add_child(shape)
 
 # Lago animado do Farm RPG não tem variações de estação, mantido vazio para evitar crash
-func _apply_season_water(season: int) -> void:
+func _apply_season_water(_season: int) -> void:
 	pass
 
 func _on_day_changed(_day: int) -> void:

@@ -54,7 +54,7 @@ func _ready() -> void:
 	water_bg = ColorRect.new()
 	water_bg.color = Color(0.1, 0.4, 0.8, 0.9)
 	water_bg.size = Vector2(bar_width, bar_height)
-	water_bg.position = Vector2(-bar_width, -bar_height / 2)
+	water_bg.position = Vector2(-bar_width, -bar_height / 2.0)
 	center.add_child(water_bg)
 	
 	# Barra de captura (jogador)
@@ -75,7 +75,7 @@ func _ready() -> void:
 	progress_bg = ColorRect.new()
 	progress_bg.color = Color(0.2, 0.2, 0.2, 0.9)
 	progress_bg.size = Vector2(10, bar_height)
-	progress_bg.position = Vector2(10, -bar_height / 2)
+	progress_bg.position = Vector2(10, -bar_height / 2.0)
 	center.add_child(progress_bg)
 	
 	progress_fill = ColorRect.new()
@@ -102,7 +102,7 @@ func start(fish_data: Dictionary) -> void:
 	var tw = create_tween()
 	tw.tween_property(bg_panel, "modulate:a", 1.0, 0.3)
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	if not is_active:
 		return
 		
@@ -140,7 +140,7 @@ func _process_fish(delta: float) -> void:
 		
 	# Move em direção ao alvo baseado no comportamento
 	var speed_mult = 1.0 + (difficulty / 100.0)
-	var max_fish_speed = 150.0 * speed_mult
+	var _max_fish_speed = 150.0 * speed_mult
 	
 	if behavior == "dart":
 		# Move instantaneamente e depois para
