@@ -53,11 +53,7 @@ func _on_focus_entered() -> void:
 	highlight_rect.visible = true
 
 func _on_focus_exited() -> void:
-	# No inventário, se for o slot ativo da hotbar, mantém o highlight
-	if show_background and inventory_data and inventory_data.active_slot_index == slot_index:
-		highlight_rect.visible = true
-	else:
-		highlight_rect.visible = false
+	highlight_rect.visible = false
 
 func _gui_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_accept"):
@@ -101,13 +97,6 @@ func update_ui() -> void:
 		else:
 			quantity_label.visible = true
 			quantity_label.set_value(slot_data.quantity)
-			
-	# Atualiza highlight se for o item ativo da hotbar no menu de inventário
-	if show_background:
-		if inventory_data and inventory_data.active_slot_index == slot_index:
-			highlight_rect.visible = true
-		elif not has_focus():
-			highlight_rect.visible = false
 
 
 func _make_custom_tooltip(_for_text: String) -> Object:
