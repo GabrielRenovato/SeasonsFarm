@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b6tmxhmodd5cb"
-path="res://.godot/imported/icon_ice_pip.png-2e7dd3eae11770d52c078d08ac1c4bcf.ctex"
+uid="uid://bik3tqahe00lq"
+path="res://.godot/imported/icon_pike.png-3f9e7bd34baab5a8d233393ef79bf84d.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/fishing/icon_ice_pip.png"
-dest_files=["res://.godot/imported/icon_ice_pip.png-2e7dd3eae11770d52c078d08ac1c4bcf.ctex"]
+source_file="res://assets/sprites/fishing/icon_pike.png"
+dest_files=["res://.godot/imported/icon_pike.png-3f9e7bd34baab5a8d233393ef79bf84d.ctex"]
 
 [params]
 

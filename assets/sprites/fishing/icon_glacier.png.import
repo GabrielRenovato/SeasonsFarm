@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dsd3beth030h8"
-path="res://.godot/imported/icon_bass.png-6992e4cf4ad07a0e69b76ecc00c8000a.ctex"
+uid="uid://d1cmhiej4k4m5"
+path="res://.godot/imported/icon_glacier.png-5f9c537def66ea341ca21076313bb8eb.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/fishing/icon_bass.png"
-dest_files=["res://.godot/imported/icon_bass.png-6992e4cf4ad07a0e69b76ecc00c8000a.ctex"]
+source_file="res://assets/sprites/fishing/icon_glacier.png"
+dest_files=["res://.godot/imported/icon_glacier.png-5f9c537def66ea341ca21076313bb8eb.ctex"]
 
 [params]
 

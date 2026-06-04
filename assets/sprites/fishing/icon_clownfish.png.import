@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bd77qhxce8hjp"
-path="res://.godot/imported/icon_sturgeon.png-1da73742905222929dd4c82058c9b95f.ctex"
+uid="uid://bpwmayguk1rvk"
+path="res://.godot/imported/icon_clownfish.png-22e6c298e09236a10c9c3adf858d178b.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/fishing/icon_sturgeon.png"
-dest_files=["res://.godot/imported/icon_sturgeon.png-1da73742905222929dd4c82058c9b95f.ctex"]
+source_file="res://assets/sprites/fishing/icon_clownfish.png"
+dest_files=["res://.godot/imported/icon_clownfish.png-22e6c298e09236a10c9c3adf858d178b.ctex"]
 
 [params]
 

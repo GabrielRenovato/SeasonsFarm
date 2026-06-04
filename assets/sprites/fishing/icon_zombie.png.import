@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://xca1tvcq2rfu"
-path="res://.godot/imported/icon_carp.png-4c98fc7887f4b02469a28d83ee6c2e88.ctex"
+uid="uid://k5xecst8ewvn"
+path="res://.godot/imported/icon_zombie.png-c6fa772f6258c2616deb271ce4be335e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/fishing/icon_carp.png"
-dest_files=["res://.godot/imported/icon_carp.png-4c98fc7887f4b02469a28d83ee6c2e88.ctex"]
+source_file="res://assets/sprites/fishing/icon_zombie.png"
+dest_files=["res://.godot/imported/icon_zombie.png-c6fa772f6258c2616deb271ce4be335e.ctex"]
 
 [params]
 

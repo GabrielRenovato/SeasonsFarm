@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c64vw4qf8e4vm"
-path="res://.godot/imported/icon_salmon.png-4938dc259bd96d7318015fa809352b38.ctex"
+uid="uid://ddpempfv0t4q4"
+path="res://.godot/imported/icon_angler.png-f534fc02ae152bce5e24779466b52021.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/fishing/icon_salmon.png"
-dest_files=["res://.godot/imported/icon_salmon.png-4938dc259bd96d7318015fa809352b38.ctex"]
+source_file="res://assets/sprites/fishing/icon_angler.png"
+dest_files=["res://.godot/imported/icon_angler.png-f534fc02ae152bce5e24779466b52021.ctex"]
 
 [params]
 
