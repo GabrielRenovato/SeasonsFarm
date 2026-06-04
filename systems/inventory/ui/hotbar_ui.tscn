@@ -1,15 +1,16 @@
-[gd_scene load_steps=4 format=3 uid="uid://chotbarui123"]
+[gd_scene load_steps=5 format=3 uid="uid://chotbarui123"]
 
 [ext_resource type="Script" uid="uid://dmj7x31t7tqwf" path="res://systems/inventory/ui/hotbar_ui.gd" id="1_hotbar"]
 [ext_resource type="Texture2D" path="res://Farm RPG - Tiny Asset Pack - (All in One)/UI/Inventory/Slots.png" id="2_slots"]
+[ext_resource type="Texture2D" path="res://Farm RPG - Tiny Asset Pack - (All in One)/UI/Extras.png" id="3_extras"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_bar"]
 atlas = ExtResource("2_slots")
 region = Rect2(6, 201, 164, 28)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_active"]
-atlas = ExtResource("2_slots")
-region = Rect2(119, 6, 16, 18)
+atlas = ExtResource("3_extras")
+region = Rect2(233, 9, 30, 30)
 
 [node name="HotbarUI" type="Control" unique_id=1611557422]
 custom_minimum_size = Vector2(164, 28)
@@ -40,10 +41,10 @@ mouse_filter = 2
 unique_name_in_owner = true
 visible = false
 layout_mode = 0
-offset_left = 5.0
-offset_top = 5.0
-offset_right = 21.0
-offset_bottom = 23.0
+offset_left = -2.0
+offset_top = -1.0
+offset_right = 28.0
+offset_bottom = 29.0
 texture = SubResource("AtlasTexture_active")
 stretch_mode = 0
 mouse_filter = 2
