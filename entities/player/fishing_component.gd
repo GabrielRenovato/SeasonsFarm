@@ -14,6 +14,7 @@ class_name FishingComponent
 const BITE_INDICATOR_SCENE = preload("res://systems/fishing/bite_indicator.gd")
 const CATCH_POPUP_SCENE = preload("res://systems/fishing/fish_catch_popup.gd")
 const MINIGAME_SCENE = preload("res://systems/fishing/fishing_minigame.gd")
+const FISH_SHADOW_SCENE = preload("res://systems/fishing/fish_shadow.gd")
 
 enum FishingState { IDLE, CASTING, WAITING, BITING, REELING, CATCHING }
 var current_state: FishingState = FishingState.IDLE
@@ -23,8 +24,10 @@ var timer: Timer
 var bite_indicator: BiteIndicator
 var is_fishing: bool = false
 var strict_direction: Vector2 = Vector2.DOWN
+var current_target_cell: Vector2i = Vector2i.ZERO
 
 var current_fish_data: Dictionary
+var fish_shadow = null   # instância de FishShadow (Sprite2D); tipo dinâmico p/ não depender do class cache
 
 func _ready() -> void:
 	if animation_tree:
@@ -48,6 +51,7 @@ func start_fishing(direction: Vector2, target_cell: Vector2i) -> bool:
 	if not _is_water_tile(target_cell): return false
 
 	strict_direction = direction
+	current_target_cell = target_cell
 	is_fishing = true
 	current_state = FishingState.CASTING
 
@@ -103,6 +107,9 @@ func _start_biting() -> void:
 	else:
 		current_fish_data = {"id": "bluegill", "name": "Bluegill", "rarity": "common", "weight": 1.0, "color": Color(0.8, 0.8, 0.8)}
 
+	# Mostra o peixe se debatendo na água (cor conforme a raridade sorteada)
+	_spawn_fish_shadow()
+
 	timer.start(bite_window)
 
 func _start_minigame() -> void:
@@ -135,6 +142,7 @@ func _on_minigame_finished(success: bool) -> void:
 func _start_catching() -> void:
 	current_state = FishingState.CATCHING
 	state_machine.travel("FishCatch")
+	_clear_fish_shadow()   # o peixe foi fisgado: some da água
 
 	var popup := CATCH_POPUP_SCENE.new()
 	actor.add_child(popup)
@@ -157,6 +165,7 @@ func _finish_fishing() -> void:
 	is_fishing = false
 	current_state = FishingState.IDLE
 	state_machine.travel("Idle")
+	_clear_fish_shadow()   # segurança: garante remoção ao cancelar/encerrar
 
 	if tool_component:
 		tool_component.is_using_tool = false
@@ -167,3 +176,23 @@ func _is_water_tile(cell: Vector2i) -> bool:
 	if not scene: return false
 	var water := scene.get_node_or_null("WaterLayer") as TileMapLayer
 	return water != null and water.get_cell_source_id(cell) != -1
+
+# Cria a sombra do peixe no centro da célula de água mirada (à frente do player).
+func _spawn_fish_shadow() -> void:
+	_clear_fish_shadow()
+	var scene := get_tree().current_scene
+	if not scene:
+		return
+	var water := scene.get_node_or_null("WaterLayer") as TileMapLayer
+	if not water:
+		return
+	fish_shadow = FISH_SHADOW_SCENE.new()
+	scene.add_child(fish_shadow)
+	fish_shadow.global_position = water.to_global(water.map_to_local(current_target_cell))
+	fish_shadow.z_index = 1   # sobre a água animada
+	fish_shadow.setup(str(current_fish_data.get("rarity", "common")))
+
+func _clear_fish_shadow() -> void:
+	if fish_shadow and is_instance_valid(fish_shadow):
+		fish_shadow.dismiss()
+	fish_shadow = null
