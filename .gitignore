@@ -4,3 +4,7 @@ export_presets.cfg
 
 # Arquivos de trabalho/experimentais (não versionados)
 _scratch/
+scratch/
+
+# Logs
+*.log
