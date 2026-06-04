@@ -285,10 +285,24 @@ func _style_label(lbl: Label, size: int) -> void:
 	lbl.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.9))
 	lbl.add_theme_constant_override("outline_size", 2)
 
-# Retorna o rótulo da tecla mapeada para a ação (ex: "F", "SPC", "LMB") para exibir no centro.
 func _action_key_label(action: String) -> String:
 	if not InputMap.has_action(action):
 		return "!"
+		
+	var has_joypad = Input.get_connected_joypads().size() > 0
+	
+	if has_joypad:
+		for ev in InputMap.action_get_events(action):
+			if ev is InputEventJoypadButton:
+				match ev.button_index:
+					JOY_BUTTON_A: return "A"
+					JOY_BUTTON_B: return "B"
+					JOY_BUTTON_X: return "X"
+					JOY_BUTTON_Y: return "Y"
+					JOY_BUTTON_LEFT_SHOULDER: return "LB"
+					JOY_BUTTON_RIGHT_SHOULDER: return "RB"
+					_: return "BTN"
+
 	for ev in InputMap.action_get_events(action):
 		if ev is InputEventKey:
 			var kc: int = ev.physical_keycode if ev.physical_keycode != 0 else ev.keycode
