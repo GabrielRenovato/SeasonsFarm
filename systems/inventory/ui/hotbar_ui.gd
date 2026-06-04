@@ -63,4 +63,6 @@ func update_selection(active_index: int) -> void:
 		active_overlay.visible = false
 		return
 	active_overlay.visible = true
-	active_overlay.position = Vector2(FIRST_X + active_index * SLOT_PITCH, SLOT_Y)
+	# Centraliza o sprite de seleção (16x18) sobre o slot (16x16)
+	# Y deslocado 1px acima para compensar a diferença de altura
+	active_overlay.position = Vector2(FIRST_X + active_index * SLOT_PITCH, SLOT_Y - 1)

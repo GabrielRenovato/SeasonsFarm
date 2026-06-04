@@ -9,7 +9,7 @@ region = Rect2(6, 201, 164, 28)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_active"]
 atlas = ExtResource("2_slots")
-region = Rect2(152, 7, 16, 16)
+region = Rect2(119, 6, 16, 18)
 
 [node name="HotbarUI" type="Control" unique_id=1611557422]
 custom_minimum_size = Vector2(164, 28)
@@ -36,17 +36,16 @@ texture = SubResource("AtlasTexture_bar")
 stretch_mode = 0
 mouse_filter = 2
 
-[node name="ActiveOverlay" type="ReferenceRect" parent="." unique_id=556677001]
+[node name="ActiveOverlay" type="TextureRect" parent="." unique_id=556677001]
 unique_name_in_owner = true
 visible = false
 layout_mode = 0
 offset_left = 5.0
-offset_top = 6.0
+offset_top = 5.0
 offset_right = 21.0
-offset_bottom = 22.0
-border_color = Color(1, 0.95, 0.3, 1)
-border_width = 1.0
-editor_only = false
+offset_bottom = 23.0
+texture = SubResource("AtlasTexture_active")
+stretch_mode = 0
 mouse_filter = 2
 
 [node name="SlotsRoot" type="Control" parent="." unique_id=1461229366]
