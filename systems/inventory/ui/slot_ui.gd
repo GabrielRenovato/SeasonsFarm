@@ -6,7 +6,7 @@ class_name SlotUI
 # Referências para os elementos visuais do slot
 @onready var item_icon: TextureRect = $MarginContainer/ItemIcon
 @onready var quantity_label: QuantityDisplay = $QuantityLabel
-@onready var highlight_rect: ReferenceRect = $HighlightRect
+@onready var highlight_rect: TextureRect = $HighlightRect
 
 signal slot_selected(index: int)
 
@@ -51,16 +51,13 @@ func _ready() -> void:
 
 func _on_focus_entered() -> void:
 	highlight_rect.visible = true
-	highlight_rect.border_color = Color(1.0, 1.0, 1.0, 1.0) # Branco para o foco
 
 func _on_focus_exited() -> void:
-	# Se for o slot ativo da hotbar, mantém o dourado
-	if not show_background and inventory_data and inventory_data.active_slot_index == slot_index:
-		highlight_rect.border_color = Color(1.0, 0.9, 0.2, 1.0)
+	# No inventário, se for o slot ativo da hotbar, mantém o highlight
+	if show_background and inventory_data and inventory_data.active_slot_index == slot_index:
 		highlight_rect.visible = true
 	else:
 		highlight_rect.visible = false
-		highlight_rect.border_color = Color(1.0, 0.9, 0.2, 1.0) # Restaura o dourado default
 
 func _gui_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_accept"):
@@ -99,12 +96,18 @@ func update_ui() -> void:
 			item_icon.texture = placeholder
 			item_icon.self_modulate = slot_data.item.icon_color
 		
-		# Ferramentas não mostram quantidade (são únicas)
 		if slot_data.item.is_tool:
 			quantity_label.visible = false
 		else:
 			quantity_label.visible = true
 			quantity_label.set_value(slot_data.quantity)
+			
+	# Atualiza highlight se for o item ativo da hotbar no menu de inventário
+	if show_background:
+		if inventory_data and inventory_data.active_slot_index == slot_index:
+			highlight_rect.visible = true
+		elif not has_focus():
+			highlight_rect.visible = false
 
 
 func _make_custom_tooltip(_for_text: String) -> Object:
