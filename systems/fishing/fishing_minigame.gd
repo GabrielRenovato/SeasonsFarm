@@ -63,8 +63,8 @@ var hint_label: Label
 func _ready() -> void:
 	layer = 100
 	var vp: Vector2 = get_viewport().get_visible_rect().size
-	# Desloca para a direita, evitando o player no centro
-	center_pos = Vector2(vp.x * 0.82, vp.y * 0.46)
+	# Desloca para a direita, evitando o player no centro, mas sem ir muito para o canto
+	center_pos = Vector2(vp.x * 0.65, vp.y * 0.46)
 
 	# Container de tela cheia, transparente (só serve para o fade in/out via modulate).
 	# Sem escurecer a tela: o skill check fica sobreposto e discreto.
