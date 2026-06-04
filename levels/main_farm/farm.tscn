@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://bafb7y1btsjh6" path="res://levels/main_farm/map_manager.gd" id="1_h12un"]
 [ext_resource type="PackedScene" uid="uid://bx7olxx11lmmi" path="res://objects/nature/tree.tscn" id="3_2i7y8"]
-[ext_resource type="PackedScene" uid="uid://opjh14fqpl4" path="res://entities/player/player.tscn" id="7_b4i1y"]
+[ext_resource type="PackedScene" uid="uid://hb2fyy4fg4dl" path="res://entities/player/player.tscn" id="7_b4i1y"]
 [ext_resource type="PackedScene" uid="uid://cx6gijkm0d1ab" path="res://objects/buildings/player_house.tscn" id="11_lmmvm"]
 [ext_resource type="TileSet" uid="uid://mmhwedrixnho" path="res://levels/main_farm/tilesets/tileset_dirt_layer.tres" id="ts_dirt"]
 [ext_resource type="TileSet" uid="uid://mrklqmqans6k" path="res://levels/main_farm/tilesets/tileset_fence_layer.tres" id="ts_fence"]

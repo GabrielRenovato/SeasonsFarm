@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://doo52cof7dhkh" path="res://levels/house_interior/house_interior.gd" id="1_ychun"]
 [ext_resource type="TileSet" uid="uid://3up21krir6iw" path="res://levels/house_interior/tileset_house.tres" id="2_v85q2"]
 [ext_resource type="Texture2D" uid="uid://ctcwb3cvn7s37" path="res://Farm RPG - Tiny Asset Pack - (All in One)/Tileset/carpet.png" id="3_ox6qm"]
-[ext_resource type="PackedScene" uid="uid://opjh14fqpl4" path="res://entities/player/player.tscn" id="9_468eb"]
+[ext_resource type="PackedScene" uid="uid://hb2fyy4fg4dl" path="res://entities/player/player.tscn" id="9_468eb"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_f1a28"]
 atlas = ExtResource("3_ox6qm")
