@@ -294,8 +294,8 @@ func _generate_lake() -> void:
 			int(lerp(float(min_c.y), float(max_c.y), 0.70))
 		)
 
-	var rx := maxi(1, lake_size.x / 2)
-	var ry := maxi(1, lake_size.y / 2)
+	var rx := maxi(1, int(lake_size.x / 2.0))
+	var ry := maxi(1, int(lake_size.y / 2.0))
 	# Retângulo com cantos cortados → formato arredondado (autotiling ortogonal encaixa).
 	var cut := clampi(mini(rx, ry) - 1, 0, 4)
 
