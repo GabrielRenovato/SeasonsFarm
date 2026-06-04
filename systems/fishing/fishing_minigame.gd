@@ -63,7 +63,8 @@ var hint_label: Label
 func _ready() -> void:
 	layer = 100
 	var vp: Vector2 = get_viewport().get_visible_rect().size
-	center_pos = Vector2(vp.x / 2.0, vp.y * 0.46)
+	# Desloca para a direita, evitando o player no centro
+	center_pos = Vector2(vp.x * 0.82, vp.y * 0.46)
 
 	# Container de tela cheia, transparente (só serve para o fade in/out via modulate).
 	# Sem escurecer a tela: o skill check fica sobreposto e discreto.
@@ -109,11 +110,11 @@ func _ready() -> void:
 	feedback_label.modulate.a = 0.0
 	bg_panel.add_child(feedback_label)
 
-	# Barra de progresso na parte inferior (compacta)
-	var bar_w: float = 104.0
-	var bar_h: float = 6.0
-	var bar_x: float = (vp.x - bar_w) / 2.0
-	var bar_y: float = vp.y - 26.0
+	# Barra de progresso na vertical, ao lado direito do círculo
+	var bar_w: float = 8.0
+	var bar_h: float = 80.0
+	var bar_x: float = center_pos.x + radius + 16.0
+	var bar_y: float = center_pos.y - (bar_h / 2.0)
 
 	progress_bg = ColorRect.new()
 	progress_bg.color = Color(0.12, 0.12, 0.14, 0.85)
@@ -123,12 +124,12 @@ func _ready() -> void:
 
 	progress_fill = ColorRect.new()
 	progress_fill.color = Color(0.3, 0.85, 0.4)
-	progress_fill.size = Vector2(0, bar_h)
+	progress_fill.size = Vector2(bar_w, 0)
 	progress_bg.add_child(progress_fill)
 
 	hint_label = Label.new()
 	hint_label.text = "PUXAR"
-	hint_label.position = Vector2(bar_x, bar_y - 10)
+	hint_label.position = Vector2(bar_x - 8, bar_y + bar_h + 4)
 	_style_label(hint_label, 7)
 	bg_panel.add_child(hint_label)
 
@@ -234,7 +235,9 @@ func _show_feedback(kind: String, color: Color) -> void:
 
 func _update_progress_visual() -> void:
 	var frac: float = progress / max_progress
-	progress_fill.size.x = progress_bg.size.x * frac
+	var current_h = progress_bg.size.y * frac
+	progress_fill.size.y = current_h
+	progress_fill.position.y = progress_bg.size.y - current_h
 	if frac > 0.66:
 		progress_fill.color = Color(0.3, 0.85, 0.4)
 	elif frac > 0.33:
