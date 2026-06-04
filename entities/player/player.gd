@@ -15,6 +15,15 @@ func _ready() -> void:
 		inventory_data = InventoryData.new()
 		inventory_data.setup_default_inventory()
 
+	# Interpolação de física (opt-in): o sistema é habilitado no project.godot,
+	# mas só o player — e seus filhos (Camera2D, poeira, lanterna) — deve ser
+	# interpolado, para movimento e câmera suaves sem trepidação ("judder").
+	# Desligamos a interpolação na raiz da árvore: todos os demais objetos do
+	# mundo são estáticos, animados por tween ou movidos em _process, e
+	# "deslizariam" ao surgir (ou brigariam com seus tweens) se interpolados.
+	get_tree().root.physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_OFF
+	physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_ON
+
 	# Configura os limites da câmera baseado no tamanho real do mapa
 	call_deferred("_setup_camera_limits")
 
@@ -124,6 +133,8 @@ func sit_down(chair: Node2D, direction: String) -> void:
 	# Posiciona o player sobre o assento
 	global_position = chair.global_position + SIT_OFFSETS.get(direction, Vector2(0, 6))
 	velocity = Vector2.ZERO
+	# Teletransporte: zera a interpolação para o player não "deslizar" até a cadeira.
+	reset_physics_interpolation()
 
 	# Ordenação: o player fica sempre em z_index 0 (acima do piso, nunca some).
 	# Para down/right/left o Y-sort já desenha o player na frente do encosto.
