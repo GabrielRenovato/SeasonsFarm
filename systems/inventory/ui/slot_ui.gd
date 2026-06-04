@@ -43,14 +43,23 @@ func _ready() -> void:
 		mc.add_theme_constant_override("margin_bottom", 2)
 	
 	highlight_rect.visible = false
+	focus_mode = Control.FOCUS_ALL
 
-	# Garante que o estilo atual (qualquer que seja) vai cobrir todos os estados
-	# evitando o risco/borda branca que o tema padrão da Godot aplica
+	# Garante que o estilo atual (qualquer que seja) vai cobrir os estados hover/pressed
+	# evitando riscos brancos indesejados, mas CRIAMOS um estilo para o foco (controle)
 	var current_style = get_theme_stylebox("panel")
 	add_theme_stylebox_override("hover", current_style)
 	add_theme_stylebox_override("pressed", current_style)
-	add_theme_stylebox_override("focus", current_style)
 	add_theme_stylebox_override("disabled", current_style)
+
+	var focus_style = current_style.duplicate()
+	if focus_style is StyleBoxFlat:
+		focus_style.border_color = Color(1.0, 0.9, 0.2, 1.0) # Borda dourada para o foco
+		focus_style.border_width_left = 2
+		focus_style.border_width_top = 2
+		focus_style.border_width_right = 2
+		focus_style.border_width_bottom = 2
+	add_theme_stylebox_override("focus", focus_style)
 
 # Configura o slot com os dados do inventário e seu índice
 func setup(p_inventory_data: InventoryData, p_slot_index: int) -> void:

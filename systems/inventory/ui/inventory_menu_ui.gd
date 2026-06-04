@@ -63,3 +63,9 @@ func _update_selected_tool() -> void:
 			selected_tool_icon.texture = slot.item.icon_texture
 			return
 	selected_tool_icon.texture = null
+
+func grab_focus_first_slot() -> void:
+	if slots_root.get_child_count() > 0:
+		var first_slot = slots_root.get_child(0)
+		if first_slot is Control:
+			first_slot.grab_focus()

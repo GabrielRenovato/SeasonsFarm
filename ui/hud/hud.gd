@@ -76,6 +76,13 @@ func _input(event: InputEvent) -> void:
 # Alterna a visibilidade do menu de inventário (se estiver aberto ele fecha, se estiver fechado ele abre)
 func toggle_inventory() -> void:
 	inventory_menu_ui.visible = not inventory_menu_ui.visible
+	if inventory_menu_ui.visible:
+		inventory_menu_ui.grab_focus_first_slot()
+	else:
+		# Remove o foco de qualquer controle UI
+		var focus_owner = get_viewport().gui_get_focus_owner()
+		if focus_owner:
+			focus_owner.release_focus()
 
 # Função chamada toda vez que os minutos do jogo passam (sinal do TimeManager)
 func _on_time_changed(day: int, hour: int, minute: int) -> void:

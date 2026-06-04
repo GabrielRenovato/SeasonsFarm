@@ -30,6 +30,7 @@ func _ready() -> void:
 		
 	# Instantiate HUD
 	var hud_instance = HUD_SCENE.instantiate()
+	hud_instance.name = "HUD"
 	add_child(hud_instance)
 	hud_instance.setup(inventory_data)
 
@@ -71,6 +72,10 @@ func _process(delta: float) -> void:
 	_update_lantern_energy(delta)
 
 func _physics_process(_delta: float) -> void:
+	var hud = get_node_or_null("HUD")
+	if hud and hud.inventory_menu_ui and hud.inventory_menu_ui.visible:
+		movement_component.stop_movement()
+		return
 	# Enquanto sentado, só processamos movimento: qualquer input de direção
 	# faz o player levantar (ver MovementComponent.handle_movement). Pular o
 	# ToolComponent evita disparar ferramentas / re-sentar enquanto sentado.
