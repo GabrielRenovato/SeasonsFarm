@@ -68,8 +68,8 @@ func _input(event: InputEvent) -> void:
 		if TimeManager:
 			_update_time_display(TimeManager.day, TimeManager.hour, TimeManager.minute)
 			
-	# Ao pressionar "TAB", abre ou fecha o inventário principal
-	if event is InputEventKey and event.pressed and event.keycode == KEY_TAB:
+	# Ao pressionar a ação "inventory" (TAB no teclado, Y ou B no controle), abre ou fecha o inventário
+	if event.is_action_pressed("inventory") or (event is InputEventKey and event.pressed and event.keycode == KEY_TAB):
 		toggle_inventory()
 		get_viewport().set_input_as_handled() # Impede que outro sistema processe a tecla "TAB" novamente
 

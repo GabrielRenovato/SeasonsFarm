@@ -144,11 +144,27 @@ func handle_tool_switch() -> void:
 	if not inventory_data or is_using_tool:
 		return
 
+	# Handle PC key for switching to next tool
 	if Input.is_action_just_pressed("switch_tool"):
 		var next_slot = (inventory_data.active_slot_index + 1) % 9
 		inventory_data.active_slot_index = next_slot
 		return
 
+	# Handle Controller Right Bumper (RB)
+	if Input.is_action_just_pressed("switch_tool_right"):
+		var next_slot = (inventory_data.active_slot_index + 1) % 9
+		inventory_data.active_slot_index = next_slot
+		return
+
+	# Handle Controller Left Bumper (LB)
+	if Input.is_action_just_pressed("switch_tool_left"):
+		var previous_slot = inventory_data.active_slot_index - 1
+		if previous_slot < 0:
+			previous_slot = 8
+		inventory_data.active_slot_index = previous_slot
+		return
+
+	# Handle number keys (1 to 9)
 	for iterator_index in range(9):
 		var key_code = KEY_1 + iterator_index
 		
