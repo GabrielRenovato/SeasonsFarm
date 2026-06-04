@@ -38,8 +38,18 @@ func setup(p_inventory_data: InventoryData) -> void:
 		slots_root.add_child(slot_ui)
 		slot_ui.custom_minimum_size = Vector2(15, 15)
 		slot_ui.setup(inventory_data, i)
+		slot_ui.slot_selected.connect(_on_slot_selected)
 
 	_update_selected_tool()
+
+var selected_for_swap: int = -1
+
+func _on_slot_selected(index: int) -> void:
+	if selected_for_swap == -1:
+		selected_for_swap = index
+	else:
+		inventory_data.swap_slots(selected_for_swap, index)
+		selected_for_swap = -1
 
 
 func update_slots() -> void:
@@ -68,4 +78,4 @@ func grab_focus_first_slot() -> void:
 	if slots_root.get_child_count() > 0:
 		var first_slot = slots_root.get_child(0)
 		if first_slot is Control:
-			first_slot.grab_focus()
+			first_slot.call_deferred("grab_focus")

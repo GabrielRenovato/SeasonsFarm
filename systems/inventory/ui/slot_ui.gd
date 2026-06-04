@@ -8,6 +8,8 @@ class_name SlotUI
 @onready var quantity_label: QuantityDisplay = $QuantityLabel
 @onready var highlight_rect: ReferenceRect = $HighlightRect
 
+signal slot_selected(index: int)
+
 # Índice desse slot no array do inventário
 var slot_index: int = -1
 # Referência aos dados do inventário completo
@@ -60,6 +62,11 @@ func _ready() -> void:
 		focus_style.border_width_right = 2
 		focus_style.border_width_bottom = 2
 	add_theme_stylebox_override("focus", focus_style)
+
+func _gui_input(event: InputEvent) -> void:
+	if event.is_action_pressed("ui_accept"):
+		slot_selected.emit(slot_index)
+		accept_event()
 
 # Configura o slot com os dados do inventário e seu índice
 func setup(p_inventory_data: InventoryData, p_slot_index: int) -> void:
