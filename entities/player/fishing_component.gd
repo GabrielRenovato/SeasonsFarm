@@ -29,6 +29,8 @@ var current_target_cell: Vector2i = Vector2i.ZERO
 var current_fish_data: Dictionary
 var fish_shadow = null   # instância de FishShadow (Sprite2D); tipo dinâmico p/ não depender do class cache
 
+var cached_fishes: Array[ItemData] = []
+
 func _ready() -> void:
 	if animation_tree:
 		state_machine = animation_tree.get("parameters/playback")
@@ -37,6 +39,20 @@ func _ready() -> void:
 	timer.one_shot = true
 	timer.timeout.connect(_on_timer_timeout)
 	add_child(timer)
+	
+	_load_fishes_to_cache()
+
+func _load_fishes_to_cache() -> void:
+	var dir = DirAccess.open("res://systems/inventory/items")
+	if dir:
+		dir.list_dir_begin()
+		var file_name = dir.get_next()
+		while file_name != "":
+			if file_name.ends_with(".tres"):
+				var item = load("res://systems/inventory/items/" + file_name) as ItemData
+				if item and item.is_fish:
+					cached_fishes.append(item)
+			file_name = dir.get_next()
 
 func _process(_delta: float) -> void:
 	if current_state == FishingState.BITING:
@@ -101,16 +117,54 @@ func _start_biting() -> void:
 	bite_indicator.show_indicator()
 	state_machine.travel("FishBite")
 
-	var db := get_node_or_null("/root/FishDatabase")
-	if db:
-		current_fish_data = db.roll_fish()
-	else:
-		current_fish_data = {"id": "bluegill", "name": "Bluegill", "rarity": "common", "weight": 1.0, "color": Color(0.8, 0.8, 0.8)}
+	_roll_fish_for_current_season()
 
 	# Mostra o peixe se debatendo na água (cor conforme a raridade sorteada)
 	_spawn_fish_shadow()
 
 	timer.start(bite_window)
+
+func _roll_fish_for_current_season() -> void:
+	var possible_fishes: Array[ItemData] = []
+	var season_map = { "Spring": 0, "Summer": 1, "Fall": 2, "Winter": 3 }
+	var current_season = 0 # Default spring
+	var time_manager = get_node_or_null("/root/TimeManager")
+	if time_manager:
+		current_season = time_manager.current_season
+
+	for item in cached_fishes:
+		if item.fish_season == "Any" or season_map.get(item.fish_season, 0) == current_season:
+			possible_fishes.append(item)
+			
+	if possible_fishes.size() == 0:
+		current_fish_data = {"id": "bluegill", "name": "Bluegill", "rarity": "common", "weight": 1.0, "color": Color(0.8, 0.8, 0.8), "item": null}
+		return
+		
+	# Sorteio com base na raridade (pesos: Common=60, Uncommon=25, Rare=10, Legendary=5)
+	var weights = { "Common": 60, "Uncommon": 25, "Rare": 10, "Legendary": 5 }
+	var total_weight = 0
+	for item in possible_fishes:
+		total_weight += weights.get(item.fish_rarity, 10)
+		
+	var roll = randi() % total_weight
+	var current_weight = 0
+	var chosen_item: ItemData = possible_fishes[0]
+	
+	for item in possible_fishes:
+		current_weight += weights.get(item.fish_rarity, 10)
+		if roll < current_weight:
+			chosen_item = item
+			break
+			
+	# Salva os dados do peixe escolhido no dicionário usado pelo minigame e popup
+	current_fish_data = {
+		"id": chosen_item.id,
+		"name": chosen_item.name,
+		"rarity": chosen_item.fish_rarity.to_lower(),
+		"weight": 1.0, # Placeholder para o minigame
+		"color": chosen_item.icon_color,
+		"item": chosen_item
+	}
 
 func _start_minigame() -> void:
 	current_state = FishingState.REELING
@@ -148,14 +202,18 @@ func _start_catching() -> void:
 	actor.add_child(popup)
 	popup.setup(current_fish_data["name"], current_fish_data["color"])
 
-	var new_item := ItemData.new()
-	new_item.id = current_fish_data["id"]
-	new_item.name = current_fish_data["name"]
-	new_item.rarity = current_fish_data["rarity"]
-
 	var inv: InventoryData = actor.inventory_data
 	if inv:
-		inv.add_item(new_item, 1)
+		if current_fish_data.has("item") and current_fish_data["item"] != null:
+			# Adiciona o resource original que já contém preço, ícone, etc.
+			inv.add_item(current_fish_data["item"], 1)
+		else:
+			# Fallback para o default se falhar (ex: bluegill de fallback)
+			var new_item := ItemData.new()
+			new_item.id = current_fish_data["id"]
+			new_item.name = current_fish_data["name"]
+			new_item.rarity = current_fish_data["rarity"]
+			inv.add_item(new_item, 1)
 
 func _cancel_fishing() -> void:
 	timer.stop()

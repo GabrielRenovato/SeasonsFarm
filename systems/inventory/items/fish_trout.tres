@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=3 format=3]
+
+[ext_resource type="Script" uid="uid://cmtdsh2fay4r3" path="res://systems/inventory/item_data.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/sprites/fishing/icon_trout.png" id="2_icon"]
+
+[resource]
+script = ExtResource("1_script")
+id = "fish_trout"
+name = "Trout"
+sell_price = 15
+is_tool = false
+tool_type = ""
+tier = "Wood"
+is_seed = false
+crop_type = ""
+rarity = "common"
+is_furniture = false
+furniture_id = ""
+is_fish = true
+fish_season = "Spring"
+fish_rarity = "Common"
+icon_color = Color(1, 1, 1, 1)
+icon_texture = ExtResource("2_icon")
