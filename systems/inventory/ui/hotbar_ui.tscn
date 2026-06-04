@@ -10,7 +10,7 @@ region = Rect2(6, 201, 164, 28)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_active"]
 atlas = ExtResource("3_extras")
-region = Rect2(233, 9, 30, 30)
+region = Rect2(283, 9, 26, 30)
 
 [node name="HotbarUI" type="Control" unique_id=1611557422]
 custom_minimum_size = Vector2(164, 28)
@@ -41,9 +41,9 @@ mouse_filter = 2
 unique_name_in_owner = true
 visible = false
 layout_mode = 0
-offset_left = -2.0
+offset_left = 0.0
 offset_top = -1.0
-offset_right = 28.0
+offset_right = 26.0
 offset_bottom = 29.0
 texture = SubResource("AtlasTexture_active")
 stretch_mode = 0
