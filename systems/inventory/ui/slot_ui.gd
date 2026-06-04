@@ -46,22 +46,21 @@ func _ready() -> void:
 	
 	highlight_rect.visible = false
 	focus_mode = Control.FOCUS_ALL
+	focus_entered.connect(_on_focus_entered)
+	focus_exited.connect(_on_focus_exited)
 
-	# Garante que o estilo atual (qualquer que seja) vai cobrir os estados hover/pressed
-	# evitando riscos brancos indesejados, mas CRIAMOS um estilo para o foco (controle)
-	var current_style = get_theme_stylebox("panel")
-	add_theme_stylebox_override("hover", current_style)
-	add_theme_stylebox_override("pressed", current_style)
-	add_theme_stylebox_override("disabled", current_style)
+func _on_focus_entered() -> void:
+	highlight_rect.visible = true
+	highlight_rect.border_color = Color(1.0, 1.0, 1.0, 1.0) # Branco para o foco
 
-	var focus_style = current_style.duplicate()
-	if focus_style is StyleBoxFlat:
-		focus_style.border_color = Color(1.0, 0.9, 0.2, 1.0) # Borda dourada para o foco
-		focus_style.border_width_left = 2
-		focus_style.border_width_top = 2
-		focus_style.border_width_right = 2
-		focus_style.border_width_bottom = 2
-	add_theme_stylebox_override("focus", focus_style)
+func _on_focus_exited() -> void:
+	# Se for o slot ativo da hotbar, mantém o dourado
+	if not show_background and inventory_data and inventory_data.active_slot_index == slot_index:
+		highlight_rect.border_color = Color(1.0, 0.9, 0.2, 1.0)
+		highlight_rect.visible = true
+	else:
+		highlight_rect.visible = false
+		highlight_rect.border_color = Color(1.0, 0.9, 0.2, 1.0) # Restaura o dourado default
 
 func _gui_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_accept"):
