@@ -1,10 +1,9 @@
-[gd_resource type="TileSet" load_steps=3 format=3]
+[gd_resource type="TileSet" format=3 uid="uid://cfbrq40hqxu6"]
 
 [ext_resource type="Texture2D" uid="uid://dv85ajcawew6k" path="res://assets/tiles/water/water_lake.png" id="1_lake"]
 
 [sub_resource type="TileSetAtlasSource" id="src_lake"]
 texture = ExtResource("1_lake")
-texture_region_size = Vector2i(16, 16)
 0:0/animation_columns = 4
 0:0/animation_frame_0/duration = 0.4
 0:0/animation_frame_1/duration = 0.4
