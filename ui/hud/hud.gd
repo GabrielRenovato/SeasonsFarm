@@ -8,7 +8,7 @@ class_name HUD
 @onready var clock_round: TextureRect = %ClockRound # Relógio redondo cenográfico (muda com hora/estação)
 @onready var hotbar_ui: HotbarUI = $Control/HotbarUI
 @onready var inventory_menu_ui: InventoryMenuUI = $Control/InventoryMenuUI
-@onready var energy_bar: ProgressBar = %EnergyBar
+@onready var energy_bar: TextureProgressBar = %EnergyBar
 
 var inventory_data: InventoryData
 var digit_labels: Array[Label] = []

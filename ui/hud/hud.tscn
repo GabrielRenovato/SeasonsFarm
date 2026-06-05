@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" path="res://Farm RPG - Tiny Asset Pack - (All in One)/UI/Clock/Extras.png" id="4_clock_extras"]
 [ext_resource type="Texture2D" path="res://Farm RPG - Tiny Asset Pack - (All in One)/UI/Clock/Others/clock.png" id="5_clock_atlas"]
 [ext_resource type="FontFile" path="res://assets/fonts/Silkscreen-Regular.ttf" id="6_silkscreen"]
+[ext_resource type="Texture2D" uid="uid://yw8adnuq8s6l" path="res://Farm RPG - Tiny Asset Pack - (All in One)/UI/Bars.png" id="7_bars"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_combined_panel"]
 atlas = ExtResource("4_clock_extras")
@@ -15,26 +16,13 @@ region = Rect2(140, 6, 60, 46)
 atlas = ExtResource("5_clock_atlas")
 region = Rect2(0, 0, 32, 32)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_energy_bg"]
-bg_color = Color(0.2, 0.1, 0.05, 1)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.1, 0.05, 0.02, 1)
-corner_radius_top_left = 2
-corner_radius_top_right = 2
-corner_radius_bottom_right = 2
-corner_radius_bottom_left = 2
-anti_aliasing = false
+[sub_resource type="AtlasTexture" id="AtlasTexture_energy_under"]
+atlas = ExtResource("7_bars")
+region = Rect2(164, 3, 8, 42)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_energy_empty"]
-bg_color = Color(0.15, 0.15, 0.15, 1)
-anti_aliasing = false
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_energy_fill"]
-bg_color = Color(0.3, 0.8, 0.3, 1)
-anti_aliasing = false
+[sub_resource type="AtlasTexture" id="AtlasTexture_energy_progress"]
+atlas = ExtResource("7_bars")
+region = Rect2(116, 15, 8, 27)
 
 [node name="HUD" type="CanvasLayer"]
 script = ExtResource("1_hud")
@@ -133,37 +121,32 @@ grow_horizontal = 2
 grow_vertical = 2
 visible = false
 
-[node name="EnergyBarContainer" type="MarginContainer" parent="Control"]
+[node name="EnergyBarContainer" type="Control" parent="Control"]
 layout_mode = 1
 anchors_preset = 3
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -26.0
-offset_top = -100.0
+offset_left = -18.0
+offset_top = -52.0
 offset_right = -10.0
-offset_bottom = -20.0
+offset_bottom = -10.0
 grow_horizontal = 0
 grow_vertical = 0
 
-[node name="EnergyBarBackground" type="PanelContainer" parent="Control/EnergyBarContainer"]
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_energy_bg")
+[node name="EnergyBarBg" type="TextureRect" parent="Control/EnergyBarContainer"]
+layout_mode = 0
+offset_right = 8.0
+offset_bottom = 42.0
+texture = SubResource("AtlasTexture_energy_under")
 
-[node name="MarginContainer" type="MarginContainer" parent="Control/EnergyBarContainer/EnergyBarBackground"]
-layout_mode = 2
-theme_override_constants/margin_left = 2
-theme_override_constants/margin_top = 2
-theme_override_constants/margin_right = 2
-theme_override_constants/margin_bottom = 2
-
-[node name="EnergyBar" type="ProgressBar" parent="Control/EnergyBarContainer/EnergyBarBackground/MarginContainer"]
+[node name="EnergyBar" type="TextureProgressBar" parent="Control/EnergyBarContainer"]
 unique_name_in_owner = true
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_styles/background = SubResource("StyleBoxFlat_energy_empty")
-theme_override_styles/fill = SubResource("StyleBoxFlat_energy_fill")
+layout_mode = 0
+offset_top = 12.0
+offset_right = 8.0
+offset_bottom = 39.0
 value = 100.0
 fill_mode = 3
-show_percentage = false
+texture_progress = SubResource("AtlasTexture_energy_progress")
