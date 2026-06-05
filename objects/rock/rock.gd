@@ -9,6 +9,7 @@ extends StaticBody2D
 ## e quantidade de pedra dropada; a estacao so troca a textura/regiao, mantendo o tier.
 
 @export var stone_scene: PackedScene = preload("res://objects/rock/stone.tscn")
+const CHIP_EFFECT := preload("res://objects/rock/effects/rock_chip_effect.tscn")
 
 # Texturas por estacao (grids de 16px). O outono nao tem sheet proprio de pedras no
 # pacote de assets, entao reusa as pedras neutras da primavera (ver _resolve_season).
@@ -161,10 +162,17 @@ func take_damage(amount: int, hitter_position: Vector2 = Vector2.ZERO, tool_name
 	if hitter_position != Vector2.ZERO:
 		spawn_direction = -1.0 if hitter_position.x > global_position.x else 1.0
 
+	_spawn_chip_effect()
+
 	if health > 0:
 		_play_shake()
 	else:
 		_break()
+
+func _spawn_chip_effect() -> void:
+	var fx: AnimatedSprite2D = CHIP_EFFECT.instantiate()
+	get_parent().add_child(fx)
+	fx.global_position = global_position
 
 func _play_shake() -> void:
 	if _active_shake_tween and _active_shake_tween.is_valid():

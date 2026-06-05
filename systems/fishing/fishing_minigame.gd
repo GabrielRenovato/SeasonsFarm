@@ -39,6 +39,8 @@ var pre_delay: float = 0.6            # pausa antes do próximo check
 # --- Progressão de dificuldade ao longo do tempo ---
 var elapsed: float = 0.0              # tempo total desde o início do minigame
 var ramp_time: float = 13.0           # segundos até atingir a dificuldade máxima
+var _last_was_miss: bool = false      # true se o check anterior foi erro → próximo spawn fica mais fácil
+const RECOVERY_EASE: float = 0.30    # quanto reduzir o eff após um erro
 
 # --- Ganhos/penalidades por acerto ---
 var gain_great: float = 18.0
@@ -186,6 +188,11 @@ func _spawn_check() -> void:
 	var ramp: float = clamp(elapsed / ramp_time, 0.0, 1.0)
 	var eff: float = ramp * (0.55 + 0.45 * d)
 
+	# Se o check anterior foi um erro, dá uma respiro antes de acelerar de novo
+	if _last_was_miss:
+		eff = maxf(eff - RECOVERY_EASE, 0.0)
+	_last_was_miss = false
+
 	zone_size = lerpf(1.0, 0.30, eff)        # zona começa grande e encolhe
 	great_size = zone_size * 0.35
 	pointer_speed = lerpf(TAU * 0.55, TAU * 1.5, eff)  # ponteiro começa lento e acelera
@@ -212,6 +219,7 @@ func _resolve_press() -> void:
 func _resolve(kind: String, amount: float, color: Color) -> void:
 	progress = clamp(progress + amount, 0.0, max_progress)
 	check_active = false
+	_last_was_miss = (kind == "miss")
 	if kind != "miss":
 		reel_tug.emit(kind == "great")   # puxão sincronizado com o acerto
 	_show_feedback(kind, color)

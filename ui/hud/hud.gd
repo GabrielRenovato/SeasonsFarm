@@ -44,6 +44,13 @@ func _ready() -> void:
 		PlayerStatsManager.energy_changed.connect(_on_energy_changed)
 		_on_energy_changed(PlayerStatsManager.energy, PlayerStatsManager.max_energy)
 
+	# Detecção de controle
+	if InputManager:
+		InputManager.controller_connected.connect(_on_controller_connected)
+		InputManager.controller_disconnected.connect(_on_controller_disconnected)
+		if InputManager.has_controller():
+			_show_controller_toast("Controle conectado!", Color("#4caf50"))
+
 # Cria os labels para cada casa decimal do ouro — as células visuais já vêm do sprite do panel
 func _setup_gold_digits() -> void:
 	var pixel_font := preload("res://assets/fonts/Silkscreen-Regular.ttf") as Font
@@ -112,6 +119,29 @@ func _on_energy_changed(current_energy: float, max_energy: float) -> void:
 		# Usa um Tween para a barra descer/subir suavemente
 		var tween = create_tween()
 		tween.tween_property(energy_bar, "value", current_energy, 0.2)
+
+func _on_controller_connected(device_id: int, name: String) -> void:
+	_show_controller_toast("🎮 " + name + " conectado!", Color("#4caf50"))
+
+func _on_controller_disconnected(_device_id: int) -> void:
+	_show_controller_toast("Controle desconectado", Color("#f44336"))
+
+func _show_controller_toast(message: String, color: Color) -> void:
+	var toast := Label.new()
+	toast.text = message
+	toast.add_theme_color_override("font_color", color)
+	toast.add_theme_font_size_override("font_size", 8)
+	var pixel_font := preload("res://assets/fonts/Silkscreen-Regular.ttf") as Font
+	if pixel_font:
+		toast.add_theme_font_override("font", pixel_font)
+	toast.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	toast.position = Vector2(120, 20)
+	toast.z_index = 100
+	$Control.add_child(toast)
+	var tween := create_tween()
+	tween.tween_interval(2.0)
+	tween.tween_property(toast, "modulate:a", 0.0, 0.5)
+	tween.tween_callback(toast.queue_free)
 
 # Atualiza os textos da interface de tempo para Inglês (lançamento global) com formato AM/PM
 func _update_time_display(day: int, hour: int, minute: int) -> void:

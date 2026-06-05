@@ -44,15 +44,25 @@ func _ready() -> void:
 
 func _load_fishes_to_cache() -> void:
 	var dir = DirAccess.open("res://systems/inventory/items")
-	if dir:
-		dir.list_dir_begin()
-		var file_name = dir.get_next()
-		while file_name != "":
-			if file_name.ends_with(".tres"):
-				var item = load("res://systems/inventory/items/" + file_name) as ItemData
+	if dir == null:
+		push_warning("FishingComponent: nao foi possivel abrir a pasta de itens")
+		return
+	dir.list_dir_begin()
+	var file_name = dir.get_next()
+	while file_name != "":
+		if not dir.current_is_dir():
+			# Em builds EXPORTADOS os recursos do PCK aparecem com sufixo ".remap"
+			# (ex.: "fish_catfish.tres.remap"); no editor vêm como ".tres" puro.
+			# Sem normalizar isso, a lista de peixes fica VAZIA no .exe e a pesca
+			# quebra (mesmo o conteúdo estando empacotado). O load() do .tres real
+			# resolve o remap internamente.
+			var clean_name: String = file_name.trim_suffix(".remap")
+			if clean_name.ends_with(".tres"):
+				var item = load("res://systems/inventory/items/" + clean_name) as ItemData
 				if item and item.is_fish:
 					cached_fishes.append(item)
-			file_name = dir.get_next()
+		file_name = dir.get_next()
+	dir.list_dir_end()
 
 func _process(_delta: float) -> void:
 	if current_state == FishingState.BITING:
