@@ -46,6 +46,7 @@ offset_top = 0.0
 offset_right = 18.0
 offset_bottom = 18.0
 texture = SubResource("AtlasTexture_active")
+expand_mode = 1
 stretch_mode = 0
 mouse_filter = 2
 
