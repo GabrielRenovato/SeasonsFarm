@@ -137,6 +137,9 @@ func _resize_shadow(region: Rect2) -> void:
 func _align_to_cell() -> void:
 	if is_breaking:
 		return
+	# Chamado via call_deferred; o nó pode já ter saído da árvore (get_tree() nulo).
+	if not is_inside_tree():
+		return
 	var layer := get_tree().get_first_node_in_group("dirt_layer") as TileMapLayer
 	if layer == null or layer.tile_set == null:
 		return

@@ -5,11 +5,102 @@ const SAVE_PATH = "user://savegame.json"
 var _inventory_data: InventoryData = null
 var _session_loaded: bool = false
 
+# Spawn pendente ao trocar de cena: ao voltar do interior da casa, o player
+# reaparece NA PORTA de onde saiu, e não no spawn fixo da cena. Só é aplicado
+# na cena cujo caminho casa com _pending_spawn_scene (ver Player._apply_pending_spawn).
+var _pending_spawn_pos: Vector2 = Vector2.ZERO
+var _pending_spawn_scene: String = ""
+
+# Cena da fazenda "guardada" enquanto o player está dentro da casa. Em vez de
+# destruir a fazenda ao entrar (e recriá-la inteira ao sair — o que causava uma
+# travada ao reinstanciar árvores, lago, colisões e crops), nós apenas a TIRAMOS
+# da árvore de cena mantendo o nó vivo em memória. Ao sair, recolocamos a mesma
+# instância: nada é regenerado, então não há hitch.
+var _stashed_farm: Node = null
+const _FARM_SCENE_PATH := "res://levels/main_farm/farm.tscn"
+
 signal save_completed
 signal load_completed(success: bool)
 
-func setup(inventory: InventoryData) -> void:
-	_inventory_data = inventory
+# Inventário da sessão: criado UMA vez e compartilhado por todas as cenas.
+# Sem isto, cada cena instanciava um player com um InventoryData próprio (default),
+# fazendo os itens "resetarem" ao entrar/sair da casa.
+func get_session_inventory() -> InventoryData:
+	if _inventory_data == null:
+		_inventory_data = InventoryData.new()
+		_inventory_data.setup_default_inventory()
+	return _inventory_data
+
+# Registra a posição em que o player deve nascer na próxima vez que a cena
+# indicada for carregada.
+func set_pending_spawn(scene_path: String, pos: Vector2) -> void:
+	_pending_spawn_scene = scene_path
+	_pending_spawn_pos = pos
+
+# Consome o spawn pendente se ele for para ESTA cena; senão retorna null.
+func take_pending_spawn(scene_path: String) -> Variant:
+	# Comparação case-insensitive: o scene_file_path do Godot pode vir com
+	# capitalização diferente da string usada no change_scene.
+	if _pending_spawn_scene != "" and _pending_spawn_scene.to_lower() == scene_path.to_lower():
+		_pending_spawn_scene = ""
+		return _pending_spawn_pos
+	return null
+
+# --- Transição casa <-> fazenda (sem recriar a fazenda) ---
+
+# Entra na casa: guarda a fazenda atual (removida da árvore, mas NÃO destruída) e
+# coloca o interior no lugar. Como a fazenda continua viva, seus nós (árvores,
+# crops, lago) seguem reagindo aos sinais de TimeManager mesmo "fora de cena".
+func enter_interior(interior_scene: PackedScene) -> void:
+	if interior_scene == null:
+		return
+	var tree := get_tree()
+	var root := tree.root
+	var farm := tree.current_scene
+	var interior := interior_scene.instantiate()
+	if farm:
+		root.remove_child(farm)
+	_stashed_farm = farm
+	root.add_child(interior)
+	tree.current_scene = interior
+
+# Sai da casa: recoloca a MESMA instância da fazenda guardada e descarta o
+# interior. Sem regeneração de árvores/lago/crops → sem travada.
+func exit_to_farm() -> void:
+	var tree := get_tree()
+	# Rede de segurança: se por algum motivo não houver fazenda guardada, recai no
+	# comportamento antigo (recarrega do disco). O player reaparece na porta via
+	# _pending_spawn gravado pela farmhouse ao entrar.
+	if _stashed_farm == null or not is_instance_valid(_stashed_farm):
+		_stashed_farm = null
+		tree.change_scene_to_file(_FARM_SCENE_PATH)
+		return
+	var interior := tree.current_scene
+	var root := tree.root
+	var farm := _stashed_farm
+	_stashed_farm = null
+	root.add_child(farm)
+	tree.current_scene = farm
+	if interior and is_instance_valid(interior):
+		root.remove_child(interior)
+		interior.queue_free()
+	# Zera a interpolação de física do player (e descendentes) para não "deslizar"
+	# ao retomar o controle na fazenda.
+	farm.reset_physics_interpolation()
+	# Reativa a câmera do player: ao sair da árvore ela deixou de ser a câmera
+	# atual da viewport. Sem isto, a tela poderia ficar enquadrada errada.
+	var cam := _find_camera(farm)
+	if cam:
+		cam.make_current()
+
+func _find_camera(node: Node) -> Camera2D:
+	if node is Camera2D:
+		return node
+	for child in node.get_children():
+		var found := _find_camera(child)
+		if found:
+			return found
+	return null
 
 func save_game() -> void:
 	if _inventory_data == null:

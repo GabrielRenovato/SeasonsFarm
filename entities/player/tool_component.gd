@@ -44,6 +44,11 @@ func get_current_tool() -> String:
 func _ready() -> void:
 	state_machine = animation_tree.get("parameters/playback")
 	animation_tree.animation_finished.connect(_on_animation_finished)
+	# Ao sair da árvore (troca de cena OU fazenda "guardada" ao entrar na casa),
+	# cancela qualquer uso de ferramenta em andamento. Sem isto, o watchdog (um
+	# await de timer) dispararia _on_animation_finished/_can_till com o nó fora da
+	# árvore — onde get_tree() é null → crash — e o player voltaria preso na pose.
+	tree_exiting.connect(_cancel_tool_use)
 	dirt_layer = get_tree().get_first_node_in_group("dirt_layer") as TileMapLayer
 	
 	if debug_rect != null:
@@ -173,6 +178,10 @@ func handle_tool_switch() -> void:
 			return
 
 func _on_slot_changed(_index: int) -> void:
+	# Ignora se a fazenda estiver "guardada" (fora da árvore, player na casa): o
+	# inventário é compartilhado, então este sinal também chega ao player parado.
+	if not is_inside_tree():
+		return
 	if not inventory_data or is_using_tool:
 		return
 	var item = inventory_data.get_active_item()
@@ -508,7 +517,16 @@ func _flash_debug_rect(flash_color: Color) -> void:
 	await get_tree().create_timer(0.1).timeout
 	debug_rect.color = original_color
 
+# Cancela o uso de ferramenta em andamento (chamado ao sair da árvore).
+func _cancel_tool_use() -> void:
+	is_using_tool = false
+	_active_tool_in_use = ""
+
 func _on_animation_finished(_animation_name: StringName) -> void:
+	# Defesa: callbacks (watchdog/animation_finished) não devem agir com o nó fora
+	# da árvore, onde get_tree() (usado em _can_till/_hit_objects) seria null.
+	if not is_inside_tree():
+		return
 	if not is_using_tool:
 		return
 

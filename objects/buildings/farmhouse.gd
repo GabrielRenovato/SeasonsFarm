@@ -20,6 +20,7 @@ var window_light: PointLight2D = null  # Luz da janela (acende à noite)
 
 var _player_in_range: bool = false  # Player está perto da porta?
 var _is_opening: bool = false       # Evita acionar a porta várias vezes
+var _player_body: Node2D = null     # Player perto da porta (p/ gravar posição de retorno)
 
 func _ready() -> void:
 	# Detecta quando o player entra/sai do alcance da porta
@@ -27,6 +28,18 @@ func _ready() -> void:
 	door_area.body_exited.connect(_on_door_area_body_exited)
 	# Cria a luz dinâmica da janela em código (sem precisar de nó na cena)
 	_setup_window_light()
+	# A fazenda é guardada (não destruída) ao entrar na casa e recolocada na árvore
+	# ao voltar. Quando ela reentra, reseta o estado da porta para permitir entrar
+	# de novo. Conectado aqui DEPOIS da 1ª emissão de tree_entered (que ocorre antes
+	# de _ready), então só dispara nas reentradas — não na carga inicial.
+	tree_entered.connect(_on_re_entered_tree)
+
+# Chamado quando a fazenda volta à árvore (player saiu da casa).
+func _on_re_entered_tree() -> void:
+	_is_opening = false
+	# Fecha a porta (RESET) caso tenha ficado aberta ao trocar de cena.
+	if animation_player and animation_player.has_animation("RESET"):
+		animation_player.play("RESET")
 
 func _setup_window_light() -> void:
 	# Cria uma luz radial suave cor laranja/quente para simular luz interna
@@ -89,6 +102,7 @@ func _process(delta: float) -> void:
 func _on_door_area_body_entered(body: Node2D) -> void:
 	if body is CharacterBody2D:
 		_player_in_range = true
+		_player_body = body
 
 # Player saiu do alcance da porta
 func _on_door_area_body_exited(body: Node2D) -> void:
@@ -113,5 +127,14 @@ func _open_door() -> void:
 	await animation_player.animation_finished
 	# Auto-save ao entrar na casa para preservar plantações, inventário e estado do solo
 	if SaveManager:
+		# Rede de segurança para o fallback de exit_to_farm (recarregar do disco):
+		# nesse caso o player reaparece NA FRENTE desta porta. No caminho normal
+		# (fazenda guardada), o player nem se move, então isto fica sem efeito.
+		if _player_body and is_instance_valid(_player_body):
+			SaveManager.set_pending_spawn("res://levels/main_farm/farm.tscn", _player_body.global_position)
 		SaveManager.save_game()
-	get_tree().change_scene_to_packed(interior_scene)
+		# Guarda a fazenda viva e abre o interior (sem destruir/recriar a fazenda).
+		# Deferido para só mexer na árvore de cena fora de callbacks de física.
+		SaveManager.call_deferred("enter_interior", interior_scene)
+	else:
+		get_tree().change_scene_to_packed(interior_scene)

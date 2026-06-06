@@ -233,7 +233,10 @@ func _is_soil_tilled(pos: Vector2i) -> bool:
 func _on_day_changed(day: int) -> void:
 	_find_dirt_layer()
 	print("FarmManager: _on_day_changed called for day ", day)
-	if dirt_layer == null:
+	# dirt_layer válido porém fora da árvore = fazenda "guardada" (player na casa).
+	# Não simula o solo nesse caso, igual ao comportamento antigo (em que a cena da
+	# fazenda nem existia enquanto o player estava dentro de casa).
+	if dirt_layer == null or not dirt_layer.is_inside_tree():
 		return
 		
 	var keys = farm_data.keys()
@@ -302,3 +305,44 @@ func update_env_stage(id: int, stage: int) -> void:
 		if entry["id"] == id:
 			entry["stage"] = stage
 			return
+
+# Redesenha o solo arado/molhado e recria os nós de crop a partir do farm_data
+# em memória. Necessário ao RECARREGAR a cena da fazenda (ex.: voltar do interior
+# da casa): a cena nova nasce com o DirtLayer vazio e os nós de crop foram
+# destruídos junto da cena anterior, mas o farm_data (autoload) sobrevive.
+# Sem isto, o solo e as plantações "somem" embora os dados continuem na memória.
+func rebuild_farm_visuals() -> void:
+	# Invalida as referências da cena anterior para achar o DirtLayer/SeedLayer da nova cena
+	dirt_layer = null
+	seed_layer = null
+	_find_dirt_layer()
+	if dirt_layer == null:
+		return
+
+	var crop_scene := load("res://objects/crops/crop.tscn") as PackedScene
+
+	for pos in farm_data.keys():
+		var data: FarmTileData = farm_data[pos]
+		if not data.tilled:
+			continue
+
+		# Repinta o solo (o auto-tiling lê os vizinhos do farm_data, então a ordem não importa)
+		_update_soil_visuals(pos)
+
+		# Recria a planta se havia uma plantada e o nó não sobreviveu à troca de cena
+		if data.crop_id != "" and crop_scene and not is_instance_valid(data.crop_node):
+			var crop_instance := crop_scene.instantiate()
+			dirt_layer.get_parent().add_child(crop_instance)
+			var tile_center := dirt_layer.map_to_local(pos)
+			crop_instance.global_position = dirt_layer.to_global(tile_center)
+
+			var config = CROP_CONFIGS.get(data.crop_id, {"texture_path": "", "stages": 7, "frame_size": 16, "frame_map": []})
+			if crop_instance.has_method("setup_crop"):
+				crop_instance.setup_crop(data.crop_id, config.texture_path, config.frame_size, config.stages, config.get("frame_map", []), 0, pos)
+
+			# Avança o crescimento até o estágio salvo
+			for _i in range(data.days_grown):
+				if crop_instance.has_method("grow"):
+					crop_instance.grow()
+
+			data.crop_node = crop_instance

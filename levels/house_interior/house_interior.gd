@@ -85,5 +85,9 @@ func _on_exit_door_body_entered(body: Node2D) -> void:
 		return
 	if body is CharacterBody2D:
 		_is_exiting = true
-		# Usamos call_deferred para mudar de cena após o término da física atual, evitando erros
-		get_tree().call_deferred("change_scene_to_file", FARM_SCENE)
+		# Deferido para mexer na árvore de cena só após o término da física atual.
+		if SaveManager:
+			# Recoloca a fazenda guardada (sem recriá-la → sem travada).
+			SaveManager.call_deferred("exit_to_farm")
+		else:
+			get_tree().call_deferred("change_scene_to_file", FARM_SCENE)

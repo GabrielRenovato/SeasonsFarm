@@ -122,8 +122,16 @@ func _ready() -> void:
 		
 	if not TimeManager.season_changed.is_connected(_on_season_changed):
 		TimeManager.season_changed.connect(_on_season_changed)
-		
+
 	_apply_season_tiles(TimeManager.current_season)
+
+	# Continuidade da fazenda: ao reentrar nesta cena (ex.: voltar do interior da
+	# casa) o farm_data persiste, mas o DirtLayer nasce vazio e os crops foram
+	# destruídos. Redesenha solo e plantações a partir do estado em memória.
+	# (Na 1ª carga do save o farm_data ainda está vazio aqui — o restore vem do
+	# SaveManager._deserialize_farm —, então isto não duplica nada.)
+	if not FarmManager.farm_data.is_empty():
+		FarmManager.call_deferred("rebuild_farm_visuals")
 
 
 func generate_environment_procedurally() -> void:
@@ -394,6 +402,12 @@ func _apply_season_water(_season: int) -> void:
 	pass
 
 func _on_day_changed(_day: int) -> void:
+	# Se a fazenda está "guardada" (fora da árvore enquanto o player está na casa),
+	# não simula nada: spawnar árvores/pedras aqui chamaria get_tree() em nós fora
+	# da árvore (crash) e mudaria o comportamento antigo (a fazenda não crescia
+	# enquanto o player estava dentro de casa).
+	if not is_inside_tree():
+		return
 	# Centralized daily update to optimize signal connections and enforce population caps
 	var trees: Array[Node] = []
 	for child in get_children():

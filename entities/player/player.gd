@@ -11,6 +11,11 @@ const CUSTOMIZATION_COMPONENT = preload("res://entities/player/customization_com
 var lantern: PointLight2D = null
 
 func _ready() -> void:
+	# Inventário COMPARTILHADO da sessão (persiste entre cenas). Sem isto, cada
+	# cena criava um player com inventário próprio e os itens "resetavam" ao
+	# entrar/sair da casa.
+	if SaveManager:
+		inventory_data = SaveManager.get_session_inventory()
 	if inventory_data == null:
 		inventory_data = InventoryData.new()
 		inventory_data.setup_default_inventory()
@@ -27,11 +32,13 @@ func _ready() -> void:
 	# Configura os limites da câmera baseado no tamanho real do mapa
 	call_deferred("_setup_camera_limits")
 
-	# Register inventory in SaveManager and load if a save exists
-	if SaveManager:
-		SaveManager.setup(inventory_data)
-		if SaveManager.has_save():
-			SaveManager.load_game()
+	# Continuidade de posição entre cenas: ao voltar do interior da casa, reaparece
+	# na porta de onde saiu. Deferred para que get_tree().current_scene já esteja pronto.
+	call_deferred("_apply_pending_spawn")
+
+	# Carrega o save uma única vez por sessão, no inventário compartilhado
+	if SaveManager and SaveManager.has_save():
+		SaveManager.load_game()
 
 	# Pass inventory to ToolComponent
 	if tool_component:
@@ -261,6 +268,21 @@ func _collect_tilemaps(node: Node, result: Array) -> void:
 		result.append(node)
 	for child in node.get_children():
 		_collect_tilemaps(child, result)
+
+# Reposiciona o player no ponto de retorno gravado para esta cena (ex.: a porta
+# da casa ao voltar do interior). Se não houver spawn pendente para a cena atual,
+# mantém o spawn fixo definido no .tscn (caso do início de jogo).
+func _apply_pending_spawn() -> void:
+	if not SaveManager:
+		return
+	var scene := get_tree().current_scene
+	if scene == null:
+		return
+	var spawn = SaveManager.take_pending_spawn(scene.scene_file_path)
+	if spawn != null:
+		global_position = spawn
+		# Zera a interpolação para não "deslizar" do spawn fixo até a porta.
+		reset_physics_interpolation()
 
 func _unhandled_input(event: InputEvent) -> void:
 	# F5 para salvar o jogo
