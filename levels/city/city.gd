@@ -142,23 +142,12 @@ func _path_role(cell: Vector2i, cells: Dictionary) -> Vector2i:
 # Cada entrada: tex, region (no atlas), foot (posição mundial do "pé"/base).
 func _build_buildings() -> void:
 	var list := [
-		# ----- Fileira NORTE (de frente para a rua), foot y ~ 198 -----
-		{"tex": TEX_SCHOOL, "reg": Rect2(1, 5, 214, 154),  "foot": Vector2(120, 198)},  # Escola
-		{"tex": TEX_BASE,   "reg": Rect2(17, 48, 174, 123),"foot": Vector2(320, 198)},  # Casa loja marrom
-		{"tex": TEX_WIZ,    "reg": Rect2(10, 2, 60, 135),  "foot": Vector2(470, 188)},  # Torre do mago
-		{"tex": TEX_BASE,   "reg": Rect2(337, 48, 94, 113),"foot": Vector2(575, 198)},  # Casa vermelha
-		{"tex": TEX_TRAIN,  "reg": Rect2(576, 45, 256, 99),"foot": Vector2(765, 198)},  # Estação de trem
+		# ----- Fileira NORTE -----
+		{"tex": TEX_BASE,   "reg": Rect2(17, 48, 174, 123),"foot": Vector2(320, 198)},  # Casa loja marrom (Vendedor de Sementes)
 
-		# ----- Fileira SUL (de frente para a rua), foot y ~ 490 -----
+		# ----- Fileira SUL -----
 		{"tex": TEX_BLACK,  "reg": Rect2(4, 7, 72, 88),    "foot": Vector2(70, 490)},   # Ferreiro
-		{"tex": TEX_BASE,   "reg": Rect2(0, 201, 80, 120), "foot": Vector2(170, 490)},  # Casa rosa
 		{"tex": TEX_FISH,   "reg": Rect2(2, 7, 76, 102),   "foot": Vector2(270, 490)},  # Pescador
-		{"tex": TEX_BASE,   "reg": Rect2(224, 25, 80, 136),"foot": Vector2(365, 490)},  # Casa A-frame
-		# (vão da estrada sul: x ~408..488)
-		{"tex": TEX_BASE,   "reg": Rect2(545, 77, 106, 94),"foot": Vector2(548, 490)},  # Casa loja teal
-		{"tex": TEX_BASE,   "reg": Rect2(672, 57, 95, 104),"foot": Vector2(652, 490)},  # Casa laranja
-		{"tex": TEX_BASE,   "reg": Rect2(96, 201, 80, 120),"foot": Vector2(748, 490)},  # Casa laranja A
-		{"tex": TEX_BASE,   "reg": Rect2(192, 201, 80, 146),"foot": Vector2(840, 490)}, # Casa azul A
 	]
 	for b in list:
 		_make_building(b["tex"], b["reg"], b["foot"])
