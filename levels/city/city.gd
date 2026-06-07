@@ -5,49 +5,37 @@ extends Node2D
 # partir do "Farm RPG - Tiny Asset Pack". Segue o padrão do map_manager
 # da fazenda: pinta chão/calçada em TileMapLayers e instancia construções
 # e decoração a partir de tabelas de dados (fácil de reposicionar).
-#
-# Layout (em tiles, mapa 56x36):
-#   - Rua principal horizontal (calçada) cruzando o mapa
-#   - Praça central
-#   - Estrada vertical ao SUL ligando à fazenda (portal de volta)
-#   - Fileira NORTE e fileira SUL de construções
-# As coordenadas (region_rect) das construções foram medidas pixel a pixel
-# nos atlas do pacote (ver _build_buildings).
 # =====================================================================
 
 const TILE := 16
-const MAP_W := 56
-const MAP_H := 36
+const MAP_W := 32  # 512px
+const MAP_H := 24  # 384px
 
 # --- Texturas do pacote (atlas de construções / props) ---
 const TEX_BASE   := preload("res://Farm RPG - Tiny Asset Pack - (All in One)/Objects/Exterior/Houses/NPCS houses/Base houses.png")
 const TEX_BLACK  := preload("res://Farm RPG - Tiny Asset Pack - (All in One)/Objects/Exterior/Houses/NPCS houses/Blacksmith.png")
 const TEX_FISH   := preload("res://Farm RPG - Tiny Asset Pack - (All in One)/Objects/Exterior/Houses/NPCS houses/Fishman.png")
-const TEX_SCHOOL := preload("res://Farm RPG - Tiny Asset Pack - (All in One)/Objects/Exterior/Houses/NPCS houses/School.png")
-const TEX_WIZ    := preload("res://Farm RPG - Tiny Asset Pack - (All in One)/Objects/Exterior/Houses/NPCS houses/wizard's house.png")
-const TEX_TRAIN  := preload("res://Farm RPG - Tiny Asset Pack - (All in One)/Objects/Exterior/Houses/NPCS houses/train station.png")
 const TEX_PROPS  := preload("res://Farm RPG - Tiny Asset Pack - (All in One)/Tileset/ALL props seasons.png")
 const TEX_STONES := preload("res://assets/sprites/Props/Spring/Ground stones.png")
 
-# --- Tilesets (grama reusa o da fazenda; calçada é novo) ---
+# --- Tilesets ---
 const TS_GRAMA := preload("res://levels/main_farm/tilesets/tileset_grama.tres")
 const TS_PATH  := preload("res://levels/city/tilesets/tileset_path.tres")
 const DAY_NIGHT := preload("res://levels/main_farm/day_night_cycle.gd")
 
-# Atlas: grama lisa (source id 3) e calçada cremosa 3x3 (source id 0)
+# Atlas
 const GRASS_SRC := 3
 const GRASS_TILE := Vector2i(9, 2)
 const PATH_SRC := 0
-# Bloco cremoso 3x3 de Path tiles.png (cantos/bordas pintadas)
 const PATH_NW := Vector2i(0, 0); const PATH_N := Vector2i(1, 0); const PATH_NE := Vector2i(2, 0)
 const PATH_W  := Vector2i(0, 1); const PATH_C := Vector2i(1, 1); const PATH_E  := Vector2i(2, 1)
 const PATH_SW := Vector2i(0, 2); const PATH_S := Vector2i(1, 2); const PATH_SE := Vector2i(2, 2)
 
-# --- Cenas de árvore (decoração; full-grown, não somem no inverno) ---
+# --- Cenas ---
 const TREE_MAPLE := preload("res://objects/nature/maple_tree.tscn")
 const TREE_MAHOG := preload("res://objects/nature/mahogany_tree.tscn")
 
-# --- Props (flores/arbustos) — regions medidas em ALL props seasons.png ---
+# --- Props ---
 const PROP_BUSH_A := Rect2(33, 1, 15, 15)
 const PROP_BUSH_B := Rect2(97, 1, 15, 15)
 const PROP_TUFT   := Rect2(0, 1, 15, 14)
@@ -72,13 +60,11 @@ func _ready() -> void:
 	_build_return_portal()
 	_build_plaza_lights()
 
-	# CanvasModulate dia/noite (mesma da fazenda) para a cidade escurecer à noite.
 	var day_night := CanvasModulate.new()
 	day_night.set_script(DAY_NIGHT)
 	day_night.name = "DayNightCycle"
 	add_child(day_night)
 
-	# Player nasce olhando para cima (entrou pela estrada de baixo).
 	call_deferred("_setup_player_spawn")
 
 
@@ -95,27 +81,27 @@ func _build_ground() -> void:
 			ground_layer.set_cell(Vector2i(x, y), GRASS_SRC, GRASS_TILE)
 
 
-# --- Calçada (rua + praça + estrada sul) com bordas autotile ---
+# --- Calçada ---
 func _build_paths() -> void:
 	path_layer = TileMapLayer.new()
 	path_layer.name = "PathLayer"
-	path_layer.add_to_group("ground_layer") # Necessário para os limites da câmera
+	path_layer.add_to_group("ground_layer")
 	path_layer.tile_set = TS_PATH
 	path_layer.z_index = -1
 	add_child(path_layer)
 
 	var cells := {}
-	# Praça central
-	for y in range(13, 22):
-		for x in range(22, 34):
+	# Praça central (menor)
+	for y in range(8, 14):
+		for x in range(11, 21):
 			cells[Vector2i(x, y)] = true
 	# Rua principal horizontal
-	for y in range(16, 19):
-		for x in range(3, 53):
+	for y in range(11, 14):
+		for x in range(3, 29):
 			cells[Vector2i(x, y)] = true
 	# Estrada vertical sul (volta para a fazenda)
-	for y in range(18, MAP_H):
-		for x in range(26, 30):
+	for y in range(13, MAP_H):
+		for x in range(14, 18):
 			cells[Vector2i(x, y)] = true
 
 	for cell in cells:
@@ -139,15 +125,14 @@ func _path_role(cell: Vector2i, cells: Dictionary) -> Vector2i:
 
 
 # --- Construções ---
-# Cada entrada: tex, region (no atlas), foot (posição mundial do "pé"/base).
 func _build_buildings() -> void:
 	var list := [
 		# ----- Fileira NORTE -----
-		{"tex": TEX_BASE,   "reg": Rect2(17, 48, 174, 123),"foot": Vector2(320, 198)},  # Casa loja marrom (Vendedor de Sementes)
+		{"tex": TEX_BASE,   "reg": Rect2(17, 48, 174, 123),"foot": Vector2(256, 128)},  # Casa loja marrom (Vendedor de Sementes)
 
 		# ----- Fileira SUL -----
-		{"tex": TEX_BLACK,  "reg": Rect2(4, 7, 72, 88),    "foot": Vector2(70, 490)},   # Ferreiro
-		{"tex": TEX_FISH,   "reg": Rect2(2, 7, 76, 102),   "foot": Vector2(270, 490)},  # Pescador
+		{"tex": TEX_BLACK,  "reg": Rect2(4, 7, 72, 88),    "foot": Vector2(100, 310)},   # Ferreiro
+		{"tex": TEX_FISH,   "reg": Rect2(2, 7, 76, 102),   "foot": Vector2(400, 310)},  # Pescador
 	]
 	for b in list:
 		_make_building(b["tex"], b["reg"], b["foot"])
@@ -165,11 +150,9 @@ func _make_building(tex: Texture2D, reg: Rect2, foot: Vector2) -> void:
 	spr.region_enabled = true
 	spr.region_rect = reg
 	spr.centered = false
-	# Base do sprite alinhada ao "pé" (origem do corpo), centralizada em x.
 	spr.position = Vector2(-reg.size.x / 2.0, -reg.size.y)
 	body.add_child(spr)
 
-	# Colisão só na base sólida (parte inferior) → player passa por trás (y-sort).
 	var col := CollisionShape2D.new()
 	var rect := RectangleShape2D.new()
 	var col_h: float = clampf(reg.size.y * 0.26, 12.0, 40.0)
@@ -179,38 +162,31 @@ func _make_building(tex: Texture2D, reg: Rect2, foot: Vector2) -> void:
 	body.add_child(col)
 
 
-# --- Decoração: árvores, pedras, flores/arbustos ---
+# --- Decoração ---
 func _build_decoration() -> void:
-	# Árvores de borda (moldura natural ao redor da cidade)
 	var tree_spots: Array[Vector2] = []
 	for x in range(24, MAP_W * TILE, 72):       # topo
 		tree_spots.append(Vector2(x, 26))
-	for y in range(64, 520, 88):                # laterais
+	for y in range(64, MAP_H * TILE - 20, 88):  # laterais
 		tree_spots.append(Vector2(20, y))
 		tree_spots.append(Vector2(MAP_W * TILE - 20, y))
-	tree_spots.append_array([                   # cantos inferiores (longe da estrada)
-		Vector2(60, 545), Vector2(140, 552), Vector2(760, 552), Vector2(850, 545),
+	tree_spots.append_array([                   # cantos inferiores
+		Vector2(60, 350), Vector2(100, 355), Vector2(400, 355), Vector2(450, 350),
 	])
 	var i := 0
 	for p in tree_spots:
 		_make_tree(TREE_MAPLE if i % 2 == 0 else TREE_MAHOG, p)
 		i += 1
 
-	# Pedras decorativas espalhadas nos quintais
-	for p in [Vector2(230, 260), Vector2(640, 250), Vector2(180, 360), Vector2(720, 370), Vector2(430, 250)]:
+	for p in [Vector2(110, 150), Vector2(420, 140), Vector2(100, 250), Vector2(400, 260)]:
 		_make_prop(TEX_STONES, STONE_REGION, p)
 
-	# Flores / arbustos pela praça e quintais
 	var flora := [
-		[PROP_BUSH_A, Vector2(360, 230)], [PROP_FLOWER, Vector2(392, 235)],
-		[PROP_BUSH_B, Vector2(520, 232)], [PROP_TUFT, Vector2(560, 240)],
-		[PROP_FLOWER, Vector2(255, 250)], [PROP_MUSH, Vector2(300, 255)],
-		[PROP_BUSH_A, Vector2(650, 255)], [PROP_TUFT, Vector2(700, 250)],
-		[PROP_FLOWER, Vector2(372, 300)], [PROP_FLOWER, Vector2(470, 300)],
-		[PROP_BUSH_B, Vector2(380, 332)], [PROP_BUSH_A, Vector2(462, 332)],
-		[PROP_MUSH, Vector2(420, 346)],
-		[PROP_BUSH_A, Vector2(120, 430)], [PROP_TUFT, Vector2(600, 430)],
-		[PROP_FLOWER, Vector2(790, 420)],
+		[PROP_BUSH_A, Vector2(140, 120)], [PROP_FLOWER, Vector2(172, 125)],
+		[PROP_BUSH_B, Vector2(300, 122)], [PROP_TUFT, Vector2(340, 130)],
+		[PROP_FLOWER, Vector2(135, 140)], [PROP_MUSH, Vector2(180, 145)],
+		[PROP_FLOWER, Vector2(252, 210)], [PROP_FLOWER, Vector2(350, 210)],
+		[PROP_BUSH_B, Vector2(260, 242)], [PROP_BUSH_A, Vector2(342, 242)],
 	]
 	for f in flora:
 		_make_prop(TEX_PROPS, f[0], f[1])
@@ -219,7 +195,7 @@ func _build_decoration() -> void:
 func _make_tree(scene: PackedScene, pos: Vector2) -> void:
 	var t := scene.instantiate()
 	if "current_stage" in t:
-		t.current_stage = 4  # GrowthStage.FULL
+		t.current_stage = 4
 	add_child(t)
 	t.global_position = pos
 
@@ -230,13 +206,12 @@ func _make_prop(tex: Texture2D, reg: Rect2, foot: Vector2) -> void:
 	spr.region_enabled = true
 	spr.region_rect = reg
 	spr.centered = false
-	# Offset desenha o sprite ACIMA do pé; node.position = foot → ordena por y-sort.
 	spr.offset = Vector2(-reg.size.x / 2.0, -reg.size.y)
 	add_child(spr)
 	spr.position = foot
 
 
-# --- Paredes de borda (confinam o player ao mapa) ---
+# --- Paredes de borda ---
 func _build_perimeter() -> void:
 	var body := StaticBody2D.new()
 	body.name = "Walls"
@@ -261,14 +236,14 @@ func _add_wall(body: StaticBody2D, center: Vector2, size: Vector2) -> void:
 	body.add_child(cs)
 
 
-# --- Portal de volta (estrada sul) → recoloca a fazenda guardada ---
+# --- Portal de volta ---
 func _build_return_portal() -> void:
 	var area := Area2D.new()
 	area.name = "ReturnPortal"
 	area.collision_layer = 4
 	area.collision_mask = 1
 	add_child(area)
-	area.position = Vector2(28 * TILE, 34 * TILE + 8)  # base da estrada
+	area.position = Vector2(16 * TILE, 23 * TILE + 8)  # x=256, y=376
 	var cs := CollisionShape2D.new()
 	var rect := RectangleShape2D.new()
 	rect.size = Vector2(64, 20)
@@ -276,7 +251,6 @@ func _build_return_portal() -> void:
 	area.add_child(cs)
 	area.body_entered.connect(_on_return_portal_body_entered)
 	
-	# Desarmado inicialmente para evitar re-trigger imediato ao voltar da fazenda
 	area.monitoring = false
 	get_tree().create_timer(0.3).timeout.connect(func(): if is_instance_valid(area): area.monitoring = true)
 
@@ -286,13 +260,12 @@ func _on_return_portal_body_entered(body: Node2D) -> void:
 		return
 	_returning = true
 	if SaveManager:
-		# Recoloca a fazenda viva (sem recriá-la → sem travada).
 		SaveManager.call_deferred("exit_to_farm")
 	else:
 		get_tree().call_deferred("change_scene_to_file", FARM_SCENE)
 
 
-# --- Lampiões da praça (luz quente que acende à noite) ---
+# --- Lampiões da praça ---
 func _build_plaza_lights() -> void:
 	var tex := GradientTexture2D.new()
 	var grad := Gradient.new()
@@ -304,7 +277,7 @@ func _build_plaza_lights() -> void:
 	tex.fill_to = Vector2(1.0, 0.5)
 	tex.width = 128
 	tex.height = 128
-	for p in [Vector2(360, 232), Vector2(520, 232), Vector2(360, 340), Vector2(520, 340)]:
+	for p in [Vector2(176, 128), Vector2(336, 128), Vector2(176, 224), Vector2(336, 224)]:
 		var light := PointLight2D.new()
 		light.texture = tex
 		light.texture_scale = 2.0
@@ -334,7 +307,6 @@ func _process(delta: float) -> void:
 			l.energy = lerp(l.energy, target, 1.0 - exp(-delta * 5.0))
 
 
-# Faz o player olhar para cima ao entrar (mesma ideia do interior da casa).
 func _setup_player_spawn() -> void:
 	var player := get_node_or_null("Player")
 	if player == null:
