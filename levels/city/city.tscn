@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://ccw4jienjpyyt"]
+
+[ext_resource type="Script" uid="uid://dtws1dvrrr8aa" path="res://levels/city/city.gd" id="1_cityscript"]
+[ext_resource type="PackedScene" uid="uid://hb2fyy4fg4dl" path="res://entities/player/player.tscn" id="2_player"]
+
+[node name="City" type="Node2D"]
+y_sort_enabled = true
+script = ExtResource("1_cityscript")
+
+[node name="Player" parent="." instance=ExtResource("2_player")]
+position = Vector2(448, 528)

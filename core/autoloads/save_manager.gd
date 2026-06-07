@@ -48,21 +48,26 @@ func take_pending_spawn(scene_path: String) -> Variant:
 
 # --- Transição casa <-> fazenda (sem recriar a fazenda) ---
 
+# Transição genérica: guarda a cena atual em memória e troca para a nova.
+# Usado tanto para entrar na casa quanto para ir à cidade (sem lag ao voltar).
+func enter_stashed_scene(scene: PackedScene) -> void:
+	if scene == null:
+		return
+	var tree := get_tree()
+	var root := tree.root
+	var current := tree.current_scene
+	var new_scene := scene.instantiate()
+	if current:
+		root.remove_child(current)
+	_stashed_farm = current
+	root.add_child(new_scene)
+	tree.current_scene = new_scene
+
 # Entra na casa: guarda a fazenda atual (removida da árvore, mas NÃO destruída) e
 # coloca o interior no lugar. Como a fazenda continua viva, seus nós (árvores,
 # crops, lago) seguem reagindo aos sinais de TimeManager mesmo "fora de cena".
 func enter_interior(interior_scene: PackedScene) -> void:
-	if interior_scene == null:
-		return
-	var tree := get_tree()
-	var root := tree.root
-	var farm := tree.current_scene
-	var interior := interior_scene.instantiate()
-	if farm:
-		root.remove_child(farm)
-	_stashed_farm = farm
-	root.add_child(interior)
-	tree.current_scene = interior
+	enter_stashed_scene(interior_scene)
 
 # Sai da casa: recoloca a MESMA instância da fazenda guardada e descarta o
 # interior. Sem regeneração de árvores/lago/crops → sem travada.
