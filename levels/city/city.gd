@@ -9,7 +9,7 @@ extends Node2D
 
 const TILE := 16
 const MAP_W := 32  # 512px
-const MAP_H := 24  # 384px
+const MAP_H := 28  # 448px
 
 # --- Texturas do pacote (atlas de construções / props) ---
 const TEX_BASE   := preload("res://Farm RPG - Tiny Asset Pack - (All in One)/Objects/Exterior/Houses/NPCS houses/Base houses.png")
@@ -136,8 +136,8 @@ func _build_buildings() -> void:
 		{"tex": TEX_BASE,   "reg": Rect2(17, 48, 174, 123),"foot": Vector2(256, 128)},  # Casa loja marrom (Vendedor de Sementes)
 
 		# ----- Fileira SUL -----
-		{"tex": TEX_BLACK,  "reg": Rect2(4, 7, 72, 88),    "foot": Vector2(100, 310)},   # Ferreiro
-		{"tex": TEX_FISH,   "reg": Rect2(2, 7, 76, 102),   "foot": Vector2(400, 310)},  # Pescador
+		{"tex": TEX_BLACK,  "reg": Rect2(4, 7, 72, 88),    "foot": Vector2(100, 390)},   # Ferreiro
+		{"tex": TEX_FISH,   "reg": Rect2(2, 7, 76, 102),   "foot": Vector2(400, 390)},  # Pescador
 	]
 	for b in list:
 		_make_building(b["tex"], b["reg"], b["foot"])
@@ -177,7 +177,7 @@ func _build_decoration() -> void:
 		tree_spots.append(Vector2(20, y))
 		tree_spots.append(Vector2(MAP_W * TILE - 20, y))
 	tree_spots.append_array([                   # cantos inferiores
-		Vector2(60, 350), Vector2(100, 355), Vector2(400, 355), Vector2(450, 350),
+		Vector2(60, 420), Vector2(100, 425), Vector2(400, 425), Vector2(450, 420),
 	])
 	var i := 0
 	for p in tree_spots:
@@ -249,7 +249,7 @@ func _build_return_portal() -> void:
 	area.collision_layer = 4
 	area.collision_mask = 1
 	add_child(area)
-	area.position = Vector2(16 * TILE, 23 * TILE + 8)  # x=256, y=376
+	area.position = Vector2(16 * TILE, 27 * TILE + 8)  # x=256, y=440
 	var cs := CollisionShape2D.new()
 	var rect := RectangleShape2D.new()
 	rect.size = Vector2(64, 20)
