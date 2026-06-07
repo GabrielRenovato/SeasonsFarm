@@ -31,9 +31,9 @@ const DAY_NIGHT := preload("res://levels/main_farm/day_night_cycle.gd")
 const GRASS_SRC := 3
 const GRASS_TILE := Vector2i(9, 2)
 const PATH_SRC := 0
-const PATH_NW := Vector2i(3, 0); const PATH_N := Vector2i(4, 0); const PATH_NE := Vector2i(5, 0)
-const PATH_W  := Vector2i(3, 1); const PATH_C := Vector2i(4, 1); const PATH_E  := Vector2i(5, 1)
-const PATH_SW := Vector2i(3, 2); const PATH_S := Vector2i(4, 2); const PATH_SE := Vector2i(5, 2)
+const PATH_NW := Vector2i(6, 0); const PATH_N := Vector2i(7, 0); const PATH_NE := Vector2i(8, 0)
+const PATH_W  := Vector2i(6, 1); const PATH_C := Vector2i(7, 1); const PATH_E  := Vector2i(8, 1)
+const PATH_SW := Vector2i(6, 2); const PATH_S := Vector2i(7, 2); const PATH_SE := Vector2i(8, 2)
 
 # --- Cenas ---
 const TREE_MAPLE := preload("res://objects/nature/maple_tree.tscn")
