@@ -18,6 +18,10 @@ const TEX_FISH   := preload("res://Farm RPG - Tiny Asset Pack - (All in One)/Obj
 const TEX_PROPS  := preload("res://Farm RPG - Tiny Asset Pack - (All in One)/Tileset/ALL props seasons.png")
 const TEX_STONES := preload("res://assets/sprites/Props/Spring/Ground stones.png")
 
+const WATER_TILESET = preload("res://levels/main_farm/tilesets/tileset_water.tres")
+const WATER_EDGE_TILES := { "N": Vector2i(4, 0), "S": Vector2i(4, 2) }
+const WATER_CENTER_TILE := Vector2i(4, 1)
+
 # --- Tilesets ---
 const TS_GRAMA := preload("res://levels/main_farm/tilesets/tileset_grama.tres")
 const TS_PATH  := preload("res://levels/city/tilesets/tileset_path.tres")
@@ -53,6 +57,7 @@ var path_layer: TileMapLayer
 
 func _ready() -> void:
 	_build_ground()
+	_build_river()
 	_build_paths()
 	_build_buildings()
 	_build_decoration()
@@ -87,7 +92,7 @@ func _build_paths() -> void:
 	path_layer.name = "PathLayer"
 	path_layer.add_to_group("ground_layer")
 	path_layer.tile_set = TS_PATH
-	path_layer.z_index = -1
+	path_layer.z_index = 0
 	add_child(path_layer)
 
 	var cells := {}
@@ -168,6 +173,7 @@ func _build_decoration() -> void:
 	for x in range(24, MAP_W * TILE, 72):       # topo
 		tree_spots.append(Vector2(x, 26))
 	for y in range(64, MAP_H * TILE - 20, 88):  # laterais
+		if y > 250 and y < 320: continue        # pula a área do rio
 		tree_spots.append(Vector2(20, y))
 		tree_spots.append(Vector2(MAP_W * TILE - 20, y))
 	tree_spots.append_array([                   # cantos inferiores
@@ -316,3 +322,36 @@ func _setup_player_spawn() -> void:
 		movement.last_direction = Vector2.UP
 		if movement.has_method("_update_blend_positions"):
 			movement._update_blend_positions()
+
+# --- Rio ---
+func _build_river() -> void:
+	var water := TileMapLayer.new()
+	water.name = "WaterLayer"
+	water.tile_set = WATER_TILESET
+	water.z_index = -1
+	add_child(water)
+
+	var river_body := StaticBody2D.new()
+	river_body.name = "RiverCollision"
+	river_body.collision_layer = 1
+	river_body.collision_mask = 0
+	add_child(river_body)
+
+	for y in range(17, 20):
+		for x in range(MAP_W):
+			var cell = Vector2i(x, y)
+			if y == 17:
+				water.set_cell(cell, 0, WATER_EDGE_TILES["N"])
+			elif y == 19:
+				water.set_cell(cell, 0, WATER_EDGE_TILES["S"])
+			else:
+				water.set_cell(cell, 0, WATER_CENTER_TILE)
+				
+			# Adicionar colisão SE NÃO for a ponte (estrada sul está entre x=14 e 17)
+			if x < 14 or x > 17:
+				var shape := CollisionShape2D.new()
+				var rect := RectangleShape2D.new()
+				rect.size = Vector2(16, 16)
+				shape.shape = rect
+				shape.position = Vector2(x * TILE + 8, y * TILE + 8)
+				river_body.add_child(shape)
