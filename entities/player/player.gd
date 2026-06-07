@@ -251,15 +251,12 @@ func _setup_camera_limits() -> void:
 	if min_x == INF:
 		return
 
-	# Metade da viewport (480x240) para não mostrar fora do mapa
-	var half_w = 240
-	var half_h = 120
 	var padding = 16
 
-	camera.limit_left   = int(min_x) - padding + half_w
-	camera.limit_top    = int(min_y) - padding + half_h
-	camera.limit_right  = int(max_x) + padding - half_w
-	camera.limit_bottom = int(max_y) + padding - half_h
+	camera.limit_left   = int(min_x) - padding
+	camera.limit_top    = int(min_y) - padding
+	camera.limit_right  = int(max_x) + padding
+	camera.limit_bottom = int(max_y) + padding
 
 	print("Camera limits set: L=%d T=%d R=%d B=%d" % [camera.limit_left, camera.limit_top, camera.limit_right, camera.limit_bottom])
 

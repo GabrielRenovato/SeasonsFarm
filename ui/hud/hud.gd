@@ -9,6 +9,7 @@ class_name HUD
 @onready var hotbar_ui: HotbarUI = $Control/HotbarUI
 @onready var inventory_menu_ui: InventoryMenuUI = $Control/InventoryMenuUI
 @onready var energy_bar: TextureProgressBar = %EnergyBar
+@onready var teleport_city_button: Button = %TeleportCityButton
 
 var inventory_data: InventoryData
 var digit_labels: Array[Label] = []
@@ -27,6 +28,9 @@ func setup(p_inventory_data: InventoryData) -> void:
 # Função chamada assim que a HUD entra no jogo (no primeiro frame)
 func _ready() -> void:
 	_setup_gold_digits()
+	
+	if teleport_city_button:
+		teleport_city_button.pressed.connect(_on_teleport_city_pressed)
 	
 	# Se o sistema de tempo (TimeManager) existir, conecta seus sinais
 	if TimeManager:
@@ -198,3 +202,9 @@ func _update_clock_sprite(hour: int) -> void:
 	var atlas := clock_round.texture as AtlasTexture
 	if atlas:
 		atlas.region = Rect2(col * 32, row * 32, 32, 32)
+
+# Teleporta o jogador para a cidade quando o botão é pressionado
+func _on_teleport_city_pressed() -> void:
+	# Como o jogo será em inglês:
+	print("Teleporting to City...")
+	get_tree().call_deferred("change_scene_to_file", "res://levels/city/city.tscn")

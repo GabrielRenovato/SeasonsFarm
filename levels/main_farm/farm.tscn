@@ -11,8 +11,14 @@
 [ext_resource type="TileSet" uid="uid://ckh7eod32d550" path="res://levels/main_farm/tilesets/tileset_mountain.tres" id="ts_mountain"]
 [ext_resource type="TileSet" uid="uid://cqsriuu77nu5i" path="res://levels/main_farm/tilesets/tileset_spawn_layer.tres" id="ts_spawn"]
 
+
+[ext_resource type="Script" path="res://levels/main_farm/farm_to_city_transition.gd" id="99_city_trans"]
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_lmmvm"]
 size = Vector2(198, 2955)
+
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_city"]
+size = Vector2(200, 50)
 
 [node name="Farm" type="Node2D" unique_id=1337363122]
 y_sort_enabled = true
@@ -97,3 +103,10 @@ collision_mask = 7
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D4" unique_id=1806128295]
 position = Vector2(70, -6)
 shape = SubResource("RectangleShape2D_lmmvm")
+
+[node name="CityTransition" type="Area2D" parent="."]
+position = Vector2(0, -300)
+script = ExtResource("99_city_trans")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CityTransition"]
+shape = SubResource("RectangleShape2D_city")
