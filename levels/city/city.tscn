@@ -8,8 +8,7 @@
 [ext_resource type="TileSet" uid="uid://dpcbevh1t2l0b" path="res://levels/city/tilesets/tileset_path.tres" id="4_d2056"]
 [ext_resource type="Texture2D" uid="uid://gyegtb8y5ekn" path="res://Farm RPG - Tiny Asset Pack - (All in One)/Tileset/ALL props seasons.png" id="7_d2056"]
 [ext_resource type="Texture2D" uid="uid://dff0yrilyd31t" path="res://Farm RPG - Tiny Asset Pack - (All in One)/Tileset/Tileset Grass Spring.png" id="8_p0vc4"]
-[ext_resource type="PackedScene" uid="uid://d1abcdefghijk" path="res://objects/door/door.tscn" id="9_door"]
-[ext_resource type="PackedScene" uid="uid://dd8a9b2c3d4e5" path="res://objects/buildings/seed_shop_exterior.tscn" id="10_seed_shop"]
+[ext_resource type="PackedScene" uid="uid://dd8bab2c3d4e5" path="res://objects/buildings/seed_shop_exterior.tscn" id="10_seed_shop"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_p0vc4"]
 texture = ExtResource("3_d2056")
@@ -2104,5 +2103,5 @@ z_index = -2
 tile_map_data = PackedByteArray("AAD8/xAAAQAJABMAAAD9/xAAAQAJABMAAAD+/xAAAQAJABMAAAD//xAAAQAJABMAAAAAABAAAQAJABMAAAABABAAAQAJABMAAAACABAAAQAJABMAAAADABAAAQAJABMAAAAEABAAAQAJABMAAAAFABAAAQAJABMAAAAGABAAAQAJABMAAAAHABAAAQAJABMAAAAIABAAAQAJABMAAAAJABAAAQAJABMAAAAKABAAAQAJABMAAAALABAAAQAJABMAAAAMABAAAQAJABMAAAANABAAAQALABMAAAANAA8AAQALABIAAAANAA4AAQALABAAAAASAA8AAQAIABEAAAASABAAAQAIABMAAAATABAAAQAJABMAAAAUABAAAQAJABMAAAAVABAAAQAJABMAAAAWABAAAQAJABMAAAAXABAAAQAJABMAAAAYABAAAQAJABMAAAAZABAAAQAJABMAAAAaABAAAQAJABMAAAAbABAAAQAJABMAAAAcABAAAQAJABMAAAAdABAAAQAJABMAAAAeABAAAQAJABMAAAAfABAAAQAJABMAAAAgABAAAQAJABMAAAAhABAAAQAJABMAAAAiABAAAQAJABMAAAAjABAAAQAJABMAAAAkABAAAQAJABMAAAAlABAAAQAJABMAAAASAA4AAQAIABAAAAA=")
 tile_set = SubResource("TileSet_k0pbh")
 
-[node name="SeedShopExterior" parent="." instance=ExtResource("10_seed_shop")]
-position = Vector2(204, 116)
+[node name="SeedShopExterior" parent="." unique_id=564076789 instance=ExtResource("10_seed_shop")]
+position = Vector2(216, 118)
