@@ -191,6 +191,9 @@ func _setup_player_spawn() -> void:
 	call_deferred("_setup_camera_limits_delayed")
 
 func _setup_camera_limits_delayed() -> void:
+	var player = get_node_or_null("PlayerTeste") as CharacterBody2D
+	if not player: return
+	
 	var cam := player.get_node_or_null("Camera2D") as Camera2D
 	var ground := get_node_or_null("GroundLayer") as TileMapLayer
 	if cam and ground:
