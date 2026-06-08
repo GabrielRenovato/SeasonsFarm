@@ -1,6 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://dd8a9b2c3d4e5"]
+[gd_scene format=3 uid="uid://dd8bab2c3d4e5"]
 
 [ext_resource type="Script" path="res://objects/buildings/seed_shop_exterior.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://bh23rvbpv5oo0" path="res://assets/tiles/farm/Door, windows, and chimney.png" id="2_door"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_base"]
 size = Vector2(80, 40)
@@ -8,36 +9,118 @@ size = Vector2(80, 40)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_door"]
 size = Vector2(24, 24)
 
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_shop"]
-_data = {
+[sub_resource type="Animation" id="Animation_reset"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Visuals/DoorSprite:hframes")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [1]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Visuals/DoorSprite:region_rect")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Rect2(112.5, 3.0, 14.6, 22.8)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Visuals/DoorSprite:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
 }
 
-[node name="SeedShopExterior" type="StaticBody2D"]
+[sub_resource type="Animation" id="Animation_open"]
+resource_name = "open_door"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Visuals/DoorSprite:hframes")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [2]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Visuals/DoorSprite:region_rect")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [Rect2(112.5, 3.0, 31.4, 22.8)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Visuals/DoorSprite:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [0, 1]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_shop"]
+_data = {
+"RESET": SubResource("Animation_reset"),
+"open_door": SubResource("Animation_open")
+}
+
+[node name="SeedShopExterior" type="StaticBody2D" unique_id=113995016]
 y_sort_enabled = true
 collision_layer = 5
 script = ExtResource("1_script")
 interior_scene = "res://levels/seed_shop_interior/seed_shop_interior.tscn"
 
-[node name="Visuals" type="Node2D" parent="."]
+[node name="Visuals" type="Node2D" parent="." unique_id=1831980669]
 
-[node name="ShopSprite" type="Sprite2D" parent="Visuals"]
+[node name="ShopSprite" type="Sprite2D" parent="Visuals" unique_id=1915973065]
 position = Vector2(0, -40)
 
 [node name="DoorSprite" type="Sprite2D" parent="Visuals"]
 position = Vector2(0, -10)
+texture = ExtResource("2_door")
+region_enabled = true
+region_rect = Rect2(112.5, 3.0, 14.6, 22.8)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1457879885]
 position = Vector2(0, -10)
 shape = SubResource("RectangleShape2D_base")
 
-[node name="DoorArea" type="Area2D" parent="."]
+[node name="DoorArea" type="Area2D" parent="." unique_id=463657891]
 collision_layer = 4
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="DoorArea"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DoorArea" unique_id=1418377361]
 position = Vector2(0, 5)
 shape = SubResource("RectangleShape2D_door")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-libraries = {
-"": SubResource("AnimationLibrary_shop")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=351359744]
+libraries/ = SubResource("AnimationLibrary_shop")
