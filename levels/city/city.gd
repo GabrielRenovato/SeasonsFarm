@@ -180,5 +180,15 @@ func _setup_player_spawn() -> void:
 		movement.last_direction = Vector2.UP
 		if movement.has_method("_update_blend_positions"):
 			movement._update_blend_positions()
+	
+	# Travar a câmera nos limites da grama
+	var cam := player.get_node_or_null("Camera2D") as Camera2D
+	var ground := get_node_or_null("GroundLayer") as TileMapLayer
+	if cam and ground:
+		var rect := ground.get_used_rect()
+		cam.limit_left = rect.position.x * TILE
+		cam.limit_top = rect.position.y * TILE
+		cam.limit_right = rect.end.x * TILE
+		cam.limit_bottom = rect.end.y * TILE
 
 
