@@ -188,6 +188,9 @@ func _setup_player_spawn() -> void:
 			player.global_position = Vector2(256, 150) # Posição em frente à porta (Position in front of the door)
 	
 	# Travar a câmera nos limites da grama
+	call_deferred("_setup_camera_limits_delayed")
+
+func _setup_camera_limits_delayed() -> void:
 	var cam := player.get_node_or_null("Camera2D") as Camera2D
 	var ground := get_node_or_null("GroundLayer") as TileMapLayer
 	if cam and ground:
