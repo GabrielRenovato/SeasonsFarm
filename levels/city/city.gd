@@ -24,6 +24,7 @@ func _ready() -> void:
 	_build_buildings()
 	_build_perimeter()
 	_build_return_portal()
+	_build_dynamic_water_collision()
 	
 	var day_night := CanvasModulate.new()
 	day_night.set_script(DAY_NIGHT)
@@ -31,6 +32,34 @@ func _ready() -> void:
 	add_child(day_night)
 
 	call_deferred("_setup_player_spawn")
+
+# --- Colisão Dinâmica da Água ---
+func _build_dynamic_water_collision() -> void:
+	var water := get_node_or_null("WaterLayer") as TileMapLayer
+	var path := get_node_or_null("PathLayer") as TileMapLayer
+	
+	var old_col := get_node_or_null("RiverCollision")
+	if old_col:
+		old_col.queue_free()
+		
+	if not water: return
+		
+	var body := StaticBody2D.new()
+	body.collision_layer = 1
+	body.collision_mask = 0
+	water.add_child(body)
+	
+	for cell in water.get_used_cells():
+		# Se tem uma calçada/ponte em cima da água, não cria colisão!
+		if path and path.get_cell_source_id(cell) != -1:
+			continue
+			
+		var shape := CollisionShape2D.new()
+		var rect := RectangleShape2D.new()
+		rect.size = Vector2(16, 16)
+		shape.shape = rect
+		shape.position = water.map_to_local(cell)
+		body.add_child(shape)
 
 
 
@@ -83,13 +112,22 @@ func _build_perimeter() -> void:
 	body.collision_layer = 1
 	body.collision_mask = 0
 	add_child(body)
-	var w := MAP_W * TILE
-	var h := MAP_H * TILE
-	var t := 8
-	_add_wall(body, Vector2(w / 2.0, -t / 2.0), Vector2(w + 2 * t, t))      # topo
-	_add_wall(body, Vector2(w / 2.0, h + t / 2.0), Vector2(w + 2 * t, t))   # base
-	_add_wall(body, Vector2(-t / 2.0, h / 2.0), Vector2(t, h + 2 * t))      # esquerda
-	_add_wall(body, Vector2(w + t / 2.0, h / 2.0), Vector2(t, h + 2 * t))   # direita
+	
+	var ground := get_node_or_null("GroundLayer") as TileMapLayer
+	var rect := ground.get_used_rect() if ground else Rect2i(0, 0, MAP_W, MAP_H)
+	
+	var min_px := Vector2(rect.position) * TILE
+	var max_px := Vector2(rect.end) * TILE
+	var w := max_px.x - min_px.x
+	var h := max_px.y - min_px.y
+	var center_x := min_px.x + w / 2.0
+	var center_y := min_px.y + h / 2.0
+	var t := 16.0
+	
+	_add_wall(body, Vector2(center_x, min_px.y - t / 2.0), Vector2(w + 2 * t, t))      # topo
+	_add_wall(body, Vector2(center_x, max_px.y + t / 2.0), Vector2(w + 2 * t, t))      # base
+	_add_wall(body, Vector2(min_px.x - t / 2.0, center_y), Vector2(t, h + 2 * t))      # esquerda
+	_add_wall(body, Vector2(max_px.x + t / 2.0, center_y), Vector2(t, h + 2 * t))      # direita
 
 
 func _add_wall(body: StaticBody2D, center: Vector2, size: Vector2) -> void:
