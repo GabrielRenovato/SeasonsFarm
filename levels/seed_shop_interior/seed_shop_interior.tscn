@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://e2abcdefghijk"]
+
+[ext_resource type="Script" path="res://levels/seed_shop_interior/seed_shop_interior.gd" id="1_seed_shop_int"]
+[ext_resource type="PackedScene" uid="uid://d1abcdefghijk" path="res://objects/door/door.tscn" id="2_door"]
+
+[node name="SeedShopInterior" type="Node2D"]
+script = ExtResource("1_seed_shop_int")
+
+[node name="TileMapLayer" type="TileMapLayer" parent="."]
+
+[node name="ExitDoor" parent="." instance=ExtResource("2_door")]
+position = Vector2(0, 64)
+
+[node name="SpawnPoint" type="Marker2D" parent="."]
+position = Vector2(0, 32)
