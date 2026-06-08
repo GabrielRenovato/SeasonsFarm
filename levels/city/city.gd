@@ -1,70 +1,30 @@
 extends Node2D
 
 # =====================================================================
-# CITY MANAGER — Cidade (town) estilo Stardew, construída por código a
-# partir do "Farm RPG - Tiny Asset Pack". Segue o padrão do map_manager
-# da fazenda: pinta chão/calçada em TileMapLayers e instancia construções
-# e decoração a partir de tabelas de dados (fácil de reposicionar).
+# CITY MANAGER — Cidade (town)
+# As casas (Ferreiro, Pescador) e o portal de retorno são gerados por código.
+# O chão, calçada e rio foram "assados" (baked) para o editor.
 # =====================================================================
 
 const TILE := 16
 const MAP_W := 32  # 512px
 const MAP_H := 28  # 448px
 
-# --- Texturas do pacote (atlas de construções / props) ---
+# --- Texturas do pacote (atlas de construções) ---
 const TEX_BASE   := preload("res://Farm RPG - Tiny Asset Pack - (All in One)/Objects/Exterior/Houses/NPCS houses/Base houses.png")
 const TEX_BLACK  := preload("res://Farm RPG - Tiny Asset Pack - (All in One)/Objects/Exterior/Houses/NPCS houses/Blacksmith.png")
 const TEX_FISH   := preload("res://Farm RPG - Tiny Asset Pack - (All in One)/Objects/Exterior/Houses/NPCS houses/Fishman.png")
-const TEX_PROPS  := preload("res://Farm RPG - Tiny Asset Pack - (All in One)/Tileset/ALL props seasons.png")
-const TEX_STONES := preload("res://assets/sprites/Props/Spring/Ground stones.png")
 
-const WATER_TILESET = preload("res://levels/main_farm/tilesets/tileset_water.tres")
-const WATER_EDGE_TILES := { "N": Vector2i(4, 0), "S": Vector2i(4, 2) }
-const WATER_CENTER_TILE := Vector2i(4, 1)
-
-# --- Tilesets ---
-const TS_GRAMA := preload("res://levels/main_farm/tilesets/tileset_grama.tres")
-const TS_PATH  := preload("res://levels/city/tilesets/tileset_path.tres")
 const DAY_NIGHT := preload("res://levels/main_farm/day_night_cycle.gd")
-
-# Atlas
-const GRASS_SRC := 3
-const GRASS_TILE := Vector2i(9, 2)
-const PATH_SRC := 0
-const PATH_NW := Vector2i(6, 0); const PATH_N := Vector2i(7, 0); const PATH_NE := Vector2i(8, 0)
-const PATH_W  := Vector2i(6, 1); const PATH_C := Vector2i(7, 1); const PATH_E  := Vector2i(8, 1)
-const PATH_SW := Vector2i(6, 2); const PATH_S := Vector2i(7, 2); const PATH_SE := Vector2i(8, 2)
-
-# --- Cenas ---
-const TREE_MAPLE := preload("res://objects/nature/maple_tree.tscn")
-const TREE_MAHOG := preload("res://objects/nature/mahogany_tree.tscn")
-
-# --- Props ---
-const PROP_BUSH_A := Rect2(33, 1, 15, 15)
-const PROP_BUSH_B := Rect2(97, 1, 15, 15)
-const PROP_TUFT   := Rect2(0, 1, 15, 14)
-const PROP_FLOWER := Rect2(0, 33, 15, 14)
-const PROP_MUSH   := Rect2(64, 33, 15, 14)
-const STONE_REGION := Rect2(0, 16, 16, 16)
-
 const FARM_SCENE := "res://levels/main_farm/farm.tscn"
 
 var _returning := false
-var _plaza_lights: Array[PointLight2D] = []
-var ground_layer: TileMapLayer
-var path_layer: TileMapLayer
-
 
 func _ready() -> void:
-	_build_ground()
-	_build_river()
-	_build_paths()
 	_build_buildings()
-	_build_decoration()
 	_build_perimeter()
 	_build_return_portal()
-	_build_plaza_lights()
-
+	
 	var day_night := CanvasModulate.new()
 	day_night.set_script(DAY_NIGHT)
 	day_night.name = "DayNightCycle"
@@ -73,63 +33,9 @@ func _ready() -> void:
 	call_deferred("_setup_player_spawn")
 
 
+
+
 # --- Chão de grama ---
-func _build_ground() -> void:
-	ground_layer = TileMapLayer.new()
-	ground_layer.name = "GroundLayer"
-	ground_layer.add_to_group("ground_layer") # Necessário para os limites da câmera
-	ground_layer.tile_set = TS_GRAMA
-	ground_layer.z_index = -2
-	add_child(ground_layer)
-	for y in range(MAP_H):
-		for x in range(MAP_W):
-			ground_layer.set_cell(Vector2i(x, y), GRASS_SRC, GRASS_TILE)
-
-
-# --- Calçada ---
-func _build_paths() -> void:
-	path_layer = TileMapLayer.new()
-	path_layer.name = "PathLayer"
-	path_layer.add_to_group("ground_layer")
-	path_layer.tile_set = TS_PATH
-	path_layer.z_index = 0
-	add_child(path_layer)
-
-	var cells := {}
-	# Praça central (menor)
-	for y in range(8, 14):
-		for x in range(11, 21):
-			cells[Vector2i(x, y)] = true
-	# Rua principal horizontal
-	for y in range(11, 14):
-		for x in range(3, 29):
-			cells[Vector2i(x, y)] = true
-	# Estrada vertical sul (volta para a fazenda)
-	for y in range(13, MAP_H):
-		for x in range(14, 18):
-			cells[Vector2i(x, y)] = true
-
-	for cell in cells:
-		path_layer.set_cell(cell, PATH_SRC, _path_role(cell, cells))
-
-
-func _path_role(cell: Vector2i, cells: Dictionary) -> Vector2i:
-	var n := cells.has(cell + Vector2i(0, -1))
-	var s := cells.has(cell + Vector2i(0, 1))
-	var w := cells.has(cell + Vector2i(-1, 0))
-	var e := cells.has(cell + Vector2i(1, 0))
-	if not n and not w: return PATH_NW
-	if not n and not e: return PATH_NE
-	if not s and not w: return PATH_SW
-	if not s and not e: return PATH_SE
-	if not n: return PATH_N
-	if not s: return PATH_S
-	if not w: return PATH_W
-	if not e: return PATH_E
-	return PATH_C
-
-
-# --- Construções ---
 func _build_buildings() -> void:
 	var list := [
 		# ----- Fileira NORTE -----
@@ -167,54 +73,7 @@ func _make_building(tex: Texture2D, reg: Rect2, foot: Vector2) -> void:
 	body.add_child(col)
 
 
-# --- Decoração ---
-func _build_decoration() -> void:
-	var tree_spots: Array[Vector2] = []
-	for x in range(24, MAP_W * TILE, 72):       # topo
-		tree_spots.append(Vector2(x, 26))
-	for y in range(64, MAP_H * TILE - 20, 88):  # laterais
-		if y > 250 and y < 320: continue        # pula a área do rio
-		tree_spots.append(Vector2(20, y))
-		tree_spots.append(Vector2(MAP_W * TILE - 20, y))
-	tree_spots.append_array([                   # cantos inferiores
-		Vector2(60, 420), Vector2(100, 425), Vector2(400, 425), Vector2(450, 420),
-	])
-	var i := 0
-	for p in tree_spots:
-		_make_tree(TREE_MAPLE if i % 2 == 0 else TREE_MAHOG, p)
-		i += 1
 
-	for p in [Vector2(110, 150), Vector2(420, 140), Vector2(100, 250), Vector2(400, 260)]:
-		_make_prop(TEX_STONES, STONE_REGION, p)
-
-	var flora := [
-		[PROP_BUSH_A, Vector2(140, 120)], [PROP_FLOWER, Vector2(172, 125)],
-		[PROP_BUSH_B, Vector2(300, 122)], [PROP_TUFT, Vector2(340, 130)],
-		[PROP_FLOWER, Vector2(135, 140)], [PROP_MUSH, Vector2(180, 145)],
-		[PROP_FLOWER, Vector2(252, 210)], [PROP_FLOWER, Vector2(350, 210)],
-		[PROP_BUSH_B, Vector2(260, 242)], [PROP_BUSH_A, Vector2(342, 242)],
-	]
-	for f in flora:
-		_make_prop(TEX_PROPS, f[0], f[1])
-
-
-func _make_tree(scene: PackedScene, pos: Vector2) -> void:
-	var t := scene.instantiate()
-	if "current_stage" in t:
-		t.current_stage = 4
-	add_child(t)
-	t.global_position = pos
-
-
-func _make_prop(tex: Texture2D, reg: Rect2, foot: Vector2) -> void:
-	var spr := Sprite2D.new()
-	spr.texture = tex
-	spr.region_enabled = true
-	spr.region_rect = reg
-	spr.centered = false
-	spr.offset = Vector2(-reg.size.x / 2.0, -reg.size.y)
-	add_child(spr)
-	spr.position = foot
 
 
 # --- Paredes de borda ---
@@ -271,46 +130,7 @@ func _on_return_portal_body_entered(body: Node2D) -> void:
 		get_tree().call_deferred("change_scene_to_file", FARM_SCENE)
 
 
-# --- Lampiões da praça ---
-func _build_plaza_lights() -> void:
-	var tex := GradientTexture2D.new()
-	var grad := Gradient.new()
-	grad.offsets = [0.0, 1.0]
-	grad.colors = [Color(1.0, 0.85, 0.5, 0.95), Color(1.0, 0.85, 0.5, 0.0)]
-	tex.gradient = grad
-	tex.fill = GradientTexture2D.FILL_RADIAL
-	tex.fill_from = Vector2(0.5, 0.5)
-	tex.fill_to = Vector2(1.0, 0.5)
-	tex.width = 128
-	tex.height = 128
-	for p in [Vector2(176, 128), Vector2(336, 128), Vector2(176, 224), Vector2(336, 224)]:
-		var light := PointLight2D.new()
-		light.texture = tex
-		light.texture_scale = 2.0
-		light.energy = 0.0
-		light.blend_mode = Light2D.BLEND_MODE_ADD
-		light.position = p
-		add_child(light)
-		_plaza_lights.append(light)
 
-
-func _process(delta: float) -> void:
-	if _plaza_lights.is_empty():
-		return
-	var tm = get_node_or_null("/root/TimeManager")
-	if not tm:
-		return
-	var time: float = tm.hour + (tm.minute / 60.0)
-	var target := 0.0
-	if time >= 18.5 or time < 5.5:
-		target = 0.9
-	elif time >= 17.5 and time < 18.5:
-		target = (time - 17.5) * 0.9
-	elif time >= 5.5 and time < 6.5:
-		target = (1.0 - (time - 5.5)) * 0.9
-	for l in _plaza_lights:
-		if is_instance_valid(l):
-			l.energy = lerp(l.energy, target, 1.0 - exp(-delta * 5.0))
 
 
 func _setup_player_spawn() -> void:
@@ -323,35 +143,4 @@ func _setup_player_spawn() -> void:
 		if movement.has_method("_update_blend_positions"):
 			movement._update_blend_positions()
 
-# --- Rio ---
-func _build_river() -> void:
-	var water := TileMapLayer.new()
-	water.name = "WaterLayer"
-	water.tile_set = WATER_TILESET
-	water.z_index = -1
-	add_child(water)
 
-	var river_body := StaticBody2D.new()
-	river_body.name = "RiverCollision"
-	river_body.collision_layer = 1
-	river_body.collision_mask = 0
-	add_child(river_body)
-
-	for y in range(17, 20):
-		for x in range(MAP_W):
-			var cell = Vector2i(x, y)
-			if y == 17:
-				water.set_cell(cell, 0, WATER_EDGE_TILES["N"])
-			elif y == 19:
-				water.set_cell(cell, 0, WATER_EDGE_TILES["S"])
-			else:
-				water.set_cell(cell, 0, WATER_CENTER_TILE)
-				
-			# Adicionar colisão SE NÃO for a ponte (estrada sul está entre x=14 e 17)
-			if x < 14 or x > 17:
-				var shape := CollisionShape2D.new()
-				var rect := RectangleShape2D.new()
-				rect.size = Vector2(16, 16)
-				shape.shape = rect
-				shape.position = Vector2(x * TILE + 8, y * TILE + 8)
-				river_body.add_child(shape)
