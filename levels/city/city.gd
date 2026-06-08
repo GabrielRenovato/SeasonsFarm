@@ -72,10 +72,12 @@ func _build_buildings() -> void:
 			"tex": TEX_BASE,   
 			"reg": Rect2(17, 48, 174, 123),
 			"foot": Vector2(256, 128),
-			"col_w": 164.0, # Colisão customizada para cobrir a base inteira
-			"col_h": 28.0,
-			"col_ox": 0.0,
-			"col_oy": -14.0
+			"collisions": [
+				# Corpo principal (esquerda)
+				{"w": 104.0, "h": 28.0, "ox": -30.0, "oy": -14.0},
+				# Anexo (direita) - fundação é mais alta, liberando a grama embaixo
+				{"w": 62.0, "h": 28.0, "ox": 53.0, "oy": -46.0}
+			]
 		},  # Casa loja marrom (Vendedor de Sementes)
 
 		# ----- Fileira SUL -----
@@ -105,20 +107,28 @@ func _make_building(data: Dictionary) -> void:
 	spr.position = Vector2(-reg.size.x / 2.0, -reg.size.y)
 	body.add_child(spr)
 
-	var col := CollisionShape2D.new()
-	var rect := RectangleShape2D.new()
-	
-	# Pega os valores customizados, ou usa a fórmula padrão se não existir
-	var default_h = clampf(reg.size.y * 0.26, 12.0, 40.0)
-	var c_w = data.get("col_w", reg.size.x * 0.72)
-	var c_h = data.get("col_h", default_h)
-	var c_ox = data.get("col_ox", 0.0)
-	var c_oy = data.get("col_oy", -default_h / 2.0)
-	
-	rect.size = Vector2(c_w, c_h)
-	col.shape = rect
-	col.position = Vector2(c_ox, c_oy)
-	body.add_child(col)
+	if data.has("collisions"):
+		for c_data in data["collisions"]:
+			var col := CollisionShape2D.new()
+			var rect := RectangleShape2D.new()
+			rect.size = Vector2(c_data["w"], c_data["h"])
+			col.shape = rect
+			col.position = Vector2(c_data["ox"], c_data["oy"])
+			body.add_child(col)
+	else:
+		var col := CollisionShape2D.new()
+		var rect := RectangleShape2D.new()
+		# Pega os valores customizados, ou usa a fórmula padrão se não existir
+		var default_h = clampf(reg.size.y * 0.26, 12.0, 40.0)
+		var c_w = data.get("col_w", reg.size.x * 0.72)
+		var c_h = data.get("col_h", default_h)
+		var c_ox = data.get("col_ox", 0.0)
+		var c_oy = data.get("col_oy", -default_h / 2.0)
+		
+		rect.size = Vector2(c_w, c_h)
+		col.shape = rect
+		col.position = Vector2(c_ox, c_oy)
+		body.add_child(col)
 
 
 
