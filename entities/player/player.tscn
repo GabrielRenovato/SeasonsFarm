@@ -17984,7 +17984,7 @@ states/Water/node = SubResource("AnimationNodeBlendSpace2D_Water")
 states/Water/position = Vector2(400, 100)
 transitions = ["Start", "Idle", SubResource("AnimationNodeStateMachineTransition_start"), "FishCast", "FishWait", SubResource("AnimationNodeStateMachineTransition_FishCast_FishWait"), "FishWait", "FishBite", SubResource("AnimationNodeStateMachineTransition_FishWait_FishBite"), "FishWait", "Idle", SubResource("AnimationNodeStateMachineTransition_FishWait_Idle"), "FishBite", "FishReel", SubResource("AnimationNodeStateMachineTransition_FishBite_FishReel"), "FishBite", "Idle", SubResource("AnimationNodeStateMachineTransition_FishBite_Idle"), "FishReel", "FishCatch", SubResource("AnimationNodeStateMachineTransition_FishReel_FishCatch"), "FishReel", "Idle", SubResource("AnimationNodeStateMachineTransition_FishReel_Idle"), "FishCatch", "Idle", SubResource("AnimationNodeStateMachineTransition_FishCatch_Idle")]
 
-[node name="PlayerTeste" type="CharacterBody2D" unique_id=1966965891]
+[node name="PlayerTeste" type="CharacterBody2D" groups=["player"] unique_id=1966965891]
 script = ExtResource("script_player")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=39782406]
