@@ -69,43 +69,79 @@ func _build_buildings() -> void:
 	var list := [
 		# ----- Fileira NORTE -----
 		{
-			"tex": TEX_BASE,   
-			"reg": Rect2(17, 48, 174, 123),
 			"foot": Vector2(256, 128),
+			"sprites": [
+				# Corpo principal (esquerda)
+				{
+					"tex": TEX_BASE, "reg": Rect2(17, 48, 104, 123),
+					"pos": Vector2(-87.0, 0.0), "offset": Vector2(0.0, -123.0)
+				},
+				# Anexo (direita) - Y-Sort base é 16 pixels mais alto (-16)
+				{
+					"tex": TEX_BASE, "reg": Rect2(121, 48, 70, 123),
+					"pos": Vector2(17.0, -16.0), "offset": Vector2(0.0, -107.0)
+				}
+			],
 			"collisions": [
 				# Corpo principal (esquerda)
-				{"w": 104.0, "h": 28.0, "ox": -30.0, "oy": -14.0},
-				# Anexo (direita) - fundação é mais alta, liberando a grama embaixo
-				{"w": 62.0, "h": 28.0, "ox": 53.0, "oy": -46.0}
+				{"w": 104.0, "h": 28.0, "ox": -35.0, "oy": -14.0},
+				# Anexo (direita) - ajustado para baixo (oy -30)
+				{"w": 70.0, "h": 28.0, "ox": 52.0, "oy": -30.0}
 			]
 		},  # Casa loja marrom (Vendedor de Sementes)
 
 		# ----- Fileira SUL -----
-		{"tex": TEX_BLACK,  "reg": Rect2(4, 7, 72, 88),    "foot": Vector2(100, 390)},   # Ferreiro
-		{"tex": TEX_FISH,   "reg": Rect2(2, 7, 76, 102),   "foot": Vector2(400, 390)},  # Pescador
+		{
+			"foot": Vector2(100, 390),
+			"sprites": [
+				{"tex": TEX_BLACK, "reg": Rect2(4, 7, 72, 88), "pos": Vector2(-36.0, 0.0), "offset": Vector2(0.0, -88.0)}
+			]
+		},   # Ferreiro
+		{
+			"foot": Vector2(400, 390),
+			"sprites": [
+				{"tex": TEX_FISH, "reg": Rect2(2, 7, 76, 102), "pos": Vector2(-38.0, 0.0), "offset": Vector2(0.0, -102.0)}
+			]
+		},  # Pescador
 	]
 	for b in list:
 		_make_building(b)
 
 
 func _make_building(data: Dictionary) -> void:
-	var tex: Texture2D = data.get("tex")
-	var reg: Rect2 = data.get("reg")
 	var foot: Vector2 = data.get("foot")
+	var reg: Rect2 = data.get("reg", Rect2())
 
 	var body := StaticBody2D.new()
 	body.collision_layer = 1
 	body.collision_mask = 0
+	body.y_sort_enabled = true # ATIVANDO Y-SORT!
 	add_child(body)
 	body.position = foot
 
-	var spr := Sprite2D.new()
-	spr.texture = tex
-	spr.region_enabled = true
-	spr.region_rect = reg
-	spr.centered = false
-	spr.position = Vector2(-reg.size.x / 2.0, -reg.size.y)
-	body.add_child(spr)
+	if data.has("sprites"):
+		for s_data in data["sprites"]:
+			var spr := Sprite2D.new()
+			spr.texture = s_data["tex"]
+			spr.region_enabled = true
+			spr.region_rect = s_data["reg"]
+			spr.centered = false
+			spr.position = s_data["pos"]
+			spr.offset = s_data["offset"]
+			spr.y_sort_enabled = true
+			body.add_child(spr)
+	else:
+		# Fallback para prédios simples (se precisar)
+		var tex: Texture2D = data.get("tex")
+		var spr := Sprite2D.new()
+		spr.texture = tex
+		spr.region_enabled = true
+		spr.region_rect = reg
+		spr.centered = false
+		spr.position = Vector2(-reg.size.x / 2.0, 0)
+		spr.offset = Vector2(0, -reg.size.y)
+		spr.y_sort_enabled = true
+		body.add_child(spr)
 
 	if data.has("collisions"):
 		for c_data in data["collisions"]:
