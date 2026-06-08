@@ -1,0 +1,43 @@
+[gd_scene load_steps=5 format=3 uid="uid://dd8a9b2c3d4e5"]
+
+[ext_resource type="Script" path="res://objects/buildings/seed_shop_exterior.gd" id="1_script"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_base"]
+size = Vector2(80, 40)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_door"]
+size = Vector2(24, 24)
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_shop"]
+_data = {
+}
+
+[node name="SeedShopExterior" type="StaticBody2D"]
+y_sort_enabled = true
+collision_layer = 5
+script = ExtResource("1_script")
+interior_scene = "res://levels/seed_shop_interior/seed_shop_interior.tscn"
+
+[node name="Visuals" type="Node2D" parent="."]
+
+[node name="ShopSprite" type="Sprite2D" parent="Visuals"]
+position = Vector2(0, -40)
+
+[node name="DoorSprite" type="Sprite2D" parent="Visuals"]
+position = Vector2(0, -10)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -10)
+shape = SubResource("RectangleShape2D_base")
+
+[node name="DoorArea" type="Area2D" parent="."]
+collision_layer = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DoorArea"]
+position = Vector2(0, 5)
+shape = SubResource("RectangleShape2D_door")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_shop")
+}
