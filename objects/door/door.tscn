@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://objects/door/door.gd" id="1_door_script"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_door"]
-size = Vector2(24, 24)
+size = Vector2(64, 48)
 
 [node name="Door" type="Area2D"]
 collision_layer = 0
@@ -12,3 +12,11 @@ script = ExtResource("1_door_script")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_door")
+
+[node name="DebugRect" type="ColorRect" parent="."]
+modulate = Color(1, 0, 0, 0.5)
+offset_left = -32.0
+offset_top = -24.0
+offset_right = 32.0
+offset_bottom = 24.0
+mouse_filter = 2

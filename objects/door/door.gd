@@ -12,8 +12,10 @@ func _ready() -> void:
 	body_entered.connect(_on_body_entered)
 
 func _on_body_entered(body: Node2D) -> void:
+	print(" DOOR TRIGGERED BY: ", body.name, " Groups: ", body.get_groups())
 	# Se o corpo for o Player e tivermos uma cena configurada (If body is Player and we have a target scene)
 	if body.is_in_group("player") and target_scene_path != "":
+		print(" Transitioning to: ", target_scene_path)
 		# Chama o SceneManager global para fazer a transição (Call global SceneManager to transition)
 		# O autoload SceneManager já deve estar configurado no project.godot
 		if Engine.has_singleton("SceneManager"):
