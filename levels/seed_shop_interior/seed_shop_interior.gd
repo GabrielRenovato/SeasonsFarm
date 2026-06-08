@@ -14,8 +14,8 @@ func _ready() -> void:
 	exit_door.target_door_name = "seed_shop_door"
 	
 	# Se viemos da cidade, posicionamos o jogador no spawn point (If we came from city, place player at spawn point)
-	if Engine.has_singleton("SceneManager"):
-		var scene_manager = get_node("/root/SceneManager")
+	var scene_manager = get_node_or_null("/root/SceneManager")
+	if scene_manager:
 		if scene_manager.target_spawn_door_name == "seed_shop_interior_door":
 			# O Player Manager ou próprio script de player pode se posicionar usando este spawn_point.
 			# Uma forma simples é procurar o jogador no grupo "player" e forçar a posição.

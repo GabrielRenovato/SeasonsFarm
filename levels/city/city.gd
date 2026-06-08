@@ -182,8 +182,8 @@ func _setup_player_spawn() -> void:
 			movement._update_blend_positions()
 	
 	# Verifica de onde o jogador veio (Check where player came from)
-	if Engine.has_singleton("SceneManager"):
-		var scene_manager = get_node("/root/SceneManager")
+	var scene_manager = get_node_or_null("/root/SceneManager")
+	if scene_manager:
 		if scene_manager.target_spawn_door_name == "seed_shop_door":
 			player.global_position = Vector2(256, 140) # Posição em frente à porta (Position in front of the door)
 	
