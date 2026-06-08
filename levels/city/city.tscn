@@ -2105,6 +2105,6 @@ tile_set = SubResource("TileSet_k0pbh")
 
 [node name="SeedShopDoor" parent="." unique_id=142270201 instance=ExtResource("9_door")]
 y_sort_enabled = true
-position = Vector2(204, 115)
+position = Vector2(204, 116)
 target_scene_path = "res://levels/seed_shop_interior/seed_shop_interior.tscn"
 target_door_name = "seed_shop_interior_door"

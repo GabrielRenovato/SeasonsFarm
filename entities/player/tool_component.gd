@@ -253,6 +253,11 @@ func handle_tool_use(direction: Vector2) -> void:
 	_update_strict_direction(direction)
 	
 	if Input.is_action_just_pressed("use_tool") and not is_using_tool:
+		# Não tenta usar a ferramenta ou item se estiver perto de uma porta interativa,
+		# deixando a porta usar o input em _unhandled_input.
+		if _is_near_door():
+			return
+			
 		var target_map_position: Vector2i = _get_target_map_position()
 		
 		# If holding furniture, place it
@@ -372,6 +377,15 @@ func _attempt_pickup_furniture() -> bool:
 			actor.sit_down(obj, dir_str)
 			return true
 
+	return false
+
+# Retorna true se o player está na mesma área de uma porta interativa.
+# Return true if the player is in the same area as an interactive door.
+func _is_near_door() -> bool:
+	var doors = get_tree().get_nodes_in_group("door")
+	for door in doors:
+		if door is Area2D and door.overlaps_body(actor):
+			return true
 	return false
 
 func _active_layer() -> TileMapLayer:
