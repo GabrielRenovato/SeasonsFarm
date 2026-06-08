@@ -251,14 +251,60 @@ func _setup_camera_limits() -> void:
 	if min_x == INF:
 		return
 
-	var padding = 16
+	# Não usamos padding nos limites da câmera para não mostrar o fundo preto fora do mapa.
+	var padding = 0
 
 	camera.limit_left   = int(min_x) - padding
 	camera.limit_top    = int(min_y) - padding
 	camera.limit_right  = int(max_x) + padding
 	camera.limit_bottom = int(max_y) + padding
+	
+	# Smoothing da câmera ativado para ficar mais suave
+	camera.position_smoothing_enabled = true
+	camera.position_smoothing_speed = 5.0
 
 	print("Camera limits set: L=%d T=%d R=%d B=%d" % [camera.limit_left, camera.limit_top, camera.limit_right, camera.limit_bottom])
+	
+	# Cria paredes invisíveis para impedir o jogador de sair da área limite da câmera
+	# Usamos um "inset" (recuo) para que o player não chegue na exata borda e tenha a cabeça cortada
+	var existing_walls = get_tree().current_scene.get_node_or_null("CameraBounds")
+	if existing_walls:
+		existing_walls.queue_free()
+
+	var walls = StaticBody2D.new()
+	walls.name = "CameraBounds"
+	walls.collision_layer = 1
+	walls.collision_mask = 0
+	get_tree().current_scene.call_deferred("add_child", walls)
+
+	var t = 100.0 # Espessura da parede
+	var inset_x = 8.0 # Mantém o jogador 8 pixels longe da borda
+	var inset_y = 16.0 # Mantém o jogador 16 pixels longe da borda (para não cortar a cabeça)
+	
+	var left = float(camera.limit_left) + inset_x
+	var top = float(camera.limit_top) + inset_y
+	var right = float(camera.limit_right) - inset_x
+	var bottom = float(camera.limit_bottom) - inset_y
+	
+	var w = right - left
+	var h = bottom - top
+	var cx = left + w / 2.0
+	var cy = top + h / 2.0
+
+	var rects = [
+		{"pos": Vector2(cx, top - t/2.0), "size": Vector2(w + t*2, t)}, # Topo
+		{"pos": Vector2(cx, bottom + t/2.0), "size": Vector2(w + t*2, t)}, # Fundo
+		{"pos": Vector2(left - t/2.0, cy), "size": Vector2(t, h + t*2)}, # Esquerda
+		{"pos": Vector2(right + t/2.0, cy), "size": Vector2(t, h + t*2)} # Direita
+	]
+
+	for r in rects:
+		var cs = CollisionShape2D.new()
+		var shape = RectangleShape2D.new()
+		shape.size = r["size"]
+		cs.shape = shape
+		cs.position = r["pos"]
+		walls.call_deferred("add_child", cs)
 
 func _collect_tilemaps(node: Node, result: Array) -> void:
 	if node is TileMapLayer:

@@ -133,23 +133,11 @@ func _ready() -> void:
 	if not FarmManager.farm_data.is_empty():
 		FarmManager.call_deferred("rebuild_farm_visuals")
 
-	call_deferred("_setup_camera_limits")
+	# O gerenciamento de limites de câmera agora é feito exclusivamente pelo player.gd
+	# call_deferred("_setup_camera_limits")
 
 func _setup_camera_limits() -> void:
-	var player = get_tree().get_first_node_in_group("player")
-	if not player: return
-	var cam := player.get_node_or_null("Camera2D") as Camera2D
-	if not cam: return
-	
-	var ground := get_node_or_null("GroundLayer") as TileMapLayer
-	if not ground: return
-	
-	var rect := ground.get_used_rect()
-	var TILE = 16
-	cam.limit_left = rect.position.x * TILE
-	cam.limit_top = rect.position.y * TILE
-	cam.limit_right = rect.end.x * TILE
-	cam.limit_bottom = rect.end.y * TILE
+	pass # Implementação antiga removida para não conflitar com a nova lógica do player.gd
 
 
 func generate_environment_procedurally() -> void:

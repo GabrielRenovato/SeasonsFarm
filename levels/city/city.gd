@@ -68,17 +68,29 @@ func _build_dynamic_water_collision() -> void:
 func _build_buildings() -> void:
 	var list := [
 		# ----- Fileira NORTE -----
-		{"tex": TEX_BASE,   "reg": Rect2(17, 48, 174, 123),"foot": Vector2(256, 128)},  # Casa loja marrom (Vendedor de Sementes)
+		{
+			"tex": TEX_BASE,   
+			"reg": Rect2(17, 48, 174, 123),
+			"foot": Vector2(256, 128),
+			"col_w": 164.0, # Colisão customizada para cobrir a base inteira
+			"col_h": 28.0,
+			"col_ox": 0.0,
+			"col_oy": -14.0
+		},  # Casa loja marrom (Vendedor de Sementes)
 
 		# ----- Fileira SUL -----
 		{"tex": TEX_BLACK,  "reg": Rect2(4, 7, 72, 88),    "foot": Vector2(100, 390)},   # Ferreiro
 		{"tex": TEX_FISH,   "reg": Rect2(2, 7, 76, 102),   "foot": Vector2(400, 390)},  # Pescador
 	]
 	for b in list:
-		_make_building(b["tex"], b["reg"], b["foot"])
+		_make_building(b)
 
 
-func _make_building(tex: Texture2D, reg: Rect2, foot: Vector2) -> void:
+func _make_building(data: Dictionary) -> void:
+	var tex: Texture2D = data.get("tex")
+	var reg: Rect2 = data.get("reg")
+	var foot: Vector2 = data.get("foot")
+
 	var body := StaticBody2D.new()
 	body.collision_layer = 1
 	body.collision_mask = 0
@@ -95,10 +107,17 @@ func _make_building(tex: Texture2D, reg: Rect2, foot: Vector2) -> void:
 
 	var col := CollisionShape2D.new()
 	var rect := RectangleShape2D.new()
-	var col_h: float = clampf(reg.size.y * 0.26, 12.0, 40.0)
-	rect.size = Vector2(reg.size.x * 0.72, col_h)
+	
+	# Pega os valores customizados, ou usa a fórmula padrão se não existir
+	var default_h = clampf(reg.size.y * 0.26, 12.0, 40.0)
+	var c_w = data.get("col_w", reg.size.x * 0.72)
+	var c_h = data.get("col_h", default_h)
+	var c_ox = data.get("col_ox", 0.0)
+	var c_oy = data.get("col_oy", -default_h / 2.0)
+	
+	rect.size = Vector2(c_w, c_h)
 	col.shape = rect
-	col.position = Vector2(0, -col_h / 2.0)
+	col.position = Vector2(c_ox, c_oy)
 	body.add_child(col)
 
 
@@ -187,20 +206,8 @@ func _setup_player_spawn() -> void:
 		if scene_manager.target_spawn_door_name == "seed_shop_door":
 			player.global_position = Vector2(256, 150) # Posição em frente à porta (Position in front of the door)
 	
-	# Travar a câmera nos limites da grama
-	call_deferred("_setup_camera_limits_delayed")
+	# O gerenciamento de limites da câmera agora é feito pelo próprio player.gd
+	# call_deferred("_setup_camera_limits_delayed")
 
 func _setup_camera_limits_delayed() -> void:
-	var player = get_node_or_null("PlayerTeste") as CharacterBody2D
-	if not player: return
-	
-	var cam := player.get_node_or_null("Camera2D") as Camera2D
-	var ground := get_node_or_null("GroundLayer") as TileMapLayer
-	if cam and ground:
-		var rect := ground.get_used_rect()
-		cam.limit_left = rect.position.x * TILE
-		cam.limit_top = rect.position.y * TILE
-		cam.limit_right = rect.end.x * TILE
-		cam.limit_bottom = rect.end.y * TILE
-
-
+	pass # Removido para usar a lógica global e segura do player.gd
